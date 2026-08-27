@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InstaPostGenerator.Views.SplashPage"
+             BackgroundColor="#101216"
+             NavigationPage.HasNavigationBar="False">
+    <Grid>
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+            <Label Text="360"
+                   FontSize="72"
+                   FontAttributes="Bold"
+                   TextColor="#D1FF02"
+                   HorizontalOptions="Center" />
+            <Label Text="buzz"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="#FFFFFF"
+                   HorizontalOptions="Center"
+                   Margin="0,-10,0,0" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

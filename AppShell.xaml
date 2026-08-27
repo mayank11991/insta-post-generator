@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:InstaPostGenerator.Views"
+       x:Class="InstaPostGenerator.AppShell"
+       Shell.BackgroundColor="#101216"
+       Shell.ForegroundColor="White"
+       Shell.TitleColor="White"
+       Shell.DisabledColor="#666"
+       Shell.TabBarBackgroundColor="#1A1D24"
+       Shell.TabBarForegroundColor="#D1FF02"
+       Shell.TabBarTitleColor="#D1FF02"
+       Shell.TabBarUnselectedColor="#888">
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <BoxView Color="#D1FF02" HeightRequest="3" VerticalOptions="Start" />
+                <ContentPresenter Grid.Row="1" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <TabBar>
+        <Tab Title="Generate" Icon="generate_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:MainPage}" />
+        </Tab>
+        <Tab Title="About" Icon="about_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:AboutPage}" />
+        </Tab>
+    </TabBar>
+</Shell>

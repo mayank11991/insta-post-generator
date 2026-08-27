@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="InstaPostGenerator.Views.AboutPage"
+             Title="About"
+             BackgroundColor="#101216">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+            <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                <Label Text="📸"
+                       FontSize="64"
+                       HorizontalOptions="Center" />
+                <Label Text="InstaPost Generator"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="#D1FF02"
+                       HorizontalOptions="Center" />
+                <Label Text="v1.0.0"
+                       FontSize="14"
+                       TextColor="#888"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <Frame BackgroundColor="#1A1D24" BorderColor="#333" CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="About"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02" />
+                    <Label Text="Automated Instagram post generator for Bollywood, India News, and Politics categories."
+                           FontSize="14"
+                           TextColor="#DDD"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="Features:"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02"
+                           Margin="0,8,0,0" />
+                    <Label Text="• Fetches latest news from RSS feeds and SerpAPI&amp;#x• AI-powered content classification &amp;  hook generation&amp;#x• 6 professional templates with green (#D1FF02) branding&amp;#x• Smart duplicate detection &amp;  story grouping&amp;#x• South Indian cinema exclusion filter&amp;#x• Generates images, captions, hashtags &amp;  source URLs&amp;#x• Saves to Downloads/insta-post folder&amp;#x• One-tap copy to clipboard"
+                           FontSize="13"
+                           TextColor="#CCC"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#1A1D24" BorderColor="#333" CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Categories"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02" />
+                    <Label Text="🎬 Bollywood &amp;  Hindi Entertainment - Movies, TV, celebrities, OTT, box office"
+                           FontSize="13"
+                           TextColor="#CCC"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="🇮🇳 India Latest News - Breaking headlines, economy, sports, tech, weather"
+                           FontSize="13"
+                           TextColor="#CCC"
+                           LineBreakMode="WordWrap" />
+                    <Label Text="🏛️ India Politics - Government, elections, parliament, policy decisions"
+                           FontSize="13"
+                           TextColor="#CCC"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#1A1D24" BorderColor="#333" CornerRadius="12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Output Location"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02" />
+                    <Label Text="All generated files are saved to:"
+                           FontSize="13"
+                           TextColor="#CCC" />
+                    <Label Text="📁 ~/Downloads/insta-post/"
+                           FontSize="13"
+                           FontFamily="Monospace"
+                           TextColor="#D1FF02" />
+                    <Label Text="• 10 PNG images (1080x1350 - Instagram portrait)&amp;#x• 10 TXT caption files with hashtags &amp;  source URLs&amp;#x• seen.json for duplicate tracking"
+                           FontSize="13"
+                           TextColor="#CCC"
+                           LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Label Text="Built with .NET MAUI &amp;  SkiaSharp"
+                   FontSize="12"
+                   TextColor="#666"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

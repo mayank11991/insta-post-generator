@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:InstaPostGenerator.ViewModels"
+             xmlns:models="clr-namespace:InstaPostGenerator.Models"
+             x:Class="InstaPostGenerator.Views.MainPage"
+             x:DataType="vm:MainPageViewModel"
+             Title="InstaPost Generator"
+             BackgroundColor="#101216">
+
+    <ContentPage.BindingContext>
+        <vm:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Header -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="📸 InstaPost Generator"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="#D1FF02"
+                       HorizontalOptions="Center" />
+                <Label Text="Generate Instagram-ready posts with images, captions and hashtags"
+                       FontSize="14"
+                       TextColor="#888"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Category Selection -->
+            <Frame BackgroundColor="#1A1D24"
+                   BorderColor="#333"
+                   CornerRadius="12"
+                   Padding="16"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Select Category"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02" />
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}" Spacing="8">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CategorySelection">
+                                <Frame
+                                    BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected}"
+                                    BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
+                                    CornerRadius="8"
+                                    Padding="12"
+                                    HasShadow="False">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleCategoryCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,32">
+                                        <Label Text="{Binding DisplayName}"
+                                               FontSize="16"
+                                               VerticalOptions="Center"
+                                               Grid.Column="0">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}"
+                                                             Value="True">
+                                                    <Setter Property="TextColor" Value="Black" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}"
+                                                             Value="False">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <!-- <Border Grid.Column="1" -->
+                                        <!--         StrokeShape="RoundRectangle 14" -->
+                                        <!--         Stroke="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}" -->
+                                        <!--         StrokeThickness="3" -->
+                                        <!--         BackgroundColor="Transparent" -->
+                                        <!--         WidthRequest="28" HeightRequest="28" -->
+                                        <!--         VerticalOptions="Center"> -->
+                                        <!--     <Border.Background> -->
+                                        <!--         <SolidColorBrush -->
+                                        <!--             Color="{Binding IsSelected, Converter={StaticResource BoolToRadioFillConverter}}" /> -->
+                                        <!--     </Border.Background> -->
+                                        <!-- </Border> -->
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Progress Bar -->
+            <ProgressBar Progress="{Binding GenerateProgress}"
+                         ProgressColor="#D1FF02"
+                         BackgroundColor="#2A2D35"
+                         HeightRequest="4"
+                         IsVisible="{Binding IsGenerating}" />
+
+            <!-- Generate Button -->
+            <Button Text="{Binding GenerateButtonText}"
+                    Command="{Binding GenerateCommand}"
+                    IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"
+                    BackgroundColor="#D1FF02"
+                    TextColor="#101216"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="56"
+                    HorizontalOptions="Fill" />
+
+            <!-- Test Image Button -->
+            <Button Text="Generate Test Image"
+                    Command="{Binding TestImageCommand}"
+                    IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"
+                    BackgroundColor="#333"
+                    TextColor="#D1FF02"
+                    FontSize="14"
+                    CornerRadius="12"
+                    HeightRequest="44"
+                    HorizontalOptions="Fill"
+                    Margin="0,4,0,0" />
+
+            <!-- Status Message -->
+            <Label Text="{Binding StatusMessage}"
+                   FontSize="14"
+                   TextColor="#888"
+                   HorizontalOptions="Center"
+                   IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}" />
+
+            <!-- Posts List -->
+            <Label Text="Generated Posts"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="#D1FF02"
+                   IsVisible="{Binding Posts.Count, Converter={StaticResource IntToBoolConverter}}" />
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Posts}" Spacing="12">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PostItemViewModel">
+                        <Frame BackgroundColor="#1A1D24"
+                               BorderColor="#333"
+                               CornerRadius="12"
+                               Padding="16"
+                               HasShadow="False">
+                            <VerticalStackLayout Spacing="12">
+                                <!-- Header with Index, Category, Series -->
+                                <HorizontalStackLayout>
+                                    <Label Text="{Binding DisplayTitle}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="#D1FF02"
+                                           LineBreakMode="WordWrap" />
+                                </HorizontalStackLayout>
+
+                                <HorizontalStackLayout Spacing="12">
+                                    <Label Text="{Binding CategoryDisplay}"
+                                           FontSize="12"
+                                           TextColor="#888" />
+                                    <Label Text="{Binding SeriesDisplay}"
+                                           FontSize="12"
+                                           TextColor="#888" />
+                                </HorizontalStackLayout>
+
+                                <!-- Caption Preview -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Caption:"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#AAA" />
+                                    <Label Text="{Binding CaptionPreview}"
+                                           FontSize="13"
+                                           TextColor="#DDD"
+                                           LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+
+                                <!-- Hashtags -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Hashtags:"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#AAA" />
+                                    <Label Text="{Binding HashtagsDisplay}"
+                                           FontSize="12"
+                                           TextColor="#D1FF02"
+                                           LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+
+                                <!-- Source -->
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Source:"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="#AAA" />
+                                    <Label Text="{Binding SourceDisplay}"
+                                           FontSize="12"
+                                           TextColor="#888"
+                                           LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+
+                                <!-- Copy Button -->
+                                <Button Text="{Binding CopyButtonText}"
+                                        Command="{Binding CopyCommand}"
+                                        BackgroundColor="#2A2D35"
+                                        TextColor="#D1FF02"
+                                        FontSize="13"
+                                        FontAttributes="Bold"
+                                        CornerRadius="8"
+                                        HeightRequest="40"
+                                        HorizontalOptions="Fill" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Empty State -->
+            <VerticalStackLayout
+                IsVisible="{Binding Posts.Count, Converter={StaticResource IntToBoolConverter}, ConverterParameter=inverse}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Margin="0,40">
+                <Label Text="📭"
+                       FontSize="48"
+                       HorizontalOptions="Center" />
+                <Label Text="No posts generated yet"
+                       FontSize="18"
+                       TextColor="#666"
+                       HorizontalOptions="Center" />
+                <Label Text="Select a category and tap Generate"
+                       FontSize="14"
+                       TextColor="#888"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

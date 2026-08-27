@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">#101216</color>
+    <color name="splash_text">#D1FF02</color>
+    <color name="maui_splash_color">#101216</color>
+</resources>

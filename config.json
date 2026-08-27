@@ -1,0 +1,80 @@
+{
+  "config_url": "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/config.json",
+  "refresh_interval_hours": 6,
+
+  "api": {
+    "serpapi_key": "fa116e61b88316107ebe4b50682e7eb411ef1b3daf0a35c566e50052241ad0fa",
+    "serpapi_url": "https://serpapi.com/search",
+    "imgbb_key": "26ad935fd71b0f1817645fa328ec7c96",
+    "meta_app_id": "2648649438885764",
+    "meta_app_secret": "93e438eec5d19c0e56739093b739e195",
+    "meta_access_token": "EAAlo7sDwd4QBSfR8GBog3f4ScMZA4KmaBnD9rRf0T5btRu1MYZCyOJBiZCvwGKLEAuzQdBpaAKukBvbDR6rSmwsTe4NB5T7kTr3dgQJwCfZAqpzc39rYDtGDNc85B4fPQ7Thf5E6UgKMwZARh0gax9ePNqQZC6WwDGfoW6ZAvoUqsFsY96O5skvHOJLZCrjtKENd8wYQik2whAVFSZAcw",
+    "instagram_business_account_id": "17841467714909055"
+  },
+
+  "settings": {
+    "language": "en",
+    "posts_per_run": 10,
+    "max_article_age_hours": 24,
+    "min_article_score": 5,
+    "story_similarity_threshold": 0.5,
+    "page_name": "360buzz"
+  },
+
+  "categories": {
+    "bollywood": {
+      "display_name": "Bollywood",
+      "query": "bollywood hindi movie tv celebrity news latest",
+      "color": "#D1FF02",
+      "emoji": "🎬"
+    },
+    "india_news": {
+      "display_name": "India News",
+      "query": "india latest news headlines today breaking",
+      "color": "#FF6B35",
+      "emoji": "📰"
+    },
+    "india_politics": {
+      "display_name": "India Politics",
+      "query": "india politics latest news today breaking headlines",
+      "color": "#E63946",
+      "emoji": "🏛️"
+    }
+  },
+
+  "exclude_keywords": [
+    "tamil", "telugu", "malayalam", "kannada", "tollywood", "kollywood",
+    "rajinikanth", "chiranjeevi", "allu arjun", "mahesh babu", "prabhas",
+    "ram charan", "jr ntr", "vijay", "ajith", "suriya", "dulquer",
+    "mammoth", "mohanlal", "fahadh", "pan india", "south indian",
+    " jr ", " jr.", " kannada", " tamil", " telugu", " malayalam"
+  ],
+
+  "rss_feeds": [
+    { "url": "https://www.bollywoodhungama.com/feed/", "source": "Bollywood Hungama", "category": "bollywood" },
+    { "url": "https://www.koimoi.com/feed/", "source": "Koimoi", "category": "bollywood" },
+    { "url": "https://indianexpress.com/section/entertainment/feed/", "source": "Indian Express", "category": "bollywood" },
+    { "url": "https://timesofindia.indiatimes.com/rssfeeds/1081479906.cms", "source": "Times of India", "category": "bollywood" },
+    { "url": "https://www.pinkvilla.com/rss.xml", "source": "Pinkvilla", "category": "bollywood" },
+    { "url": "https://www.bollywoodshaadis.com/rss", "source": "Bollywood Shaadis", "category": "bollywood" },
+    { "url": "https://www.tellychakkar.com/rss.xml", "source": "Tellychakkar", "category": "bollywood" },
+    { "url": "https://indianexpress.com/section/india/feed/", "source": "Indian Express India", "category": "india_news" },
+    { "url": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms", "source": "Times of India India", "category": "india_news" },
+    { "url": "https://www.ndtv.com/india/rss", "source": "NDTV India", "category": "india_news" },
+    { "url": "https://www.thehindu.com/news/national/feeder/default.rss", "source": "The Hindu National", "category": "india_news" },
+    { "url": "https://indianexpress.com/section/political-pulse/feed/", "source": "Indian Express Politics", "category": "india_politics" },
+    { "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "source": "Times of India Politics", "category": "india_politics" },
+    { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "india_politics" }
+  ],
+
+  "image": {
+    "width": 2160,
+    "height": 2700,
+    "export_width": 1080,
+    "export_height": 1350,
+    "brand_green": "#D1FF02",
+    "brand_yellow": "#FFD700",
+    "brand_red": "#DC2626",
+    "bg_dark": "#101216"
+  }
+}

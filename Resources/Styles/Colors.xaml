@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Primary Colors -->
+    <Color x:Key="Primary">#D1FF02</Color>
+    <Color x:Key="PrimaryDark">#B8E002</Color>
+    <Color x:Key="PrimaryLight">#E0FF4D</Color>
+
+    <!-- Background Colors -->
+    <Color x:Key="Background">#101216</Color>
+    <Color x:Key="Surface">#1A1D24</Color>
+    <Color x:Key="SurfaceVariant">#2A2D35</Color>
+    <Color x:Key="CardBackground">#1A1D24</Color>
+
+    <!-- Text Colors -->
+    <Color x:Key="OnPrimary">#101216</Color>
+    <Color x:Key="OnBackground">#FFFFFF</Color>
+    <Color x:Key="OnSurface">#FFFFFF</Color>
+    <Color x:Key="OnSurfaceVariant">#DDDDDD</Color>
+    <Color x:Key="TextSecondary">#888888</Color>
+    <Color x:Key="TextMuted">#666666</Color>
+
+    <!-- Border Colors -->
+    <Color x:Key="Border">#333333</Color>
+    <Color x:Key="BorderLight">#444444</Color>
+
+    <!-- Status Colors -->
+    <Color x:Key="Success">#4CAF50</Color>
+    <Color x:Key="Warning">#FF9800</Color>
+    <Color x:Key="Error">#F44336</Color>
+    <Color x:Key="Info">#2196F3</Color>
+
+    <!-- Brand Colors -->
+    <Color x:Key="BrandGreen">#D1FF02</Color>
+    <Color x:Key="BrandYellow">#FFD700</Color>
+    <Color x:Key="BrandRed">#DC2626</Color>
+    <Color x:Key="BrandBlue">#097AD4</Color>
+
+</ResourceDictionary>
