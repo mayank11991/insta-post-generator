@@ -16,16 +16,22 @@ public class MainPageViewModel : INotifyPropertyChanged
     private bool _isGenerating;
     private string _statusMessage = "Ready to generate posts";
     private ObservableCollection<PostItemViewModel> _posts = new();
+    private int _liveCount;
 
     public MainPageViewModel()
     {
-        // Initialize categories
-        Categories = new ObservableCollection<CategorySelection>
+        // Initialize categories from remote config
+        var config = RemoteConfigService.GetConfig();
+        Categories = new ObservableCollection<CategorySelection>();
+        foreach (var kv in config.Categories)
         {
-            new CategorySelection { Name = "bollywood", DisplayName = "🎬 Bollywood & Hindi Entertainment", IsSelected = true },
-            new CategorySelection { Name = "india_news", DisplayName = "🇮🇳 India Latest News" },
-            new CategorySelection { Name = "india_politics", DisplayName = "🏛️ India Politics" }
-        };
+            Categories.Add(new CategorySelection
+            {
+                Name = kv.Key,
+                DisplayName = $"{kv.Value.Emoji} {kv.Value.DisplayName}",
+                IsSelected = Categories.Count == 0
+            });
+        }
 
         GenerateCommand = new Command(async () => await GeneratePostsAsync(), () => !IsGenerating);
         TestImageCommand = new Command(async () => await GenerateTestImageAsync(), () => !IsGenerating);
@@ -58,10 +64,10 @@ public class MainPageViewModel : INotifyPropertyChanged
     public double GenerateProgress
     {
         get => _generateProgress;
-        set { _generateProgress = value; OnPropertyChanged(); OnPropertyChanged(nameof(GenerateButtonText)); OnPropertyChanged(nameof(ShowTick)); }
+        set { _generateProgress = value; OnPropertyChanged(); _liveCount = (int)(value * 10); OnPropertyChanged(nameof(GenerateButtonText)); OnPropertyChanged(nameof(ShowTick)); }
     }
 
-    public string GenerateButtonText => IsDone ? "✓ Done" : IsGenerating ? $"Generating... {Posts.Count}/10" : "Generate Posts";
+    public string GenerateButtonText => IsDone ? "✓ Done" : IsGenerating ? $"Generating... {_liveCount}/10" : "Generate Posts";
     public bool ShowTick => IsDone;
 
     private bool _isDone;
@@ -112,6 +118,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         IsGenerating = true;
         IsDone = false;
         GenerateProgress = 0;
+        _liveCount = 0;
         StatusMessage = "Starting post generation...";
         Posts.Clear();
 
