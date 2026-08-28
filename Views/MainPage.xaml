@@ -198,16 +198,27 @@
                                            LineBreakMode="WordWrap" />
                                 </VerticalStackLayout>
 
-                                <!-- Copy Button -->
-                                <Button Text="{Binding CopyButtonText}"
-                                        Command="{Binding CopyCommand}"
-                                        BackgroundColor="#2A2D35"
-                                        TextColor="#D1FF02"
-                                        FontSize="13"
-                                        FontAttributes="Bold"
-                                        CornerRadius="8"
-                                        HeightRequest="40"
-                                        HorizontalOptions="Fill" />
+                                <!-- Buttons -->
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                    <Button Text="{Binding CopyButtonText}"
+                                            Command="{Binding CopyCommand}"
+                                            BackgroundColor="#2A2D35"
+                                            TextColor="#D1FF02"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            CornerRadius="8"
+                                            HeightRequest="40"
+                                            Grid.Column="0" />
+                                    <Button Text="{Binding PostButtonText}"
+                                            Command="{Binding PostCommand}"
+                                            BackgroundColor="#E1306C"
+                                            TextColor="#FFFFFF"
+                                            FontSize="12"
+                                            FontAttributes="Bold"
+                                            CornerRadius="8"
+                                            HeightRequest="40"
+                                            Grid.Column="1" />
+                                </Grid>
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
