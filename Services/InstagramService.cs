@@ -77,7 +77,8 @@ public static class InstagramService
             {
                 image_url = imageUrl,
                 caption = caption,
-                access_token = accessToken
+                access_token = accessToken,
+                share_to_facebook = true
             };
 
             var json = JsonSerializer.Serialize(payload);

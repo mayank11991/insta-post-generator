@@ -96,7 +96,7 @@ public static class PostGenerator
         foreach (var line in headlineLines)
         {
             DrawHighlightedText(canvas, pad, headlineY - metrics.Ascent, line, headingFont,
-                Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_YELLOW });
+                Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_RED });
             headlineY += metrics.Descent - metrics.Ascent + lineGap;
         }
 
@@ -372,7 +372,7 @@ public static class PostGenerator
         }
 
         // Yellow line
-        using (var paint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
+        using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
         {
             canvas.DrawRoundRect(
                 new SKRect(linesX + lineWidth + Config.IMAGE_WIDTH * 0.012f, linesY,
@@ -492,7 +492,7 @@ public static class PostGenerator
         var borderWidth = Config.IMAGE_WIDTH * BORDER_WIDTH_RATIO;
         using var paint = new SKPaint
         {
-            Color = Config.BRAND_YELLOW,
+            Color = Config.BRAND_RED,
             Style = SKPaintStyle.Stroke,
             StrokeWidth = borderWidth,
             IsAntialias = true
@@ -533,7 +533,7 @@ public static class PostGenerator
             if (y + args.HeadingFont.GetMetrics().Descent > args.ImageHeight - args.OverlayPad)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad, y - args.HeadingFont.GetMetrics().Ascent, line, args.HeadingFont, Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad, y - args.HeadingFont.GetMetrics().Ascent, line, args.HeadingFont, Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_RED });
         }
     }
 
@@ -589,7 +589,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -656,7 +656,7 @@ public static class PostGenerator
             if (y + args.HeadingFont.GetMetrics().Descent > args.ImageHeight - args.OverlayPad)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad, y - args.HeadingFont.GetMetrics().Ascent, line, args.HeadingFont, Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad, y - args.HeadingFont.GetMetrics().Ascent, line, args.HeadingFont, Config.WHITE, new[] { Config.BRAND_GREEN, Config.BRAND_RED });
         }
     }
 
@@ -710,7 +710,7 @@ public static class PostGenerator
                 args.ImageWidth * 0.008f, args.ImageWidth * 0.008f, paint);
         }
 
-        using (var paint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
+        using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
         {
             canvas.DrawText(shortSummary,
                 args.Pad + innerPadding + (summaryWidth - summaryFont.MeasureText(shortSummary)) / 2,
@@ -755,7 +755,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -781,7 +781,7 @@ public static class PostGenerator
         var catFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.025f, SKFontStyleWeight.Bold);
         var catTextWidth = catFont.MeasureText(catLabel);
 
-        using (var paint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
+        using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
         {
             canvas.DrawText(catLabel,
                 args.Pad + innerPadding,
@@ -851,7 +851,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -899,7 +899,7 @@ public static class PostGenerator
             if (y + headerFont.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding - args.ImageWidth * 0.05f)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - headerFont.GetMetrics().Ascent, line, headerFont, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_YELLOW });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - headerFont.GetMetrics().Ascent, line, headerFont, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
 
         // Separator
