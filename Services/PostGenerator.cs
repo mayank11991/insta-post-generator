@@ -64,8 +64,8 @@ public static class PostGenerator
         DrawBranding(canvas);
 
         // Source box
-        var headingFont = CreateFont(Config.FONT_HEADING, Config.IMAGE_WIDTH * HEADING_SIZE_RATIO, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(Config.FONT_HEADING, Config.IMAGE_WIDTH * SOURCE_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * HEADING_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * SOURCE_SIZE_RATIO, SKFontStyleWeight.Bold);
         var pad = Config.IMAGE_WIDTH * PAD_RATIO;
         var sourceBoxPad = Config.IMAGE_WIDTH * 0.016f;
         var sourceName = "TIMES OF INDIA";
@@ -181,9 +181,9 @@ public static class PostGenerator
         DrawBranding(drawCanvas);
 
         // Prepare fonts (matching Python: Montserrat for headings, Montserrat for source)
-        var headingFont = CreateFont(Config.FONT_HEADING, Config.IMAGE_WIDTH * HEADING_SIZE_RATIO, SKFontStyleWeight.Bold);
-        var brandFont = CreateFont(Config.FONT_BRICOLAGE, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(Config.FONT_HEADING, Config.IMAGE_WIDTH * SOURCE_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * HEADING_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * SOURCE_SIZE_RATIO, SKFontStyleWeight.Bold);
 
         // Source name
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
@@ -381,7 +381,7 @@ public static class PostGenerator
         }
 
         // Page name - use BricolageGrotesque (matching Python brand_font)
-        var brandFont = CreateFont(Config.FONT_BRICOLAGE, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
+        var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
         var brandX = linesX + 2 * lineWidth + Config.IMAGE_WIDTH * 0.012f + Config.IMAGE_WIDTH * 0.02f;
         // SkiaSharp DrawText draws from baseline, add ascent to position text top at desired Y
         // Python: brand_y = lines_y + (line_h - brand_font.size) // 2 - int(IMAGE_WIDTH * 0.008)
@@ -579,7 +579,7 @@ public static class PostGenerator
         var lines = new List<string>(args.HeadlineLines);
         while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
         {
-            hf = CreateFont(Config.FONT_HEADING, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -601,12 +601,12 @@ public static class PostGenerator
 
         // Summary box - GREEN with BLACK text
         var maxSummaryW = args.ImageWidth - args.Pad * 2;
-        var summaryFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
+        var summaryFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
         var summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
 
         while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.025f)
         {
-            summaryFont = CreateFont(Config.FONT_HEADING, summaryFont.Size - 2, SKFontStyleWeight.Bold);
+            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size - 2, SKFontStyleWeight.Bold);
             summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
         }
 
@@ -678,12 +678,12 @@ public static class PostGenerator
 
         // Black summary box
         var maxSummaryW = args.ImageWidth - args.Pad * 2 - innerPadding * 2;
-        var summaryFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
+        var summaryFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
         var summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
 
         while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.025f)
         {
-            summaryFont = CreateFont(Config.FONT_HEADING, summaryFont.Size - 2, SKFontStyleWeight.Bold);
+            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size - 2, SKFontStyleWeight.Bold);
             summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
         }
 
@@ -745,7 +745,7 @@ public static class PostGenerator
         var lines = new List<string>(args.HeadlineLines);
         while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
         {
-            hf = CreateFont(Config.FONT_HEADING, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -778,7 +778,7 @@ public static class PostGenerator
         }
 
         var catLabel = "BREAKING NEWS";
-        var catFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.025f, SKFontStyleWeight.Bold);
+        var catFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.025f, SKFontStyleWeight.Bold);
         var catTextWidth = catFont.MeasureText(catLabel);
 
         using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
@@ -841,7 +841,7 @@ public static class PostGenerator
         var lines = new List<string>(args.HeadlineLines);
         while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
         {
-            hf = CreateFont(Config.FONT_HEADING, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -889,7 +889,7 @@ public static class PostGenerator
         }
 
         // Header
-        var headerFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.038f, SKFontStyleWeight.Bold);
+        var headerFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.038f, SKFontStyleWeight.Bold);
         var headerY = boxY + smallGap + args.SourceBoxHeight + args.GapMed;
         var headerLines = WrapText(canvas, args.Title, headerFont, args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40);
 
@@ -912,7 +912,7 @@ public static class PostGenerator
         // Body text
         var summary = (args.Article.Summary ?? args.Title);
         if (summary.Length > 200) summary = summary.Substring(0, 200);
-        var bodyFont = CreateFont(Config.FONT_HEADING, args.ImageWidth * 0.028f, SKFontStyleWeight.Normal);
+        var bodyFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.028f, SKFontStyleWeight.Normal);
         var bodyY = sepY + smallGap;
         var bodyLines = WrapText(canvas, summary, bodyFont, args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40);
 

@@ -581,9 +581,7 @@ public static class NewsFetcher
             if (articleTexts.Any())
             {
                 var text = articleTexts.OrderByDescending(t => t.Length).First();
-                var sentences = Regex.Split(text, @"(?<=[.!?])\s+");
-                var summary = string.Join(" ", sentences.Take(8));
-                return summary;
+                return text;
             }
         }
         catch { }
