@@ -16,16 +16,19 @@ public static class InstagramService
         if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(igUserId))
             return "Error: Meta API credentials not configured";
 
+        onStatus?.Invoke("Uploading image...");
+        var imageUrl = await UploadImageAsync(imagePath);
+        if (string.IsNullOrEmpty(imageUrl))
+            return "Error: Failed to upload image";
+
         onStatus?.Invoke("Creating media container...");
         var fullCaption = caption + "\n\n" + hashtags;
-
-        // Step 1: Upload image directly to Instagram via multipart form
-        var containerId = await CreateMediaContainerDirectAsync(igUserId, imagePath, fullCaption, accessToken);
+        var containerId = await CreateMediaContainerAsync(igUserId, imageUrl, fullCaption, accessToken);
         if (string.IsNullOrEmpty(containerId))
             return "Error: Failed to create media container";
 
         onStatus?.Invoke("Waiting for processing...");
-        var ready = await WaitForContainerAsync(igUserId, containerId, accessToken);
+        var ready = await WaitForContainerAsync(containerId, accessToken);
         if (!ready)
             return "Error: Container processing failed or timed out";
 
@@ -37,21 +40,84 @@ public static class InstagramService
         return "Posted! Media ID: " + mediaId;
     }
 
-    private static async Task<string> CreateMediaContainerDirectAsync(string igUserId, string imagePath, string caption, string accessToken)
+    private static async Task<string> UploadImageAsync(string imagePath)
+    {
+        // Try multiple hosting services
+        var imageUrl = await UploadTo0x0st(imagePath);
+        if (!string.IsNullOrEmpty(imageUrl)) return imageUrl;
+
+        imageUrl = await UploadToImgbb(imagePath);
+        if (!string.IsNullOrEmpty(imageUrl)) return imageUrl;
+
+        return null;
+    }
+
+    private static async Task<string> UploadTo0x0st(string imagePath)
+    {
+        try
+        {
+            var imageBytes = await File.ReadAllBytesAsync(imagePath);
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(imageBytes), "file", Path.GetFileName(imagePath));
+
+            var response = await _http.PostAsync("https://0x0.st", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var url = (await response.Content.ReadAsStringAsync()).Trim();
+                if (url.StartsWith("http"))
+                    return url;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("[IG] 0x0.st upload failed: " + ex.Message);
+        }
+        return null;
+    }
+
+    private static async Task<string> UploadToImgbb(string imagePath)
+    {
+        try
+        {
+            var imageBytes = await File.ReadAllBytesAsync(imagePath);
+            var base64 = Convert.ToBase64String(imageBytes);
+
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(Config.IMGBB_API_KEY), "key");
+            content.Add(new StringContent(base64), "image");
+
+            var response = await _http.PostAsync("https://api.imgbb.com/1/upload", content);
+            var json = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(json);
+
+            if (doc.RootElement.TryGetProperty("data", out var data) &&
+                data.TryGetProperty("url", out var url))
+            {
+                return url.GetString();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("[IG] IMGBB upload failed: " + ex.Message);
+        }
+        return null;
+    }
+
+    private static async Task<string> CreateMediaContainerAsync(string igUserId, string imageUrl, string caption, string accessToken)
     {
         try
         {
             var url = "https://graph.facebook.com/v19.0/" + igUserId + "/media";
+            var payload = new
+            {
+                image_url = imageUrl,
+                caption = caption,
+                access_token = accessToken,
+                share_to_facebook = true
+            };
 
-            var imageBytes = await File.ReadAllBytesAsync(imagePath);
-            var imageFileName = Path.GetFileName(imagePath);
-
-            var content = new MultipartFormDataContent();
-            content.Add(new ByteArrayContent(imageBytes), "image", imageFileName);
-            content.Add(new StringContent(caption), "caption");
-            content.Add(new StringContent(accessToken), "access_token");
-            content.Add(new StringContent("true"), "share_to_facebook");
-
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _http.PostAsync(url, content);
             var responseJson = await response.Content.ReadAsStringAsync();
             var doc = JsonDocument.Parse(responseJson);
@@ -70,7 +136,7 @@ public static class InstagramService
         return null;
     }
 
-    private static async Task<bool> WaitForContainerAsync(string igUserId, string containerId, string accessToken, int maxWaitSeconds = 120)
+    private static async Task<bool> WaitForContainerAsync(string containerId, string accessToken, int maxWaitSeconds = 120)
     {
         for (int i = 0; i < maxWaitSeconds; i += 5)
         {
