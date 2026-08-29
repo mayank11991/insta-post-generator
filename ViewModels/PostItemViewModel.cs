@@ -92,16 +92,16 @@ public class PostItemViewModel : INotifyPropertyChanged
             }
             else
             {
-                PostButtonText = $"❌ {result}";
-                await Task.Delay(3000);
+                PostButtonText = "❌ Failed";
+                await Application.Current.MainPage.DisplayAlert("Post Failed", result, "OK");
                 PostButtonText = "📤 Send to Instagram";
                 IsPosting = false;
             }
         }
         catch (Exception ex)
         {
-            PostButtonText = $"❌ Error: {ex.Message}";
-            await Task.Delay(3000);
+            PostButtonText = "❌ Error";
+            await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
             PostButtonText = "📤 Send to Instagram";
             IsPosting = false;
         }

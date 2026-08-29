@@ -135,6 +135,7 @@ public static class Config
     public const string FONT_HEADING = "Rougan.otf";
     public const string FONT_SUBHEADING = "Montserrat-Italic.ttf";
     public const string FONT_HINDI = "NotoSansDevanagari-Regular.ttf";
+    public const string FONT_ARENA = "Arena-rvwaK.ttf";
 
     // Helper to parse hex color
     private static SKColor ParseColor(string hex, SKColor fallback)
