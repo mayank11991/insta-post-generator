@@ -365,13 +365,13 @@ public static class PostGenerator
         var linesX = pad;
         var linesY = pad;
 
-        // Blue line
+        // Green line
         using (var paint = new SKPaint { Color = Config.BRAND_GREEN, IsAntialias = true })
         {
             canvas.DrawRoundRect(new SKRect(linesX, linesY, linesX + lineWidth, linesY + lineHeight), lineWidth / 2, lineWidth / 2, paint);
         }
 
-        // Yellow line
+        // Red line
         using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
         {
             canvas.DrawRoundRect(
@@ -380,17 +380,23 @@ public static class PostGenerator
                 lineWidth / 2, lineWidth / 2, paint);
         }
 
-        // Page name - use BricolageGrotesque (matching Python brand_font)
+        // "360" in GREEN, "buzz" in WHITE
         var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
         var brandX = linesX + 2 * lineWidth + Config.IMAGE_WIDTH * 0.012f + Config.IMAGE_WIDTH * 0.02f;
-        // SkiaSharp DrawText draws from baseline, add ascent to position text top at desired Y
-        // Python: brand_y = lines_y + (line_h - brand_font.size) // 2 - int(IMAGE_WIDTH * 0.008)
         var metrics = brandFont.GetMetrics();
         var brandY = linesY + (lineHeight - brandFont.Size) / 2 - Config.IMAGE_WIDTH * 0.008f - metrics.Ascent;
 
+        var text360 = "360";
+        var textBuzz = "buzz";
+        var w360 = brandFont.MeasureText(text360);
+
+        using (var paint = new SKPaint { Color = Config.BRAND_GREEN, IsAntialias = true })
+        {
+            canvas.DrawText(text360, brandX, brandY, brandFont, paint);
+        }
         using (var paint = new SKPaint { Color = Config.WHITE, IsAntialias = true })
         {
-            canvas.DrawText(Config.PAGE_NAME, brandX, brandY, brandFont, paint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, paint);
         }
     }
 
@@ -577,9 +583,9 @@ public static class PostGenerator
 
         var hf = args.HeadingFont;
         var lines = new List<string>(args.HeadlineLines);
-        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
+        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.02f)
         {
-            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.9f, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -589,7 +595,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.BLACK, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -604,9 +610,9 @@ public static class PostGenerator
         var summaryFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
         var summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
 
-        while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.025f)
+        while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.02f)
         {
-            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size - 2, SKFontStyleWeight.Bold);
+            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size * 0.9f, SKFontStyleWeight.Bold);
             summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
         }
 
@@ -681,9 +687,9 @@ public static class PostGenerator
         var summaryFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.055f, SKFontStyleWeight.Bold);
         var summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
 
-        while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.025f)
+        while (summaryWidth > maxSummaryW && summaryFont.Size > args.ImageWidth * 0.02f)
         {
-            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size - 2, SKFontStyleWeight.Bold);
+            summaryFont = CreateFont(Config.FONT_ARENA, summaryFont.Size * 0.9f, SKFontStyleWeight.Bold);
             summaryWidth = (int)summaryFont.MeasureText(shortSummary) + (int)args.Pad * 2;
         }
 
@@ -743,9 +749,9 @@ public static class PostGenerator
 
         var hf = args.HeadingFont;
         var lines = new List<string>(args.HeadlineLines);
-        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
+        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.02f)
         {
-            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.9f, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -755,7 +761,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.BLACK, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -839,9 +845,9 @@ public static class PostGenerator
 
         var hf = args.HeadingFont;
         var lines = new List<string>(args.HeadlineLines);
-        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.025f)
+        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.02f)
         {
-            hf = CreateFont(Config.FONT_ARENA, hf.Size - 2, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.9f, SKFontStyleWeight.Bold);
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -851,7 +857,7 @@ public static class PostGenerator
             if (y + hf.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - hf.GetMetrics().Ascent, line, hf, Config.BLACK, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
     }
 
@@ -899,7 +905,7 @@ public static class PostGenerator
             if (y + headerFont.GetMetrics().Descent > args.ImageHeight - args.OverlayPad - innerPadding - args.ImageWidth * 0.05f)
                 break;
 
-            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - headerFont.GetMetrics().Ascent, line, headerFont, Config.DARK_GRAY, new[] { Config.BRAND_RED, Config.BRAND_RED });
+            DrawHighlightedText(canvas, args.Pad + innerPadding + 20, y - headerFont.GetMetrics().Ascent, line, headerFont, Config.BLACK, new[] { Config.BRAND_RED, Config.BRAND_RED });
         }
 
         // Separator
