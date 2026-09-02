@@ -380,7 +380,7 @@ public static class PostGenerator
                 lineWidth / 2, lineWidth / 2, paint);
         }
 
-        // "360" in GREEN, "buzz" in WHITE
+        // "360" in YELLOW with black stroke, "buzz" in WHITE with black stroke
         var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * BRAND_SIZE_RATIO, SKFontStyleWeight.Bold);
         var brandX = linesX + 2 * lineWidth + Config.IMAGE_WIDTH * 0.012f + Config.IMAGE_WIDTH * 0.02f;
         var metrics = brandFont.GetMetrics();
@@ -389,14 +389,22 @@ public static class PostGenerator
         var text360 = "360";
         var textBuzz = "buzz";
         var w360 = brandFont.MeasureText(text360);
+        var strokeWidth = Math.Max(2, Config.IMAGE_WIDTH * 0.003f);
 
-        using (var paint = new SKPaint { Color = Config.BRAND_GREEN, IsAntialias = true })
+        // Draw "360" with black stroke then yellow fill
+        using (var strokePaint = new SKPaint { Color = Config.BLACK, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeWidth })
+        using (var fillPaint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
         {
-            canvas.DrawText(text360, brandX, brandY, brandFont, paint);
+            canvas.DrawText(text360, brandX, brandY, brandFont, strokePaint);
+            canvas.DrawText(text360, brandX, brandY, brandFont, fillPaint);
         }
-        using (var paint = new SKPaint { Color = Config.WHITE, IsAntialias = true })
+
+        // Draw "buzz" with black stroke then white fill
+        using (var strokePaint = new SKPaint { Color = Config.BLACK, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeWidth })
+        using (var fillPaint = new SKPaint { Color = Config.WHITE, IsAntialias = true })
         {
-            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, paint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, strokePaint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, fillPaint);
         }
     }
 
@@ -543,7 +551,7 @@ public static class PostGenerator
         }
     }
 
-    // Template 2: White bottom layout with RED highlights
+    // Template 2: White bottom layout with RED highlights - GRADIENT FADE
     private static void CreateTemplate2(TemplateArgs args)
     {
         var canvas = args.Canvas;
@@ -551,11 +559,20 @@ public static class PostGenerator
         var smallGap = args.ImageWidth * 0.015f;
         var boxY = args.GradTop + args.OverlayPad + smallGap;
 
-        // White background
-        using (var paint = new SKPaint { Color = new SKColor(255, 255, 255, 230), IsAntialias = true })
+        // White gradient background - fade from top (more opaque) to bottom (transparent)
+        var whiteTopAlpha = (byte)200;
+        var whiteBottomAlpha = (byte)60;
+        
+        using (var shader = SKShader.CreateLinearGradient(
+            new SKPoint(0, boxY),
+            new SKPoint(0, args.ImageHeight - args.OverlayPad),
+            new[] { new SKColor(255, 255, 255, whiteTopAlpha), new SKColor(255, 255, 255, whiteBottomAlpha) },
+            new float[] { 0f, 1f },
+            SKShaderTileMode.Clamp))
+        using (var paint = new SKPaint { Shader = shader, IsAntialias = true })
         {
             canvas.DrawRoundRect(
-                new SKRect(args.Pad, args.GradTop + args.OverlayPad, args.ImageWidth - args.Pad, args.ImageHeight - args.OverlayPad),
+                new SKRect(args.Pad, boxY, args.ImageWidth - args.Pad, args.ImageHeight - args.OverlayPad),
                 args.CornerRadius, args.CornerRadius, paint);
         }
 
@@ -576,16 +593,17 @@ public static class PostGenerator
                 args.SourceFont, paint);
         }
 
-        // Headline with font fitting
+        // Headline with font fitting - more aggressive shrink
         var headlineY = boxY + args.SourceBoxHeight + args.GapMed;
         var availableH = (args.ImageHeight - args.OverlayPad - innerPadding) - headlineY;
         var maxTextW = args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40;
 
         var hf = args.HeadingFont;
         var lines = new List<string>(args.HeadlineLines);
-        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.02f)
+        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.018f)
         {
-            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.9f, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.85f, SKFontStyleWeight.Bold);
+            args.LineGap *= 0.9f;
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -812,9 +830,15 @@ public static class PostGenerator
                 args.SourceFont, paint);
         }
 
-        // White bottom layout
+        // White bottom layout - GRADIENT FADE
         var boxY = statsY + statsH + smallGap;
-        using (var paint = new SKPaint { Color = new SKColor(255, 255, 255, 230), IsAntialias = true })
+        using (var shader = SKShader.CreateLinearGradient(
+            new SKPoint(0, boxY),
+            new SKPoint(0, args.ImageHeight - args.OverlayPad),
+            new[] { new SKColor(255, 255, 255, 200), new SKColor(255, 255, 255, 60) },
+            new float[] { 0f, 1f },
+            SKShaderTileMode.Clamp))
+        using (var paint = new SKPaint { Shader = shader, IsAntialias = true })
         {
             canvas.DrawRoundRect(
                 new SKRect(args.Pad, boxY, args.ImageWidth - args.Pad, args.ImageHeight - args.OverlayPad),
@@ -838,16 +862,17 @@ public static class PostGenerator
                 args.SourceFont, paint);
         }
 
-        // Headline with RED highlights
+        // Headline with RED highlights - more aggressive shrink
         var headlineY = boxY + smallGap + args.SourceBoxHeight + args.GapMed;
         var availableH = (args.ImageHeight - args.OverlayPad - innerPadding) - headlineY;
         var maxTextW = args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40;
 
         var hf = args.HeadingFont;
         var lines = new List<string>(args.HeadlineLines);
-        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.02f)
+        while (lines.Count * (hf.GetMetrics().Descent - hf.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && hf.Size > args.ImageWidth * 0.018f)
         {
-            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.9f, SKFontStyleWeight.Bold);
+            hf = CreateFont(Config.FONT_ARENA, hf.Size * 0.85f, SKFontStyleWeight.Bold);
+            args.LineGap *= 0.9f;
             lines = WrapText(canvas, args.Title, hf, maxTextW);
         }
 
@@ -861,16 +886,22 @@ public static class PostGenerator
         }
     }
 
-    // Template 6: List/fact format
+    // Template 6: List/fact format - GRADIENT FADE
     private static void CreateTemplate6(TemplateArgs args)
     {
         var canvas = args.Canvas;
         var innerPadding = args.ImageWidth * 0.03f;
         var smallGap = args.ImageWidth * 0.015f;
 
-        // White bottom layout
+        // White bottom layout - GRADIENT FADE
         var boxY = args.GradTop + args.OverlayPad + smallGap;
-        using (var paint = new SKPaint { Color = new SKColor(255, 255, 255, 230), IsAntialias = true })
+        using (var shader = SKShader.CreateLinearGradient(
+            new SKPoint(0, boxY),
+            new SKPoint(0, args.ImageHeight - args.OverlayPad),
+            new[] { new SKColor(255, 255, 255, 200), new SKColor(255, 255, 255, 60) },
+            new float[] { 0f, 1f },
+            SKShaderTileMode.Clamp))
+        using (var paint = new SKPaint { Shader = shader, IsAntialias = true })
         {
             canvas.DrawRoundRect(
                 new SKRect(args.Pad, boxY, args.ImageWidth - args.Pad, args.ImageHeight - args.OverlayPad),
@@ -894,10 +925,19 @@ public static class PostGenerator
                 args.SourceFont, paint);
         }
 
-        // Header
+        // Header with font fitting
         var headerFont = CreateFont(Config.FONT_ARENA, args.ImageWidth * 0.038f, SKFontStyleWeight.Bold);
         var headerY = boxY + smallGap + args.SourceBoxHeight + args.GapMed;
-        var headerLines = WrapText(canvas, args.Title, headerFont, args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40);
+        var availableH = args.ImageHeight - args.OverlayPad - innerPadding - headerY - args.ImageWidth * 0.05f;
+        var maxTextW = args.ImageWidth - args.Pad * 2 - innerPadding * 2 - 40;
+        var headerLines = WrapText(canvas, args.Title, headerFont, maxTextW);
+        
+        while (headerLines.Count * (headerFont.GetMetrics().Descent - headerFont.GetMetrics().Ascent + args.LineGap) - args.LineGap > availableH && headerFont.Size > args.ImageWidth * 0.02f)
+        {
+            headerFont = CreateFont(Config.FONT_ARENA, headerFont.Size * 0.85f, SKFontStyleWeight.Bold);
+            args.LineGap *= 0.9f;
+            headerLines = WrapText(canvas, args.Title, headerFont, maxTextW);
+        }
 
         foreach (var (line, i) in headerLines.Take(2).Select((l, idx) => (l, idx)))
         {
