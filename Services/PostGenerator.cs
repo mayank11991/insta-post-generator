@@ -343,22 +343,38 @@ public static class PostGenerator
             canvas.Restore();
         }
 
-        // Red wave text block - smaller wave
+        // Red wave text block - SWEEPING WAVE (S-shape: top-right up, bottom-left down)
         using (var wavePath = new SKPath())
         {
-            var waveAmplitude = W * 0.02f;  // Reduced from 0.035f
+            var waveAmplitude = W * 0.045f;  // Larger for visible sweep
             var waveStartX = cardLeft;
             var waveEndX = cardRight;
             var waveY = textBlockTop;
             
-            wavePath.MoveTo(waveStartX, waveY + waveAmplitude);
+            // Start at left, go UP at right (top-right sweep up)
+            wavePath.MoveTo(waveStartX, waveY + waveAmplitude * 0.3f);
             
-            var ctrlX1 = waveStartX + cardWidth * 0.25f;
-            var ctrlY1 = waveY - waveAmplitude * 0.5f;  // Less upward curve
-            var ctrlX2 = waveStartX + cardWidth * 0.75f;
-            var ctrlY2 = waveY + waveAmplitude * 0.8f;  // Reduced from 1.5f
+            // First curve: sweep UP at right side
+            var ctrlX1 = waveStartX + cardWidth * 0.35f;
+            var ctrlY1 = waveY - waveAmplitude * 0.8f;   // Upward at top-right
+            var ctrlX2 = waveStartX + cardWidth * 0.65f;
+            var ctrlY2 = waveY + waveAmplitude * 1.2f;  // Down through middle
+            var midX = waveStartX + cardWidth * 0.5f;
+            var midY = waveY + waveAmplitude * 0.2f;
             
-            wavePath.CubicTo(ctrlX1, ctrlY1, ctrlX2, ctrlY2, waveEndX, waveY + waveAmplitude * 0.3f);
+            wavePath.CubicTo(ctrlX1, ctrlY1, ctrlX2, ctrlY2, midX, midY);
+            
+            // Second curve: sweep DOWN at left side (bottom-left sweep down)
+            ctrlX1 = midX + cardWidth * 0.15f;
+            ctrlY1 = waveY - waveAmplitude * 0.3f;
+            ctrlX2 = waveEndX - cardWidth * 0.35f;
+            ctrlY2 = waveY + waveAmplitude * 2.0f;  // Deep down at bottom-left
+            var endX = waveEndX;
+            var endY = waveY + waveAmplitude * 0.5f;
+            
+            wavePath.CubicTo(ctrlX1, ctrlY1, ctrlX2, ctrlY2, endX, endY);
+            
+            // Close path to bottom of card
             wavePath.LineTo(waveEndX, cardBottom);
             wavePath.LineTo(waveStartX, cardBottom);
             wavePath.Close();
@@ -369,7 +385,7 @@ public static class PostGenerator
             }
         }
 
-        // Source badge (pill-shaped, at bottom-left of photo area)
+        // Source badge (pill-shaped, INSIDE photo area at bottom-left, NOT touching wave)
         var badgeText = args.SourceName;
         var badgePaddingX = W * 0.03f;
         var badgePaddingY = W * 0.01f;
@@ -379,7 +395,7 @@ public static class PostGenerator
         var badgeRadius = badgeHeight / 2;
         
         var badgeX = photoLeft + W * 0.02f;
-        var badgeY = photoBottom - badgeHeight - W * 0.015f;  // Positioned at bottom of photo, above wave
+        var badgeY = photoBottom - badgeHeight - W * 0.05f;  // Well inside photo area (5% gap from photo bottom)
         
         using (var badgePaint = new SKPaint { Color = electricRed, IsAntialias = true })
         {
@@ -394,7 +410,7 @@ public static class PostGenerator
             canvas.DrawText(badgeText, badgeX + badgePaddingX, textY, args.SourceFont, badgeTextPaint);
         }
 
-        // Top left: 360buzz_ branding - "360" in YELLOW, "buzz_" in RED
+        // Top left: 360buzz_ branding - "360" in YELLOW (thicker stroke), "buzz_" in RED
         var brandX = pad;
         var brandY = pad + W * 0.02f;
         var brandFont = args.BrandFont;
@@ -404,9 +420,9 @@ public static class PostGenerator
         var textBuzz = "buzz_";
         var w360 = brandFont.MeasureText(text360);
         
-        var strokeW = Math.Max(2, W * 0.003f);
+        var strokeW = Math.Max(3, W * 0.004f);  // Thicker stroke for visibility
         
-        // Draw "360" with black stroke then YELLOW fill
+        // Draw "360" with thick black stroke then YELLOW fill
         using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
         using (var fillPaint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
         {
@@ -414,7 +430,7 @@ public static class PostGenerator
             canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, fillPaint);
         }
         
-        // Draw "buzz_" with black stroke then RED fill
+        // Draw "buzz_" with thick black stroke then RED fill
         using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
         using (var fillPaint = new SKPaint { Color = electricRed, IsAntialias = true })
         {
@@ -422,11 +438,7 @@ public static class PostGenerator
             canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, fillPaint);
         }
 
-        // Top right: wireframe globe
-        var globeSize = W * 0.065f;
-        var globeX = W - pad - globeSize;
-        var globeY = pad + W * 0.01f;
-        DrawGlobeIcon(canvas, globeX, globeY, globeSize);
+        // Globe icon REMOVED per request
 
         // Main title text (left-aligned in red wave)
         var textPadding = W * 0.05f;
