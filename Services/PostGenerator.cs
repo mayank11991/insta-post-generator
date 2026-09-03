@@ -215,14 +215,40 @@ public static class PostGenerator
             return;
         }
 
-        // Draw template at its native size (no resize) - centered if different
-        var tx = (W - templateBitmap.Width) / 2;
-        var ty = (H - templateBitmap.Height) / 2;
-        canvas.DrawBitmap(templateBitmap, tx, ty);
+        // Ensure template has alpha (RGBA)
+        if (templateBitmap.ColorType != SKColorType.Rgba8888)
+        {
+            var mutable = templateBitmap.Copy(SKColorType.Rgba8888);
+            templateBitmap.Dispose();
+            templateBitmap = mutable;
+        }
+
+        // Make dark background transparent so article image shows through
+        // Template dark color is ~#181616 (24,22,22) - make similar colors transparent
+        var pixels = templateBitmap.Pixels;
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            var c = pixels[i];
+            var r = c.Red;
+            var g = c.Green;
+            var b = c.Blue;
+            var a = c.Alpha;
+            
+            // Dark background (~#181616) -> make transparent
+            if (r <= 40 && g <= 40 && b <= 40 && a > 0)
+            {
+                pixels[i] = SKColors.Transparent; // Fully transparent
+            }
+            // Keep red area (#FF3131) and other colored elements opaque
+        }
+        templateBitmap.Pixels = pixels;
+
+        // Draw template at native size (0,0 since canvas = template size)
+        canvas.DrawBitmap(templateBitmap, 0, 0);
 
         // Template layout for template11 (1080x1440):
-        // Red area starts at ~62% from top
-        var redAreaTop = H * 0.62f;
+        // Red area starts at ~1140px (y=1140/1440 = 0.79)
+        var redAreaTop = H * 0.79f;
         var redAreaBottom = H;
         var redAreaHeight = redAreaBottom - redAreaTop;
         
@@ -230,6 +256,31 @@ public static class PostGenerator
         var textLeft = pad + W * 0.04f;
         var textRight = W - pad - W * 0.04f;
         var textMaxWidth = textRight - textLeft;
+
+        // 360buzz_ branding at top-left (on top of template)
+        var brandX = pad;
+        var brandY = pad + W * 0.02f;
+        var text360 = "360";
+        var textBuzz = "buzz_";
+        var w360 = args.BrandFont.MeasureText(text360);
+        var strokeW = Math.Max(3, W * 0.004f);
+        var brandMetrics = args.BrandFont.GetMetrics();
+
+        // Draw "360" with thick black stroke then YELLOW fill
+        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
+        using (var fillPaint = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true })
+        {
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
+        }
+
+        // Draw "buzz_" with thick black stroke then RED fill
+        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
+        using (var fillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true })
+        {
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
+        }
 
         // Source name in red area (top of red area)
         var sourceY = redAreaTop + redAreaHeight * 0.15f;
@@ -270,31 +321,6 @@ public static class PostGenerator
         {
             using var tsPaint = new SKPaint { Color = new SKColor(255, 255, 255, 200), IsAntialias = true };
             canvas.DrawText(timestamp, textLeft, tsY - args.TimestampFont.GetMetrics().Ascent, args.TimestampFont, tsPaint);
-        }
-
-        // 360buzz_ branding at top-left (above template)
-        var brandX = pad;
-        var brandY = pad + W * 0.02f;
-        var text360 = "360";
-        var textBuzz = "buzz_";
-        var w360 = args.BrandFont.MeasureText(text360);
-        var strokeW = Math.Max(3, W * 0.004f);
-        var brandMetrics = args.BrandFont.GetMetrics();
-
-        // Draw "360" with thick black stroke then YELLOW fill
-        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true }) // #FFD700
-        {
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
-        }
-
-        // Draw "buzz_" with thick black stroke then RED fill
-        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true }) // #E50012
-        {
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
         }
     }
 
