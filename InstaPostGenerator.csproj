@@ -51,8 +51,11 @@
 		<MauiFont Include="Resources\Fonts\*.ttf" />
 		<MauiFont Include="Resources\Fonts\*.otf" />
 
-		<!-- Raw Assets (also copy the logo and template) -->
+<!-- Raw Assets (also copy the logo and templates) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="Resources\Images\template11.png" LogicalName="template11.png" />
+		<MauiAsset Include="Resources\Images\template12.png" LogicalName="template12.png" />
+		<MauiAsset Include="Resources\Images\template13.png" LogicalName="template13.png" />
 		<MauiAsset Include="config.json" LogicalName="config.json" />
 	</ItemGroup>
 
