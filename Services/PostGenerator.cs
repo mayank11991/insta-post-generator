@@ -49,7 +49,14 @@ public static class PostGenerator
             canvas.DrawBitmap(fitted, offsetX, offsetY);
         }
 
-        // Test template
+        // Apply heavy blur to background for frosted glass effect
+        using (var blurPaint = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(60, 60) })
+        {
+            canvas.SaveLayer(blurPaint);
+            canvas.Restore();
+        }
+
+        // Test template (fonts will be calculated in CreateFromTemplateAsync based on red area)
         var headingFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.052f, SKFontStyleWeight.Bold);
         var sourceFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
         var timestampFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
@@ -114,7 +121,7 @@ public static class PostGenerator
         {
             canvas.Clear(new SKColor(0, 0, 0));
             
-// Draw article image filling canvas - HIGH QUALITY
+            // Draw article image filling canvas - HIGH QUALITY
             if (articleBitmap != null)
             {
                 var scale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
@@ -126,6 +133,13 @@ public static class PostGenerator
                 var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
                 canvas.DrawBitmap(fitted, offsetX, offsetY);
+            }
+            
+            // Apply heavy blur to background for frosted glass effect
+            using (var blurPaint = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(60, 60) })
+            {
+                canvas.SaveLayer(blurPaint);
+                canvas.Restore();
             }
         }
 
@@ -275,40 +289,46 @@ public static class PostGenerator
         var redAreaBottom = H;
         var redAreaHeight = redAreaBottom - redAreaTop;
         
+        // Font sizes based on RED AREA height (not full canvas)
+        // This ensures text fills the red area properly
+        var sourceFont = CreateFont(Config.FONT_ARENA, redAreaHeight * 0.12f, SKFontStyleWeight.SemiBold);
+        var headingFont = CreateFont(Config.FONT_ARENA, redAreaHeight * 0.22f, SKFontStyleWeight.Bold);
+        
         var pad = args.Pad;
         var textLeft = pad + W * 0.04f;
         var textRight = W - pad - W * 0.04f;
         var textMaxWidth = textRight - textLeft;
 
         // Source name in red area (top of red area)
-        var sourceY = redAreaTop + redAreaHeight * 0.15f;
+        var sourceY = redAreaTop + redAreaHeight * 0.12f;
         using (var sourcePaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
         {
-            canvas.DrawText(args.SourceName, textLeft, sourceY - args.SourceFont.GetMetrics().Ascent, args.SourceFont, sourcePaint);
+            canvas.DrawText(args.SourceName, textLeft, sourceY - sourceFont.GetMetrics().Ascent, sourceFont, sourcePaint);
         }
 
         // Title in red area (below source)
-        var titleTop = sourceY + args.SourceFont.GetMetrics().Descent - args.SourceFont.GetMetrics().Ascent + W * 0.02f;
-        var availableHeight = redAreaBottom - titleTop - W * 0.03f;
-        var lineHeight = args.HeadingFont.GetMetrics().Descent - args.HeadingFont.GetMetrics().Ascent + W * 0.008f;
+        var titleTop = sourceY + sourceFont.GetMetrics().Descent - sourceFont.GetMetrics().Ascent + redAreaHeight * 0.03f;
+        var availableHeight = redAreaBottom - titleTop - redAreaHeight * 0.05f;
+        var lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + redAreaHeight * 0.015f;
 
-        var titleLines = WrapText(canvas, args.Title, args.HeadingFont, textMaxWidth);
+        var titleLines = WrapText(canvas, args.Title, headingFont, textMaxWidth);
         if (!titleLines.Any()) titleLines = new List<string> { args.Title };
 
-        while (titleLines.Count * lineHeight > availableHeight && args.HeadingFont.Size > W * 0.022f)
+        // Auto-shrink font to fit red area
+        while (titleLines.Count * lineHeight > availableHeight && headingFont.Size > redAreaHeight * 0.08f)
         {
-            args.HeadingFont = CreateFont(Config.FONT_ARENA, args.HeadingFont.Size * 0.85f, SKFontStyleWeight.Bold);
-            lineHeight = args.HeadingFont.GetMetrics().Descent - args.HeadingFont.GetMetrics().Ascent + W * 0.008f;
-            titleLines = WrapText(canvas, args.Title, args.HeadingFont, textMaxWidth);
+            headingFont = CreateFont(Config.FONT_ARENA, headingFont.Size * 0.9f, SKFontStyleWeight.Bold);
+            lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + redAreaHeight * 0.015f;
+            titleLines = WrapText(canvas, args.Title, headingFont, textMaxWidth);
         }
 
         var currentY = titleTop;
         using var titlePaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
         foreach (var line in titleLines)
         {
-            if (currentY + args.HeadingFont.GetMetrics().Descent > redAreaBottom - W * 0.02f)
+            if (currentY + headingFont.GetMetrics().Descent > redAreaBottom - redAreaHeight * 0.03f)
                 break;
-            canvas.DrawText(line, textLeft, currentY - args.HeadingFont.GetMetrics().Ascent, args.HeadingFont, titlePaint);
+            canvas.DrawText(line, textLeft, currentY - headingFont.GetMetrics().Ascent, headingFont, titlePaint);
             currentY += lineHeight;
         }
     }
