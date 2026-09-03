@@ -39,20 +39,22 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#101216" />
+		<MauiImage Include="Resources\Raw\template11.png" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#101216" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Include="Resources\Images\*" Exclude="Resources\Images\template11.png" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*.ttf" />
 		<MauiFont Include="Resources\Fonts\*.otf" />
 
-		<!-- Raw Assets (also copy the logo) -->
+		<!-- Raw Assets (also copy the logo and template) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="Resources\Images\template11.png" LogicalName="template11.png" />
 		<MauiAsset Include="config.json" LogicalName="config.json" />
 	</ItemGroup>
 

@@ -96,7 +96,7 @@ public class MainPageViewModel : INotifyPropertyChanged
             var outputDir = Config.GetOutputDir();
             Directory.CreateDirectory(outputDir);
             var testPath = Path.Combine(outputDir, "test_image.png");
-            PostGenerator.GenerateTestImage(testPath);
+            await PostGenerator.GenerateTestImageAsync(testPath);
             StatusMessage = $"Test image saved: {testPath}";
             await ShowToastAsync($"Test image saved to:\n{testPath}");
         }

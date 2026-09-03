@@ -1,6 +1,7 @@
 using SkiaSharp;
 using InstaPostGenerator.Models;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace InstaPostGenerator.Services;
 
@@ -17,7 +18,7 @@ public static class PostGenerator
         return metrics;
     }
 
-    public static void GenerateTestImage(string outputPath)
+    public static async Task GenerateTestImageAsync(string outputPath)
     {
         var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
@@ -47,7 +48,7 @@ public static class PostGenerator
             ImageHeight = Config.EXPORT_HEIGHT
         };
 
-        CreateFromTemplate(templateArgs);
+        await CreateFromTemplateAsync(templateArgs);
 
         // Save
         using var image = SKImage.FromBitmap(bitmap);
@@ -129,7 +130,7 @@ public static class PostGenerator
             ImageHeight = Config.EXPORT_HEIGHT
         };
 
-        CreateFromTemplate(templateArgs);
+        await CreateFromTemplateAsync(templateArgs);
 
         // Save
         using var image = SKImage.FromBitmap(canvasBitmap);
@@ -185,28 +186,25 @@ public static class PostGenerator
     }
 
     // Load template and draw content on it
-    private static void CreateFromTemplate(TemplateArgs args)
+    private static async Task CreateFromTemplateAsync(TemplateArgs args)
     {
         var canvas = args.Canvas;
         var W = args.ImageWidth;
         var H = args.ImageHeight;
 
-        // Load template image from resources
+        // Load template image from app package (Resources/Raw/template11.png)
         SKBitmap templateBitmap = null;
-#if ANDROID
         try
         {
-            var context = Android.App.Application.Context;
-            using var stream = context.Assets?.Open("Images/template11.png");
+            using var stream = await FileSystem.OpenAppPackageFileAsync("template11.png");
             if (stream != null)
             {
-                using var memoryStream = new System.IO.MemoryStream();
-                stream.CopyTo(memoryStream);
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
                 templateBitmap = SKBitmap.Decode(SKData.CreateCopy(memoryStream.ToArray()));
             }
         }
         catch { }
-#endif
 
         if (templateBitmap == null)
         {
