@@ -37,10 +37,10 @@ public static class PostGenerator
         }
         catch { }
 
-        // Draw test image filling canvas - HIGH QUALITY
+        // Draw test image - CONTAIN MODE (entire image visible, no crop)
         if (testImage != null)
         {
-            var scale = Math.Max((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
+            var scale = Math.Min((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
             var newW = Math.Max(1, (int)(testImage.Width * scale));
             var newH = Math.Max(1, (int)(testImage.Height * scale));
             var fitted = testImage.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
@@ -121,14 +121,13 @@ public static class PostGenerator
         {
             canvas.Clear(new SKColor(0, 0, 0));
             
-            // Draw article image filling canvas - HIGH QUALITY
+            // Draw article image - CONTAIN MODE (entire image visible, no crop)
             if (articleBitmap != null)
             {
-                var scale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
+                var scale = Math.Min((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
                 var newW = Math.Max(1, (int)(articleBitmap.Width * scale));
                 var newH = Math.Max(1, (int)(articleBitmap.Height * scale));
                 
-                // Use default high quality
                 var fitted = articleBitmap.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
                 var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
