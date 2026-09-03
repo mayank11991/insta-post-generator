@@ -37,7 +37,7 @@ public static class PostGenerator
         }
         catch { }
 
-        // Draw test image filling canvas
+        // Draw test image filling canvas - HIGH QUALITY
         if (testImage != null)
         {
             var scale = Math.Max((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
@@ -114,12 +114,14 @@ public static class PostGenerator
         {
             canvas.Clear(new SKColor(0, 0, 0));
             
-            // Draw article image filling canvas
+// Draw article image filling canvas - HIGH QUALITY
             if (articleBitmap != null)
             {
                 var scale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
                 var newW = Math.Max(1, (int)(articleBitmap.Width * scale));
                 var newH = Math.Max(1, (int)(articleBitmap.Height * scale));
+                
+                // Use default high quality
                 var fitted = articleBitmap.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
                 var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
@@ -360,22 +362,27 @@ public static class PostGenerator
         var lines = new List<string>();
         foreach (var rawLine in text.Split('\n'))
         {
-            var words = rawLine.Split(' ');
+            var words = rawLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var line = "";
+            
             foreach (var word in words)
             {
-                var candidate = (line + " " + word).Trim();
-                if (font.MeasureText(candidate) <= maxWidth || string.IsNullOrEmpty(line))
+                var candidate = string.IsNullOrEmpty(line) ? word : line + " " + word;
+                var measuredWidth = font.MeasureText(candidate);
+                
+                if (measuredWidth <= maxWidth || string.IsNullOrEmpty(line))
                 {
                     line = candidate;
                 }
                 else
                 {
-                    lines.Add(line);
+                    if (!string.IsNullOrEmpty(line))
+                        lines.Add(line);
                     line = word;
                 }
             }
-            lines.Add(line);
+            if (!string.IsNullOrEmpty(line))
+                lines.Add(line);
         }
         return lines;
     }
