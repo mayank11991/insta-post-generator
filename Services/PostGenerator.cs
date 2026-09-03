@@ -26,6 +26,29 @@ public static class PostGenerator
         // Dark background
         canvas.Clear(new SKColor(0, 0, 0));
 
+        // Download a test image for background
+        SKBitmap testImage = null;
+        try
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+            var imageBytes = await httpClient.GetByteArrayAsync("https://picsum.photos/1080/1440");
+            testImage = SKBitmap.Decode(imageBytes);
+        }
+        catch { }
+
+        // Draw test image filling canvas
+        if (testImage != null)
+        {
+            var scale = Math.Max((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
+            var newW = Math.Max(1, (int)(testImage.Width * scale));
+            var newH = Math.Max(1, (int)(testImage.Height * scale));
+            var fitted = testImage.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
+            var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
+            var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
+            canvas.DrawBitmap(fitted, offsetX, offsetY);
+        }
+
         // Test template
         var headingFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.052f, SKFontStyleWeight.Bold);
         var sourceFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
@@ -255,31 +278,6 @@ public static class PostGenerator
         var textRight = W - pad - W * 0.04f;
         var textMaxWidth = textRight - textLeft;
 
-        // 360buzz_ branding at top-left (on top of template)
-        var brandX = pad;
-        var brandY = pad + W * 0.02f;
-        var text360 = "360";
-        var textBuzz = "buzz_";
-        var w360 = args.BrandFont.MeasureText(text360);
-        var strokeW = Math.Max(3, W * 0.004f);
-        var brandMetrics = args.BrandFont.GetMetrics();
-
-        // Draw "360" with thick black stroke then YELLOW fill
-        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true })
-        {
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
-        }
-
-        // Draw "buzz_" with thick black stroke then RED fill
-        using (var strokePaint = new SKPaint { Color = SKColors.Black, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true })
-        {
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
-        }
-
         // Source name in red area (top of red area)
         var sourceY = redAreaTop + redAreaHeight * 0.15f;
         using (var sourcePaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
@@ -310,15 +308,6 @@ public static class PostGenerator
                 break;
             canvas.DrawText(line, textLeft, currentY - args.HeadingFont.GetMetrics().Ascent, args.HeadingFont, titlePaint);
             currentY += lineHeight;
-        }
-
-        // Timestamp
-        var timestamp = DateTime.Now.ToString("dd MMM yyyy \u2022 HH:mm");
-        var tsY = currentY + W * 0.018f;
-        if (tsY + args.TimestampFont.GetMetrics().Descent < redAreaBottom - W * 0.015f)
-        {
-            using var tsPaint = new SKPaint { Color = new SKColor(255, 255, 255, 200), IsAntialias = true };
-            canvas.DrawText(timestamp, textLeft, tsY - args.TimestampFont.GetMetrics().Ascent, args.TimestampFont, tsPaint);
         }
     }
 
