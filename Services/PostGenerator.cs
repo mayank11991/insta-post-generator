@@ -31,11 +31,8 @@ public static class PostGenerator
         
         // Draw blurred background (no image)
         DrawBlurredBackground(canvas, false);
-        
-        // Draw branding
-        DrawBranding(canvas);
 
-        // Test template
+        // Test template (branding is drawn inside CreateTemplate7)
         var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.052f, SKFontStyleWeight.Bold);
         var sourceFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
         var timestampFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.018f, SKFontStyleWeight.Normal);
@@ -128,6 +125,8 @@ public static class PostGenerator
 
         // Draw heavy blur + dark overlay on background
         DrawBlurredBackground(drawCanvas, articleBitmap != null);
+
+        // NOTE: Branding is now drawn inside CreateTemplate7 (top-left: 360buzz_)
 
         // Draw new template
         var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.052f, SKFontStyleWeight.Bold);
@@ -265,58 +264,6 @@ public static class PostGenerator
         canvas.DrawPath(path, paint);
     }
 
-    // Draw branding (360buzz_)
-    private static void DrawBranding(SKCanvas canvas)
-    {
-        var pad = Config.IMAGE_WIDTH * PAD_RATIO;
-        var lineHeight = Config.IMAGE_WIDTH * 0.055f;
-        var lineWidth = Math.Max(6, Config.IMAGE_WIDTH * 0.008f);
-        var linesX = pad;
-        var linesY = pad;
-
-        // Green line
-        using (var paint = new SKPaint { Color = Config.BRAND_GREEN, IsAntialias = true })
-        {
-            canvas.DrawRoundRect(new SKRect(linesX, linesY, linesX + lineWidth, linesY + lineHeight), lineWidth / 2, lineWidth / 2, paint);
-        }
-
-        // Red line
-        using (var paint = new SKPaint { Color = Config.BRAND_RED, IsAntialias = true })
-        {
-            canvas.DrawRoundRect(
-                new SKRect(linesX + lineWidth + Config.IMAGE_WIDTH * 0.012f, linesY,
-                          linesX + 2 * lineWidth + Config.IMAGE_WIDTH * 0.012f, linesY + lineHeight),
-                lineWidth / 2, lineWidth / 2, paint);
-        }
-
-        // "360" in YELLOW with black stroke, "buzz" in WHITE with black stroke
-        var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.042f, SKFontStyleWeight.Bold);
-        var brandX = linesX + 2 * lineWidth + Config.IMAGE_WIDTH * 0.012f + Config.IMAGE_WIDTH * 0.02f;
-        var metrics = brandFont.GetMetrics();
-        var brandY = linesY + (lineHeight - brandFont.Size) / 2 - Config.IMAGE_WIDTH * 0.008f - metrics.Ascent;
-
-        var text360 = "360";
-        var textBuzz = "buzz";
-        var w360 = brandFont.MeasureText(text360);
-        var strokeWidth = Math.Max(2, Config.IMAGE_WIDTH * 0.003f);
-
-        // Draw "360" with black stroke then yellow fill
-        using (var strokePaint = new SKPaint { Color = Config.BLACK, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeWidth })
-        using (var fillPaint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
-        {
-            canvas.DrawText(text360, brandX, brandY, brandFont, strokePaint);
-            canvas.DrawText(text360, brandX, brandY, brandFont, fillPaint);
-        }
-
-        // Draw "buzz" with black stroke then white fill
-        using (var strokePaint = new SKPaint { Color = Config.BLACK, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeWidth })
-        using (var fillPaint = new SKPaint { Color = Config.WHITE, IsAntialias = true })
-        {
-            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, strokePaint);
-            canvas.DrawText(textBuzz, brandX + w360, brandY, brandFont, fillPaint);
-        }
-    }
-
     // New Template 7: Central Card with Photo Top, Red Wave Bottom
     private static void CreateTemplate7(TemplateArgs args)
     {
@@ -396,10 +343,10 @@ public static class PostGenerator
             canvas.Restore();
         }
 
-        // Red wave text block
+        // Red wave text block - smaller wave
         using (var wavePath = new SKPath())
         {
-            var waveAmplitude = W * 0.035f;
+            var waveAmplitude = W * 0.02f;  // Reduced from 0.035f
             var waveStartX = cardLeft;
             var waveEndX = cardRight;
             var waveY = textBlockTop;
@@ -407,11 +354,11 @@ public static class PostGenerator
             wavePath.MoveTo(waveStartX, waveY + waveAmplitude);
             
             var ctrlX1 = waveStartX + cardWidth * 0.25f;
-            var ctrlY1 = waveY - waveAmplitude;
+            var ctrlY1 = waveY - waveAmplitude * 0.5f;  // Less upward curve
             var ctrlX2 = waveStartX + cardWidth * 0.75f;
-            var ctrlY2 = waveY + waveAmplitude * 1.5f;
+            var ctrlY2 = waveY + waveAmplitude * 0.8f;  // Reduced from 1.5f
             
-            wavePath.CubicTo(ctrlX1, ctrlY1, ctrlX2, ctrlY2, waveEndX, waveY + waveAmplitude * 0.5f);
+            wavePath.CubicTo(ctrlX1, ctrlY1, ctrlX2, ctrlY2, waveEndX, waveY + waveAmplitude * 0.3f);
             wavePath.LineTo(waveEndX, cardBottom);
             wavePath.LineTo(waveStartX, cardBottom);
             wavePath.Close();
@@ -422,7 +369,7 @@ public static class PostGenerator
             }
         }
 
-        // Source badge (pill-shaped, overlaps photo/wave boundary)
+        // Source badge (pill-shaped, at bottom-left of photo area)
         var badgeText = args.SourceName;
         var badgePaddingX = W * 0.03f;
         var badgePaddingY = W * 0.01f;
@@ -432,7 +379,7 @@ public static class PostGenerator
         var badgeRadius = badgeHeight / 2;
         
         var badgeX = photoLeft + W * 0.02f;
-        var badgeY = photoBottom - badgeHeight / 2 - W * 0.01f;
+        var badgeY = photoBottom - badgeHeight - W * 0.015f;  // Positioned at bottom of photo, above wave
         
         using (var badgePaint = new SKPaint { Color = electricRed, IsAntialias = true })
         {
@@ -447,18 +394,32 @@ public static class PostGenerator
             canvas.DrawText(badgeText, badgeX + badgePaddingX, textY, args.SourceFont, badgeTextPaint);
         }
 
-        // Top left: 360buzz_ branding
+        // Top left: 360buzz_ branding - "360" in YELLOW, "buzz_" in RED
         var brandX = pad;
         var brandY = pad + W * 0.02f;
-        var brandText = "360buzz_";
-        var brandMetrics = args.BrandFont.GetMetrics();
+        var brandFont = args.BrandFont;
+        var brandMetrics = brandFont.GetMetrics();
+        
+        var text360 = "360";
+        var textBuzz = "buzz_";
+        var w360 = brandFont.MeasureText(text360);
         
         var strokeW = Math.Max(2, W * 0.003f);
+        
+        // Draw "360" with black stroke then YELLOW fill
         using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = pureWhite, IsAntialias = true })
+        using (var fillPaint = new SKPaint { Color = Config.BRAND_YELLOW, IsAntialias = true })
         {
-            canvas.DrawText(brandText, brandX, brandY - brandMetrics.Ascent, args.BrandFont, strokePaint);
-            canvas.DrawText(brandText, brandX, brandY - brandMetrics.Ascent, args.BrandFont, fillPaint);
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, strokePaint);
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, fillPaint);
+        }
+        
+        // Draw "buzz_" with black stroke then RED fill
+        using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
+        using (var fillPaint = new SKPaint { Color = electricRed, IsAntialias = true })
+        {
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, strokePaint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, fillPaint);
         }
 
         // Top right: wireframe globe
