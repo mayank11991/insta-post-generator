@@ -34,50 +34,6 @@ public static class PostGenerator
             BottomPaddingRatio = 0.03f,
             ApplyBlur = true,
             BlurRadius = 60
-        },
-        ["template12"] = new TemplateConfig
-        {
-            FileName = "template12.png",
-            DarkBgThreshold = -1,  // No transparency - solid red template
-            RedAreaTopRatio = 0.0f,  // Full template
-            TextColor = SKColors.White,
-            SourceYRatio = 0.15f,
-            TitleYRatio = 0.25f,
-            SourceFontSizeRatio = 0.10f,
-            TitleFontSizeRatio = 0.18f,
-            MinTitleFontSizeRatio = 0.07f,
-            TextLeftRatio = 0.06f,
-            TextRightRatio = 0.06f,
-            SourceYOffsetRatio = 0.15f,
-            TitleYOffsetRatio = 0.25f,
-            AvailableHeightRatio = 0.85f,
-            LineHeightRatio = 0.018f,
-            MinTitleFontRatio = 0.06f,
-            BottomPaddingRatio = 0.05f,
-            ApplyBlur = false,
-            BlurRadius = 0
-        },
-        ["template13"] = new TemplateConfig
-        {
-            FileName = "template13.png",
-            DarkBgThreshold = 50,  // Make dark bottom transparent
-            RedAreaTopRatio = 0.69f,  // Red accent at 69%
-            TextColor = SKColors.White,
-            SourceYRatio = 0.10f,
-            TitleYRatio = 0.35f,
-            SourceFontSizeRatio = 0.10f,
-            TitleFontSizeRatio = 0.18f,
-            MinTitleFontSizeRatio = 0.07f,
-            TextLeftRatio = 0.08f,
-            TextRightRatio = 0.08f,
-            SourceYOffsetRatio = 0.10f,
-            TitleYOffsetRatio = 0.35f,
-            AvailableHeightRatio = 0.80f,
-            LineHeightRatio = 0.018f,
-            MinTitleFontRatio = 0.06f,
-            BottomPaddingRatio = 0.05f,
-            ApplyBlur = true,
-            BlurRadius = 40
         }
     };
 
@@ -227,10 +183,8 @@ public static class PostGenerator
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
 
-        // Randomly select template from available ones
-        var availableTemplates = templateIds?.Where(id => id >= 11 && id <= 13).Select(id => $"template{id}").ToArray() 
-            ?? new[] { "template11", "template12", "template13" };
-        var selectedTemplate = template != 0 ? $"template{template}" : availableTemplates[_random.Next(availableTemplates.Length)];
+        // Always use template11
+        var selectedTemplate = "template11";
 
         var templateArgs = new TemplateArgs
         {
