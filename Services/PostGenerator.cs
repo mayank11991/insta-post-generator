@@ -19,17 +19,17 @@ public static class PostGenerator
 
     public static void GenerateTestImage(string outputPath)
     {
-        var bitmap = new SKBitmap(Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT);
+        var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
 
         // Dark background
         canvas.Clear(new SKColor(0, 0, 0));
 
         // Test template
-        var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.052f, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
-        var timestampFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.018f, SKFontStyleWeight.Normal);
-        var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.042f, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.052f, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
+        var timestampFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
+        var brandFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.042f, SKFontStyleWeight.Bold);
 
         var templateArgs = new TemplateArgs
         {
@@ -41,10 +41,10 @@ public static class PostGenerator
             SourceFont = sourceFont,
             BrandFont = brandFont,
             TimestampFont = timestampFont,
-            Pad = Config.IMAGE_WIDTH * 0.04f,
-            CornerRadius = Config.IMAGE_WIDTH * 0.045f,
-            ImageWidth = Config.IMAGE_WIDTH,
-            ImageHeight = Config.IMAGE_HEIGHT
+            Pad = Config.EXPORT_WIDTH * 0.04f,
+            CornerRadius = Config.EXPORT_WIDTH * 0.045f,
+            ImageWidth = Config.EXPORT_WIDTH,
+            ImageHeight = Config.EXPORT_HEIGHT
         };
 
         CreateFromTemplate(templateArgs);
@@ -84,21 +84,21 @@ public static class PostGenerator
 
         var displayTitle = title;
 
-        // Create canvas with template
-        var canvasBitmap = new SKBitmap(Config.IMAGE_WIDTH, Config.IMAGE_HEIGHT);
+        // Create canvas with template (EXPORT dimensions = template size)
+        var canvasBitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using (var canvas = new SKCanvas(canvasBitmap))
         {
             canvas.Clear(new SKColor(0, 0, 0));
             
-            // Draw article image in top area (will be clipped by template)
+            // Draw article image filling canvas
             if (articleBitmap != null)
             {
-                var scale = Math.Max((float)Config.IMAGE_WIDTH / articleBitmap.Width, (float)Config.IMAGE_HEIGHT / articleBitmap.Height);
+                var scale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
                 var newW = Math.Max(1, (int)(articleBitmap.Width * scale));
                 var newH = Math.Max(1, (int)(articleBitmap.Height * scale));
                 var fitted = articleBitmap.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
-                var offsetX = (Config.IMAGE_WIDTH - newW) / 2;
-                var offsetY = (Config.IMAGE_HEIGHT - newH) / 2;
+                var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
+                var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
                 canvas.DrawBitmap(fitted, offsetX, offsetY);
             }
         }
@@ -106,10 +106,10 @@ public static class PostGenerator
         using var drawCanvas = new SKCanvas(canvasBitmap);
 
         // Draw template-based layout
-        var headingFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.052f, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
-        var timestampFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.018f, SKFontStyleWeight.Normal);
-        var brandFont = CreateFont(Config.FONT_ARENA, Config.IMAGE_WIDTH * 0.042f, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.052f, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.022f, SKFontStyleWeight.SemiBold);
+        var timestampFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
+        var brandFont = CreateFont(Config.FONT_ARENA, Config.EXPORT_WIDTH * 0.042f, SKFontStyleWeight.Bold);
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
 
@@ -123,10 +123,10 @@ public static class PostGenerator
             SourceFont = sourceFont,
             BrandFont = brandFont,
             TimestampFont = timestampFont,
-            Pad = Config.IMAGE_WIDTH * 0.04f,
-            CornerRadius = Config.IMAGE_WIDTH * 0.045f,
-            ImageWidth = Config.IMAGE_WIDTH,
-            ImageHeight = Config.IMAGE_HEIGHT
+            Pad = Config.EXPORT_WIDTH * 0.04f,
+            CornerRadius = Config.EXPORT_WIDTH * 0.045f,
+            ImageWidth = Config.EXPORT_WIDTH,
+            ImageHeight = Config.EXPORT_HEIGHT
         };
 
         CreateFromTemplate(templateArgs);
