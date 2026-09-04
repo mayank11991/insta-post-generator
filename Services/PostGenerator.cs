@@ -380,15 +380,13 @@ public static class PostGenerator
         var titlePaintYellow = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true };
         var titlePaintOrange = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true };
         
-        // Start from bottom of title area (just above source)
-        var currentY = titleBottom;
+        // Draw title from top down (correct line order)
+        var currentY = overlayTop + margin;
         
         foreach (var line in titleLines)
         {
-            if (currentY - lineHeight < overlayTop + margin)
+            if (currentY + lineHeight > titleBottom - margin)
                 break;
-
-            currentY -= lineHeight;
 
             // Draw each word with random color (white/yellow/orange)
             var words = line.Split(' ');
@@ -412,7 +410,7 @@ public static class PostGenerator
                 currentX += wordWidth + spaceWidth;
             }
             
-            currentY -= lineHeight;
+            currentY += lineHeight;
         }
     }
 
