@@ -69,9 +69,9 @@
 
   "image": {
     "width": 2160,
-    "height": 2880,
+    "height": 2700,
     "export_width": 1080,
-    "export_height": 1440,
+    "export_height": 1350,
     "brand_green": "#D1FF02",
     "brand_yellow": "#FFD700",
     "brand_red": "#DC2626",

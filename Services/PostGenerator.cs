@@ -10,15 +10,15 @@ public static class PostGenerator
     private static readonly Random _random = new();
     private static readonly Regex DevanagariRegex = new(@"[\u0900-\u097F]");
 
-    // Template configuration - only template11
+    // Template configuration - only template14
     private static readonly Dictionary<string, TemplateConfig> _templates = new()
     {
-        ["template11"] = new TemplateConfig
+        ["template14"] = new TemplateConfig
         {
-            FileName = "template11.png",
-            DarkBgThreshold = 40,  // Make dark bg transparent
-            ApplyBlur = true,
-            BlurRadius = 60
+            FileName = "template14.png",
+            DarkBgThreshold = -1,  // No transparency - solid template
+            ApplyBlur = false,
+            BlurRadius = 0
         }
     };
 
@@ -34,13 +34,13 @@ public static class PostGenerator
         return metrics;
     }
 
-    public static async Task GenerateTestImageAsync(string outputPath, string templateName = "template11")
+    public static async Task GenerateTestImageAsync(string outputPath, string templateName = "template14")
     {
         var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
 
-        // Dark background
-        canvas.Clear(new SKColor(0, 0, 0));
+        // White background for template14
+        canvas.Clear(new SKColor(255, 255, 255));
 
         // Download a test image for background
         SKBitmap testImage = null;
@@ -48,7 +48,7 @@ public static class PostGenerator
         {
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
-            var imageBytes = await httpClient.GetByteArrayAsync("https://picsum.photos/1080/1440");
+            var imageBytes = await httpClient.GetByteArrayAsync("https://picsum.photos/1080/1350");
             testImage = SKBitmap.Decode(imageBytes);
         }
         catch { }
@@ -63,17 +63,6 @@ public static class PostGenerator
             var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
             var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
             canvas.DrawBitmap(fitted, offsetX, offsetY);
-        }
-
-        // Apply heavy blur to background for frosted glass effect (if template supports it)
-        var config = _templates.GetValueOrDefault(templateName, _templates["template11"]);
-        if (config.ApplyBlur)
-        {
-            using (var blurPaint = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(config.BlurRadius, config.BlurRadius) })
-            {
-                canvas.SaveLayer(blurPaint);
-                canvas.Restore();
-            }
         }
 
         var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.055f, SKFontStyleWeight.Bold);
@@ -139,7 +128,8 @@ public static class PostGenerator
         var canvasBitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using (var canvas = new SKCanvas(canvasBitmap))
         {
-            canvas.Clear(new SKColor(0, 0, 0));
+            // White background for template14
+            canvas.Clear(new SKColor(255, 255, 255));
             
             // Draw article image - CONTAIN MODE (entire image visible, no crop)
             if (articleBitmap != null)
@@ -153,13 +143,6 @@ public static class PostGenerator
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
                 canvas.DrawBitmap(fitted, offsetX, offsetY);
             }
-            
-            // Apply heavy blur to background for frosted glass effect
-            using (var blurPaint = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(60, 60) })
-            {
-                canvas.SaveLayer(blurPaint);
-                canvas.Restore();
-            }
         }
 
         using var drawCanvas = new SKCanvas(canvasBitmap);
@@ -172,8 +155,8 @@ public static class PostGenerator
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
 
-        // Always use template11
-        var selectedTemplate = "template11";
+        // Always use template14
+        var selectedTemplate = "template14";
 
         var templateArgs = new TemplateArgs
         {

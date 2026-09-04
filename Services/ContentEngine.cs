@@ -94,7 +94,7 @@ public static class ContentEngine
                 "Rate this trailer 1-10!",
                 "Tag your movie buddy!"
             },
-            TemplateIds = new[] { 11 }
+            TemplateIds = new[] { 14 }
         },
         ["india_news"] = new CategoryInfo
         {
@@ -143,7 +143,7 @@ public static class ContentEngine
                 "Tag someone who needs to see this!",
                 "Stay informed — follow for more!"
             },
-            TemplateIds = new[] { 11 }
+            TemplateIds = new[] { 14 }
         },
         ["india_politics"] = new CategoryInfo
         {
@@ -191,7 +191,7 @@ public static class ContentEngine
                 "Tag someone who follows politics!",
                 "Stay informed — follow for more!"
             },
-            TemplateIds = new[] { 11 }
+            TemplateIds = new[] { 14 }
         }
     };
 
