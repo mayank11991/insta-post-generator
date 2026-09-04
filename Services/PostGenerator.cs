@@ -10,18 +10,6 @@ public static class PostGenerator
     private static readonly Random _random = new();
     private static readonly Regex DevanagariRegex = new(@"[\u0900-\u097F]");
 
-    // Template configuration - only template14
-    private static readonly Dictionary<string, TemplateConfig> _templates = new()
-    {
-        ["template14"] = new TemplateConfig
-        {
-            FileName = "template14.png",
-            DarkBgThreshold = -1,  // No transparency - solid template
-            ApplyBlur = false,
-            BlurRadius = 0
-        }
-    };
-
     // Font name constants
     private const string FONT_LEAGUE_SPARTAN = "LeagueSpartan-Bold.otf";
     private const string FONT_ARENA = "Arena-rvwaK.ttf";
@@ -34,12 +22,12 @@ public static class PostGenerator
         return metrics;
     }
 
-    public static async Task GenerateTestImageAsync(string outputPath, string templateName = "template14")
+    public static async Task GenerateTestImageAsync(string outputPath)
     {
         var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
 
-        // White background for template14
+        // White background
         canvas.Clear(new SKColor(255, 255, 255));
 
         // Download a test image for background
@@ -53,10 +41,10 @@ public static class PostGenerator
         }
         catch { }
 
-        // Draw test image - CONTAIN MODE (entire image visible, no crop)
+        // Draw test image - COVER MODE (fill entire canvas)
         if (testImage != null)
         {
-            var scale = Math.Min((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
+            var scale = Math.Max((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
             var newW = Math.Max(1, (int)(testImage.Width * scale));
             var newH = Math.Max(1, (int)(testImage.Height * scale));
             var fitted = testImage.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
@@ -74,7 +62,7 @@ public static class PostGenerator
         {
             Canvas = canvas,
             Article = null,
-            Title = "Breaking News: This is a Test Title for the New Template Layout",
+            Title = "Breaking News: This is a Test Title for the Custom Template Layout",
             SourceName = "TEST SOURCE",
             HeadingFont = headingFont,
             SourceFont = sourceFont,
@@ -83,11 +71,10 @@ public static class PostGenerator
             Pad = Config.EXPORT_WIDTH * 0.04f,
             CornerRadius = Config.EXPORT_WIDTH * 0.045f,
             ImageWidth = Config.EXPORT_WIDTH,
-            ImageHeight = Config.EXPORT_HEIGHT,
-            TemplateName = templateName
+            ImageHeight = Config.EXPORT_HEIGHT
         };
 
-        await CreateFromTemplateAsync(templateArgs);
+        await CreateCustomTemplateAsync(templateArgs);
 
         // Save
         using var image = SKImage.FromBitmap(bitmap);
@@ -124,17 +111,17 @@ public static class PostGenerator
 
         var displayTitle = title;
 
-        // Create canvas with template (EXPORT dimensions = template size)
+        // Create canvas with custom template
         var canvasBitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using (var canvas = new SKCanvas(canvasBitmap))
         {
-            // White background for template14
+            // White background fallback
             canvas.Clear(new SKColor(255, 255, 255));
             
-            // Draw article image - CONTAIN MODE (entire image visible, no crop)
+            // Draw article image - COVER MODE (fill entire canvas)
             if (articleBitmap != null)
             {
-                var scale = Math.Min((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
+                var scale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
                 var newW = Math.Max(1, (int)(articleBitmap.Width * scale));
                 var newH = Math.Max(1, (int)(articleBitmap.Height * scale));
                 
@@ -147,16 +134,13 @@ public static class PostGenerator
 
         using var drawCanvas = new SKCanvas(canvasBitmap);
 
-        // Draw template-based layout
+        // Draw custom template
         var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.055f, SKFontStyleWeight.Bold);
         var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.025f, SKFontStyleWeight.Bold);
         var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
         var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.042f, SKFontStyleWeight.Bold);
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
-
-        // Always use template14
-        var selectedTemplate = "template14";
 
         var templateArgs = new TemplateArgs
         {
@@ -171,11 +155,10 @@ public static class PostGenerator
             Pad = Config.EXPORT_WIDTH * 0.04f,
             CornerRadius = Config.EXPORT_WIDTH * 0.045f,
             ImageWidth = Config.EXPORT_WIDTH,
-            ImageHeight = Config.EXPORT_HEIGHT,
-            TemplateName = selectedTemplate
+            ImageHeight = Config.EXPORT_HEIGHT
         };
 
-        await CreateFromTemplateAsync(templateArgs);
+        await CreateCustomTemplateAsync(templateArgs);
 
         // Save
         using var image = SKImage.FromBitmap(canvasBitmap);
@@ -200,15 +183,6 @@ public static class PostGenerator
         public float CornerRadius { get; set; }
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
-        public string TemplateName { get; set; }
-    }
-
-    private class TemplateConfig
-    {
-        public string FileName { get; set; }
-        public int DarkBgThreshold { get; set; }
-        public bool ApplyBlur { get; set; }
-        public int BlurRadius { get; set; }
     }
 
     private static SKFont CreateFont(string fontFamily, float size, SKFontStyleWeight weight)
@@ -239,207 +213,105 @@ public static class PostGenerator
         return new SKFont(typeface, size);
     }
 
-    // Load template and draw content on it - NEW LAYOUT: No red bar, source with red pill, title in red
-    private static async Task CreateFromTemplateAsync(TemplateArgs args)
+    // Custom template: Full image cover, bottom 30% semi-transparent overlay, text on top
+    private static async Task CreateCustomTemplateAsync(TemplateArgs args)
     {
         var canvas = args.Canvas;
         var W = args.ImageWidth;
         var H = args.ImageHeight;
-        var templateName = args.TemplateName ?? "template11";
-        var config = _templates.GetValueOrDefault(templateName, _templates["template11"]);
 
-        // Load template image from app package
-        SKBitmap templateBitmap = null;
-        try
-        {
-            using var stream = await FileSystem.OpenAppPackageFileAsync(config.FileName);
-            if (stream != null)
-            {
-                using var memoryStream = new MemoryStream();
-                await stream.CopyToAsync(memoryStream);
-                templateBitmap = SKBitmap.Decode(SKData.CreateCopy(memoryStream.ToArray()));
-            }
-        }
-        catch { }
-
-        if (templateBitmap == null)
-        {
-            DrawFallbackLayout(args);
-            return;
-        }
-
-        // Ensure template has alpha (RGBA)
-        if (templateBitmap.ColorType != SKColorType.Rgba8888)
-        {
-            var mutable = templateBitmap.Copy(SKColorType.Rgba8888);
-            templateBitmap.Dispose();
-            templateBitmap = mutable;
-        }
-
-        // Make dark background transparent so article image shows through
-        if (config.DarkBgThreshold >= 0)
-        {
-            var pixels = templateBitmap.Pixels;
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                var c = pixels[i];
-                var r = c.Red;
-                var g = c.Green;
-                var b = c.Blue;
-                var a = c.Alpha;
-                
-                if (r <= config.DarkBgThreshold && g <= config.DarkBgThreshold && b <= config.DarkBgThreshold && a > 0)
-                {
-                    pixels[i] = SKColors.Transparent;
-                }
-            }
-            templateBitmap.Pixels = pixels;
-        }
-
-        // Draw template at native size (template has transparent dark areas, red elements remain)
-        canvas.DrawBitmap(templateBitmap, 0, 0);
-
-        // Apply blur if configured
-        if (config.ApplyBlur)
-        {
-            using (var blurPaint = new SKPaint { ImageFilter = SKImageFilter.CreateBlur(config.BlurRadius, config.BlurRadius) })
-            {
-                canvas.SaveLayer(blurPaint);
-                canvas.Restore();
-            }
-        }
-
-        // ============ NEW LAYOUT ============
-        // No red bar at bottom
-        // Source: white text with RED pill background (at top-left of safe area)
-        // Title: RED text, large, left-aligned, multi-line (bottom area)
-        
         // Colors
-        var electricRed = new SKColor(0xE5, 0x00, 0x12);  // #E50012
+        var electricRed = new SKColor(0xE5, 0x00, 0x12);  // #E50012 - Orange/Red
+        var brightYellow = new SKColor(0xFF, 0xD7, 0x00); // #FFD700 - Yellow
         var pureWhite = SKColors.White;
         var deepBlack = new SKColor(0x00, 0x00, 0x00);
 
         // Use League Spartan font for all text
         var sourceFont = args.SourceFont;
         var headingFont = args.HeadingFont;
+        var brandFont = args.BrandFont;
 
         // Safe margins
         var margin = W * 0.05f;
+
+        // ========== BRANDING: "360" in YELLOW, "buzz_" in ORANGE (Top-Left) ==========
+        var text360 = "360";
+        var textBuzz = "buzz_";
+        var w360 = brandFont.MeasureText(text360);
+        var strokeW = Math.Max(2, W * 0.003f);
+        var brandMetrics = brandFont.GetMetrics();
+
+        var brandX = margin;
+        var brandY = margin + H * 0.02f;
+
+        // Draw "360" with black stroke then YELLOW fill
+        using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
+        using (var fillPaint = new SKPaint { Color = brightYellow, IsAntialias = true })
+        {
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, strokePaint);
+            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, fillPaint);
+        }
+
+        // Draw "buzz_" with black stroke then ORANGE fill
+        using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
+        using (var fillPaint = new SKPaint { Color = electricRed, IsAntialias = true })
+        {
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, strokePaint);
+            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, fillPaint);
+        }
+
+        // ========== BOTTOM 30% SEMI-TRANSPARENT OVERLAY ==========
+        var overlayTop = H * 0.70f;  // Start at 70% from top (30% from bottom)
+        var overlayHeight = H - overlayTop;
+        
+        // Semi-transparent dark overlay (dark with 70% opacity)
+        using (var overlayPaint = new SKPaint { Color = new SKColor(0, 0, 0, 180), IsAntialias = true })
+        {
+            canvas.DrawRect(new SKRect(0, overlayTop, W, H), overlayPaint);
+        }
+
+        // ========== SOURCE NAME (Top of overlay area, left) ==========
+        var sourceMargin = margin;
+        var sourceY = overlayTop + margin;
+
+        using (var sourcePaint = new SKPaint { Color = pureWhite, IsAntialias = true })
+        {
+            canvas.DrawText(args.SourceName, sourceMargin, sourceY - args.SourceFont.GetMetrics().Ascent, args.SourceFont, sourcePaint);
+        }
+
+        // ========== TITLE (Below source, large RED text) ==========
         var textLeft = margin;
         var textRight = W - margin;
         var textMaxWidth = textRight - textLeft;
 
-        // ========== SOURCE (Top-Left) ==========
-        // White text with RED pill background
-        var sourceText = args.SourceName;
-        var sourcePaddingX = W * 0.025f;
-        var sourcePaddingY = W * 0.012f;
-        var sourceTextWidth = sourceFont.MeasureText(sourceText);
-        var sourcePillWidth = sourceTextWidth + sourcePaddingX * 2;
-        var sourcePillHeight = (int)(sourceFont.GetMetrics().Descent - sourceFont.GetMetrics().Ascent + sourcePaddingY * 2);
-        var sourcePillRadius = sourcePillHeight / 2f;
-
-        var sourceX = margin;
-        var sourceY = margin + H * 0.02f;
-
-        // Draw red pill background
-        using (var pillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true })
-        {
-            canvas.DrawRoundRect(
-                new SKRect(sourceX, sourceY, sourceX + sourcePillWidth, sourceY + sourcePillHeight),
-                sourcePillRadius, sourcePillRadius, pillPaint);
-        }
-
-        // Draw white source text on pill
-        using (var textPaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
-        {
-            var textY = sourceY + sourcePaddingY - sourceFont.GetMetrics().Ascent;
-            canvas.DrawText(sourceText, sourceX + sourcePaddingX, textY, sourceFont, textPaint);
-        }
-
-        // ========== TITLE (Bottom area, left-aligned, RED text) ==========
-        // Use headingFont from args (already sized)
+        // Wrap title
         var titleLines = WrapText(canvas, args.Title, headingFont, textMaxWidth);
         if (!titleLines.Any()) titleLines = new List<string> { args.Title };
 
-        // Calculate available space for title (bottom 45% of image)
-        var titleAreaTop = H * 0.55f;
-        var availableHeight = H - titleAreaTop - margin * 2;
-        var lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + W * 0.01f;
+        // Available space for title
+        var titleTop = sourceY + args.SourceFont.GetMetrics().Descent - args.SourceFont.GetMetrics().Ascent + margin;
+        var availableHeight = H - margin - titleTop;
+        var lineHeight = args.HeadingFont.GetMetrics().Descent - args.HeadingFont.GetMetrics().Ascent + W * 0.01f;
 
         // Auto-shrink font to fit
-        while (titleLines.Count * lineHeight > availableHeight && headingFont.Size > W * 0.03f)
+        var currentHeadingFont = args.HeadingFont;
+        while (titleLines.Count * lineHeight > (H - margin - titleTop) && currentHeadingFont.Size > W * 0.03f)
         {
-            headingFont = CreateFont(FONT_LEAGUE_SPARTAN, headingFont.Size * 0.9f, SKFontStyleWeight.Bold);
-            lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + W * 0.01f;
-            titleLines = WrapText(canvas, args.Title, headingFont, textMaxWidth);
+            currentHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, currentHeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
+            lineHeight = currentHeadingFont.GetMetrics().Descent - currentHeadingFont.GetMetrics().Ascent + W * 0.01f;
+            titleLines = WrapText(canvas, args.Title, currentHeadingFont, W - margin * 2);
         }
 
-        // Draw title lines in RED, bottom-aligned area
-        var currentY = titleAreaTop;
+        // Draw title lines in RED
+        var currentY = titleTop;
         using var titlePaint = new SKPaint { Color = electricRed, IsAntialias = true };
         
         foreach (var line in titleLines)
         {
-            if (currentY + headingFont.GetMetrics().Descent > H - margin)
+            if (currentY + currentHeadingFont.GetMetrics().Descent > H - margin)
                 break;
-            canvas.DrawText(line, margin, currentY - headingFont.GetMetrics().Ascent, headingFont, titlePaint);
+            canvas.DrawText(line, margin, currentY - currentHeadingFont.GetMetrics().Ascent, currentHeadingFont, titlePaint);
             currentY += lineHeight;
-        }
-    }
-
-    private static void DrawFallbackLayout(TemplateArgs args)
-    {
-        var canvas = args.Canvas;
-        var fbW = args.ImageWidth;
-        var fbH = args.ImageHeight;
-        var fbMargin = fbW * 0.05f;
-
-        // Simple fallback: dark top, source pill, red title
-        var fbSourceFont = CreateFont(FONT_LEAGUE_SPARTAN, fbW * 0.025f, SKFontStyleWeight.Bold);
-        var fbHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, fbW * 0.055f, SKFontStyleWeight.Bold);
-
-        var fbElectricRed = new SKColor(0xE5, 0x00, 0x12);
-
-        // Source pill
-        var fbSourceText = args.SourceName;
-        var fbSourcePaddingX = fbW * 0.025f;
-        var fbSourcePaddingY = fbW * 0.012f;
-        var fbSourceTextWidth = fbSourceFont.MeasureText(args.SourceName);
-        var fbPillWidth = fbSourceTextWidth + fbSourcePaddingX * 2;
-        var fbPillHeight = (int)(fbSourceFont.GetMetrics().Descent - fbSourceFont.GetMetrics().Ascent + fbSourcePaddingY * 2);
-        var fbPillRadius = fbPillHeight / 2f;
-
-        var fbSourceX = fbMargin;
-        var fbSourceY = fbMargin;
-
-        using (var pillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true })
-        {
-            canvas.DrawRoundRect(
-                new SKRect(fbSourceX, fbSourceY, fbSourceX + fbPillWidth, fbSourceY + fbPillHeight),
-                fbPillRadius, fbPillRadius, pillPaint);
-        }
-
-        using (var textPaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
-        {
-            var fbTextY = fbSourceY + fbSourcePaddingY - fbSourceFont.GetMetrics().Ascent;
-            canvas.DrawText(args.SourceName, fbSourceX + fbSourcePaddingX, fbTextY, fbSourceFont, textPaint);
-        }
-
-        // Title in red
-        var fbTitleLines = WrapText(canvas, args.Title, args.HeadingFont, fbW - fbMargin * 2);
-        if (!fbTitleLines.Any()) fbTitleLines = new List<string> { args.Title };
-
-        var fbLineHeight = args.HeadingFont.GetMetrics().Descent - args.HeadingFont.GetMetrics().Ascent + fbW * 0.01f;
-        var fbCurrentY = fbH * 0.5f;
-        using var fbTitlePaint = new SKPaint { Color = fbElectricRed, IsAntialias = true };
-        
-        foreach (var line in fbTitleLines)
-        {
-            if (fbCurrentY + args.HeadingFont.GetMetrics().Descent > fbH - fbMargin)
-                break;
-            canvas.DrawText(line, fbMargin, fbCurrentY - args.HeadingFont.GetMetrics().Ascent, args.HeadingFont, fbTitlePaint);
-            fbCurrentY += fbLineHeight;
         }
     }
 
