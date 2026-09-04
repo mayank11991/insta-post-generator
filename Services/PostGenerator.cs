@@ -355,7 +355,7 @@ public static class PostGenerator
         var textRight = W - margin;
         var textMaxWidth = textRight - textLeft;
 
-        // Wrap title
+        // Wrap title with initial font
         var titleLines = WrapText(canvas, args.Title, args.HeadingFont, textMaxWidth);
         if (!titleLines.Any()) titleLines = new List<string> { args.Title };
 
@@ -363,12 +363,12 @@ public static class PostGenerator
         var titleBottom = sourceY - margin;
         var availableHeight = titleBottom - overlayTop;
 
-        // Create local font that can be shrunk
-        var localHeadingFont = args.HeadingFont;
+        // Create local font that can be shrunk - start slightly smaller for better fit
+        var localHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, args.HeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
         var lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
 
         // Auto-shrink font to fit within overlay area
-        while (titleLines.Count * lineHeight > availableHeight && localHeadingFont.Size > W * 0.03f)
+        while (titleLines.Count * lineHeight > availableHeight && localHeadingFont.Size > W * 0.025f)
         {
             localHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, localHeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
             lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
