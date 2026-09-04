@@ -341,13 +341,13 @@ public static class PostGenerator
             canvas.DrawRect(new SKRect(0, overlayTop, W, H), overlayPaint);
         }
 
-        // ========== SOURCE NAME (Left, at top of overlay) ==========
+        // ========== SOURCE NAME (Left, at BOTTOM of overlay) ==========
         var sourceMargin = margin;
-        var sourceY = overlayTop + margin;
+        var sourceY = H - margin;  // Bottom of screen
 
         using (var sourcePaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
         {
-            canvas.DrawText(args.SourceName, sourceMargin, sourceY - args.SourceFont.GetMetrics().Ascent, args.SourceFont, sourcePaint);
+            canvas.DrawText(args.SourceName, margin, sourceY - args.SourceFont.GetMetrics().Ascent, args.SourceFont, sourcePaint);
         }
 
         // ========== TITLE (Above source, mixed white/yellow/orange) ==========
@@ -363,24 +363,25 @@ public static class PostGenerator
         var titleBottom = sourceY - margin;
         var availableHeight = titleBottom - overlayTop;
 
-        // Use reasonable font size - not too large
-        var lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + W * 0.008f;
+        // Create local font that can be shrunk
+        var localHeadingFont = args.HeadingFont;
+        var lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
 
         // Auto-shrink font to fit within overlay area
-        while (titleLines.Count * lineHeight > availableHeight && headingFont.Size > W * 0.035f)
+        while (titleLines.Count * lineHeight > availableHeight && localHeadingFont.Size > W * 0.03f)
         {
-            headingFont = CreateFont(FONT_LEAGUE_SPARTAN, headingFont.Size * 0.9f, SKFontStyleWeight.Bold);
-            lineHeight = headingFont.GetMetrics().Descent - headingFont.GetMetrics().Ascent + W * 0.008f;
-            titleLines = WrapText(canvas, args.Title, headingFont, W - margin * 2);
+            localHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, localHeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
+            lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
+            titleLines = WrapText(canvas, args.Title, localHeadingFont, W - margin * 2);
         }
 
-        // Draw title from bottom up (bottom-aligned)
+        // Draw title from bottom up (bottom-aligned, going upward)
         var titlePaintWhite = new SKPaint { Color = SKColors.White, IsAntialias = true };
         var titlePaintYellow = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true };
         var titlePaintOrange = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true };
         
-        // Start from bottom of title area
-        var currentY = sourceY - margin;
+        // Start from bottom of title area (just above source)
+        var currentY = titleBottom;
         
         foreach (var line in titleLines)
         {
@@ -394,8 +395,8 @@ public static class PostGenerator
             float currentX = margin;
             foreach (var word in words)
             {
-                var wordWidth = headingFont.MeasureText(word);
-                var spaceWidth = headingFont.MeasureText(" ");
+                var wordWidth = localHeadingFont.MeasureText(word);
+                var spaceWidth = localHeadingFont.MeasureText(" ");
                 
                 // Random color: 40% white, 30% yellow, 30% orange
                 var rand = _random.NextDouble();
@@ -407,7 +408,7 @@ public static class PostGenerator
                 else
                     wordPaint = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true };
                 
-                canvas.DrawText(word, currentX, currentY - headingFont.GetMetrics().Ascent, headingFont, wordPaint);
+                canvas.DrawText(word, currentX, currentY - localHeadingFont.GetMetrics().Ascent, localHeadingFont, wordPaint);
                 currentX += wordWidth + spaceWidth;
             }
             
