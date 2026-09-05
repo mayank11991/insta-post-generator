@@ -10,6 +10,16 @@ public static class PostGenerator
     private static readonly Random _random = new();
     private static readonly Regex DevanagariRegex = new(@"[\u0900-\u097F]");
 
+    // 5 color combos for title text - randomly picked per post
+    private static readonly SKColor[][] TitleColorCombos = new[]
+    {
+        new[] { SKColors.White, new SKColor(0xFF, 0xA5, 0x00), new SKColor(0xFF, 0xFF, 0x00) },         // white + orange + yellow
+        new[] { SKColors.White, new SKColor(0x07, 0x77, 0xF6) },                                         // white + #0777F6
+        new[] { SKColors.White, new SKColor(0xEA, 0xFF, 0x00) },                                         // white + #EAFF00
+        new[] { SKColors.White, new SKColor(0xE5, 0x00, 0x6A) },                                         // white + #E5006A
+        new[] { SKColors.White, new SKColor(0xFF, 0xFF, 0x00), new SKColor(0x22, 0x7D, 0xFC) },          // white + yellow + #227DFC
+    };
+
     // Font name constants
     private const string FONT_LEAGUE_SPARTAN = "LeagueSpartan-Bold.otf";
     private const string FONT_ARENA = "Arena-rvwaK.ttf";
@@ -27,8 +37,8 @@ public static class PostGenerator
         var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
 
-        // White background
-        canvas.Clear(new SKColor(255, 255, 255));
+        // Dark background first (fills gaps around centered image)
+        canvas.Clear(new SKColor(0x10, 0x10, 0x10));
 
         // Download a test image for background
         SKBitmap testImage = null;
@@ -41,7 +51,7 @@ public static class PostGenerator
         }
         catch { }
 
-        // Draw test image - CONTAIN MODE (center fitted, entire image visible in HD)
+            // Draw test image - CONTAIN MODE (center fitted, full quality, entire image visible)
         if (testImage != null)
         {
             var scale = Math.Min((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
@@ -53,42 +63,13 @@ public static class PostGenerator
             canvas.DrawBitmap(fitted, offsetX, offsetY);
         }
 
-        // Apply top and bottom gradient blur effects
-        var topBlurHeight = Config.EXPORT_HEIGHT * 0.25f;
-        var bottomBlurHeight = Config.EXPORT_HEIGHT * 0.30f;
         var W = Config.EXPORT_WIDTH;
         var H = Config.EXPORT_HEIGHT;
-        
-        // Top gradient blur (transparent to dark)
-        using (var topBlurPaint = new SKPaint())
-        {
-            var topGradient = SKShader.CreateLinearGradient(
-                new SKPoint(0, 0),
-                new SKPoint(0, topBlurHeight),
-                new[] { new SKColor(0, 0, 0, 160), new SKColor(0, 0, 0, 0) },
-                new float[] { 0f, 1f },
-                SKShaderTileMode.Clamp);
-            topBlurPaint.Shader = topGradient;
-            canvas.DrawRect(new SKRect(0, 0, W, topBlurHeight), topBlurPaint);
-        }
-        
-        // Bottom gradient blur (dark to transparent)
-        using (var bottomBlurPaint = new SKPaint())
-        {
-            var bottomGradient = SKShader.CreateLinearGradient(
-                new SKPoint(0, H - bottomBlurHeight),
-                new SKPoint(0, H),
-                new[] { new SKColor(0, 0, 0, 0), new SKColor(0, 0, 0, 200) },
-                new float[] { 0f, 1f },
-                SKShaderTileMode.Clamp);
-            bottomBlurPaint.Shader = bottomGradient;
-            canvas.DrawRect(new SKRect(0, H - bottomBlurHeight, W, H), bottomBlurPaint);
-        }
 
-        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.055f, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.025f, SKFontStyleWeight.Bold);
-        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
-        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.042f, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.055f, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.025f, SKFontStyleWeight.Bold);
+        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.018f, SKFontStyleWeight.Normal);
+        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.042f, SKFontStyleWeight.Bold);
 
         var templateArgs = new TemplateArgs
         {
@@ -149,10 +130,10 @@ public static class PostGenerator
         var H = Config.EXPORT_HEIGHT;
         using (var canvas = new SKCanvas(canvasBitmap))
         {
-            // White background fallback
-            canvas.Clear(new SKColor(255, 255, 255));
+            // Dark background first (fills gaps around centered image)
+            canvas.Clear(new SKColor(0x10, 0x10, 0x10));
             
-            // Draw article image - CONTAIN MODE (center fitted, entire image visible in HD)
+            // Draw article image - CONTAIN MODE (center fitted, full quality, entire image visible)
             if (articleBitmap != null)
             {
                 var scale = Math.Min((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
@@ -163,36 +144,6 @@ public static class PostGenerator
                 var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
                 canvas.DrawBitmap(fitted, offsetX, offsetY);
-            }
-            
-            // Apply top and bottom gradient blur effects
-            var topBlurHeight = H * 0.25f;
-            var bottomBlurHeight = H * 0.30f;
-            
-            // Top gradient blur (transparent to dark)
-            using (var topBlurPaint = new SKPaint())
-            {
-                var topGradient = SKShader.CreateLinearGradient(
-                    new SKPoint(0, 0),
-                    new SKPoint(0, topBlurHeight),
-                    new[] { new SKColor(0, 0, 0, 160), new SKColor(0, 0, 0, 0) },
-                    new float[] { 0f, 1f },
-                    SKShaderTileMode.Clamp);
-                topBlurPaint.Shader = topGradient;
-                canvas.DrawRect(new SKRect(0, 0, W, topBlurHeight), topBlurPaint);
-            }
-            
-            // Bottom gradient blur (dark to transparent)
-            using (var bottomBlurPaint = new SKPaint())
-            {
-                var bottomGradient = SKShader.CreateLinearGradient(
-                    new SKPoint(0, H - bottomBlurHeight),
-                    new SKPoint(0, H),
-                    new[] { new SKColor(0, 0, 0, 0), new SKColor(0, 0, 0, 200) },
-                    new float[] { 0f, 1f },
-                    SKShaderTileMode.Clamp);
-                bottomBlurPaint.Shader = bottomGradient;
-                canvas.DrawRect(new SKRect(0, H - bottomBlurHeight, W, H), bottomBlurPaint);
             }
         }
 
@@ -277,140 +228,166 @@ public static class PostGenerator
         return new SKFont(typeface, size);
     }
 
-    // Custom template: Center-fitted HD image, top/bottom gradient blur, text at bottom 30%
+    // Custom template: Center-fitted HD image, bottom 1/3 dark fade, red source badge, white headline
     private static async Task CreateCustomTemplateAsync(TemplateArgs args)
     {
         var canvas = args.Canvas;
         var W = args.ImageWidth;
         var H = args.ImageHeight;
 
-        // Colors
-        var electricRed = new SKColor(0xE5, 0x00, 0x12);  // #E50012 - Orange/Red
-        var brightYellow = new SKColor(0xFF, 0xD7, 0x00); // #FFD700 - Yellow
-        var pureWhite = SKColors.White;
-        var deepBlack = new SKColor(0x00, 0x00, 0x00);
-
-        // Use League Spartan font for all text
-        var sourceFont = args.SourceFont;
-        var headingFont = args.HeadingFont;
-        var brandFont = args.BrandFont;
-
-        // Safe margins
         var margin = W * 0.05f;
 
-        // ========== BRANDING: "360" in YELLOW, "buzz_" in ORANGE (Top-Left) ==========
+        // ========== YELLOW BORDER (2px around entire post) ==========
+        using (var borderPaint = new SKPaint { Color = new SKColor(0xFF, 0xFF, 0x00), IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2f })
+        {
+            canvas.DrawRect(1, 1, W - 2, H - 2, borderPaint);
+        }
+
+        // ========== APP NAME: Two vertical lines + "360" orange + "buzz_" yellow ==========
+        var appFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.032f, SKFontStyleWeight.Normal);
+        var appMetrics = appFont.GetMetrics();
+        var lineThick = Math.Max(2, W * 0.005f);
+        var lineTop = margin;
+        var lineBottom = margin + H * 0.035f;
+
+        // Two small vertical lines first (one orange, one yellow)
+        using (var linePaint1 = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true, StrokeWidth = lineThick, StrokeCap = SKStrokeCap.Round })
+        {
+            canvas.DrawLine(margin, lineTop, margin, lineBottom, linePaint1);
+        }
+        var secondLineX = margin + lineThick + W * 0.008f;
+        using (var linePaint2 = new SKPaint { Color = new SKColor(0xFF, 0xFF, 0x00), IsAntialias = true, StrokeWidth = lineThick, StrokeCap = SKStrokeCap.Round })
+        {
+            canvas.DrawLine(secondLineX, lineTop, secondLineX, lineBottom, linePaint2);
+        }
+
+        // Vertically center text relative to the lines
+        var lineCenterY = (lineTop + lineBottom) / 2f;
+        var textBaselineY = lineCenterY - (appMetrics.Ascent + appMetrics.Descent) / 2f;
+
+        // Text starts after the lines
+        var textStartX = secondLineX + lineThick + W * 0.012f;
         var text360 = "360";
         var textBuzz = "buzz_";
-        var w360 = brandFont.MeasureText(text360);
-        var strokeW = Math.Max(2, W * 0.003f);
-        var brandMetrics = brandFont.GetMetrics();
+        var w360 = appFont.MeasureText(text360);
 
-        var brandX = margin;
-        var brandY = margin + H * 0.02f;
-
-        // Draw "360" with black stroke then YELLOW fill
-        using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true })
+        // "360" in orange
+        using (var paint360 = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true })
         {
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, strokePaint);
-            canvas.DrawText(text360, brandX, brandY - brandMetrics.Ascent, brandFont, fillPaint);
+            canvas.DrawText(text360, textStartX, textBaselineY, appFont, paint360);
         }
 
-        // Draw "buzz_" with black stroke then ORANGE fill
-        using (var strokePaint = new SKPaint { Color = deepBlack, IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = strokeW })
-        using (var fillPaint = new SKPaint { Color = new SKColor(0xE5, 0x00, 0x12), IsAntialias = true })
+        // "buzz_" in yellow
+        using (var paintBuzz = new SKPaint { Color = new SKColor(0xFF, 0xFF, 0x00), IsAntialias = true })
         {
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, strokePaint);
-            canvas.DrawText(textBuzz, brandX + w360, brandY - brandMetrics.Ascent, brandFont, fillPaint);
+            canvas.DrawText(textBuzz, textStartX + w360, textBaselineY, appFont, paintBuzz);
         }
 
-        // ========== TEXT AT BOTTOM 30% AREA ==========
-        var overlayTop = H * 0.70f;  // Bottom 30% starts here
-        var overlayHeight = H - overlayTop;
+        // ========== BOTTOM 1/3: Semi-transparent black blurry fade ==========
+        var overlayTop = H * 0.667f;
 
-        // Semi-transparent dark overlay at bottom 30% (gradient)
+        // Multi-stop gradient for smoother fade
         using (var overlayPaint = new SKPaint())
         {
             var overlayGradient = SKShader.CreateLinearGradient(
-                new SKPoint(0, overlayTop),
+                new SKPoint(0, overlayTop - H * 0.05f),
                 new SKPoint(0, H),
-                new[] { new SKColor(0, 0, 0, 0), new SKColor(0, 0, 0, 200) },
-                new float[] { 0f, 1f },
+                new[] {
+                    new SKColor(0, 0, 0, 0),
+                    new SKColor(0, 0, 0, 60),
+                    new SKColor(0, 0, 0, 160),
+                    new SKColor(0, 0, 0, 220)
+                },
+                new float[] { 0f, 0.2f, 0.5f, 1f },
                 SKShaderTileMode.Clamp);
             overlayPaint.Shader = overlayGradient;
-            canvas.DrawRect(new SKRect(0, overlayTop, W, H), overlayPaint);
+            canvas.DrawRect(new SKRect(0, overlayTop - H * 0.05f, W, H), overlayPaint);
         }
 
-        // ========== SOURCE NAME (Left, at BOTTOM of overlay) ==========
-        var sourceMargin = margin;
-        var sourceY = H - margin;  // Bottom of screen
+        // ========== RED SOURCE BADGE (top of bottom overlay) ==========
+        var sourceText = args.SourceName.ToUpperInvariant();
+        var sourceBadgeFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.028f, SKFontStyleWeight.Bold);
+        var sourceBadgeMetrics = sourceBadgeFont.GetMetrics();
+        var sourceTextWidth = sourceBadgeFont.MeasureText(sourceText);
 
-        using (var sourcePaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
+        var badgePadX = W * 0.025f;
+        var badgePadY = H * 0.008f;
+        var badgeW = sourceTextWidth + badgePadX * 2;
+        var badgeH = (sourceBadgeMetrics.Descent - sourceBadgeMetrics.Ascent) + badgePadY * 2;
+        var badgeX = margin;
+        var badgeY = overlayTop + margin * 0.8f;
+
+        // Red rounded rectangle
+        using (var badgeBgPaint = new SKPaint { Color = new SKColor(0xFF, 0x00, 0x00), IsAntialias = true })
         {
-            canvas.DrawText(args.SourceName, margin, sourceY - args.SourceFont.GetMetrics().Ascent, args.SourceFont, sourcePaint);
+            var badgeRect = new SKRect(badgeX, badgeY, badgeX + badgeW, badgeY + badgeH);
+            canvas.DrawRoundRect(badgeRect, W * 0.008f, W * 0.008f, badgeBgPaint);
         }
 
-        // ========== TITLE (Above source, mixed white/yellow/orange) ==========
-        var textLeft = margin;
-        var textRight = W - margin;
-        var textMaxWidth = textRight - textLeft;
-
-        // Wrap title with initial font
-        var titleLines = WrapText(canvas, args.Title, args.HeadingFont, textMaxWidth);
-        if (!titleLines.Any()) titleLines = new List<string> { args.Title };
-
-        // Available space for title (between source and top of overlay)
-        var titleBottom = sourceY - margin;
-        var availableHeight = titleBottom - overlayTop;
-
-        // Create local font that can be shrunk - start slightly smaller for better fit
-        var localHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, args.HeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
-        var lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
-
-        // Auto-shrink font to fit within overlay area
-        while (titleLines.Count * lineHeight > availableHeight && localHeadingFont.Size > W * 0.025f)
+        // Source text inside badge
+        using (var badgeTextPaint = new SKPaint { Color = SKColors.White, IsAntialias = true })
         {
-            localHeadingFont = CreateFont(FONT_LEAGUE_SPARTAN, localHeadingFont.Size * 0.9f, SKFontStyleWeight.Bold);
-            lineHeight = localHeadingFont.GetMetrics().Descent - localHeadingFont.GetMetrics().Ascent + W * 0.008f;
-            titleLines = WrapText(canvas, args.Title, localHeadingFont, W - margin * 2);
+            canvas.DrawText(sourceText, badgeX + badgePadX, badgeY + badgePadY - sourceBadgeMetrics.Ascent, sourceBadgeFont, badgeTextPaint);
         }
 
-        // Draw title from bottom up (bottom-aligned, going upward)
-        var titlePaintWhite = new SKPaint { Color = SKColors.White, IsAntialias = true };
-        var titlePaintYellow = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true };
-        var titlePaintOrange = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true };
-        
-        // Draw title from top down (correct line order)
-        var currentY = overlayTop + margin;
-        
-        foreach (var line in titleLines)
-        {
-            if (currentY + lineHeight > titleBottom - margin)
-                break;
+        // ========== HEADLINE (below red badge, center aligned, ~1/4 image height) ==========
+        var headlineTop = badgeY + badgeH + margin * 0.6f;
+        var headlineAreaBottom = H - margin;
+        var headlineAvailableHeight = headlineAreaBottom - headlineTop;
 
-            // Draw each word with random color (white/yellow/orange)
+        var textMaxWidth = W - margin * 2;
+
+        // Start with heading font, auto-shrink to fit
+        var headlineFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.058f, SKFontStyleWeight.Bold);
+        var headlineLines = WrapText(canvas, args.Title, headlineFont, textMaxWidth);
+        var lineMetrics = headlineFont.GetMetrics();
+        var headlineLineHeight = lineMetrics.Descent - lineMetrics.Ascent + W * 0.01f;
+
+        // Shrink if needed
+        while (headlineLines.Count * headlineLineHeight > headlineAvailableHeight && headlineFont.Size > W * 0.025f)
+        {
+            headlineFont = CreateFont(FONT_LEAGUE_SPARTAN, headlineFont.Size * 0.92f, SKFontStyleWeight.Bold);
+            lineMetrics = headlineFont.GetMetrics();
+            headlineLineHeight = lineMetrics.Descent - lineMetrics.Ascent + W * 0.01f;
+            headlineLines = WrapText(canvas, args.Title, headlineFont, textMaxWidth);
+        }
+
+        // Max lines that fit
+        int maxLines = Math.Max(1, (int)(headlineAvailableHeight / headlineLineHeight));
+        var linesToRender = headlineLines.Take(maxLines).ToList();
+
+        // Add ellipsis if truncated
+        if (headlineLines.Count > maxLines && linesToRender.Any())
+        {
+            var lastLine = linesToRender[^1];
+            while (headlineFont.MeasureText(lastLine + "...") > textMaxWidth && lastLine.Length > 0)
+                lastLine = lastLine[..^1].TrimEnd();
+            linesToRender[^1] = lastLine.TrimEnd() + "...";
+        }
+
+        // Draw headline center-aligned, each word randomly colored from a picked combo
+        var colorCombo = TitleColorCombos[_random.Next(TitleColorCombos.Length)];
+        float currentY = headlineTop;
+        foreach (var line in linesToRender)
+        {
             var words = line.Split(' ');
-            float currentX = margin;
+            // Measure full line width to center the block
+            var totalLineWidth = headlineFont.MeasureText(line);
+            float cursorX = (W - totalLineWidth) / 2f;
+
             foreach (var word in words)
             {
-                var wordWidth = localHeadingFont.MeasureText(word);
-                var spaceWidth = localHeadingFont.MeasureText(" ");
-                
-                // Random color: 40% white, 30% yellow, 30% orange
-                var rand = _random.NextDouble();
-                SKPaint wordPaint;
-                if (rand < 0.4)
-                    wordPaint = new SKPaint { Color = SKColors.White, IsAntialias = true };
-                else if (rand < 0.7)
-                    wordPaint = new SKPaint { Color = new SKColor(0xFF, 0xD7, 0x00), IsAntialias = true };
-                else
-                    wordPaint = new SKPaint { Color = new SKColor(0xFF, 0xA5, 0x00), IsAntialias = true };
-                
-                canvas.DrawText(word, currentX, currentY - localHeadingFont.GetMetrics().Ascent, localHeadingFont, wordPaint);
-                currentX += wordWidth + spaceWidth;
+                var wordWidth = headlineFont.MeasureText(word);
+                var spaceWidth = headlineFont.MeasureText(" ");
+
+                var wordColor = colorCombo[_random.Next(colorCombo.Length)];
+
+                using var wordPaint = new SKPaint { Color = wordColor, IsAntialias = true };
+                canvas.DrawText(word, cursorX, currentY - lineMetrics.Ascent, headlineFont, wordPaint);
+                cursorX += wordWidth + spaceWidth;
             }
-            
-            currentY += lineHeight;
+
+            currentY += headlineLineHeight;
         }
     }
 
