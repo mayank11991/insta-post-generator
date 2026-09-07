@@ -39,7 +39,13 @@
       "query": "india politics latest news today breaking headlines",
       "color": "#E63946",
       "emoji": "🏛️"
-    }
+    },
+     "ai": {
+      "display_name": "Artificial Intelligence ",
+      "query": "artificial intelligence news latest",
+      "color": "#D1FF02",
+      "emoji": "✨"
+    },
   },
 
   "exclude_keywords": [
