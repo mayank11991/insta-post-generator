@@ -13,6 +13,7 @@ public class PostItemViewModel : INotifyPropertyChanged
     private string _postButtonText = "📤 Send to Instagram";
     private bool _isPosting;
     private bool _isPosted;
+    private bool _isSelected;
 
     public PostItemViewModel(PostDisplayItem item, int index, MainPageViewModel parentViewModel)
     {
@@ -31,6 +32,12 @@ public class PostItemViewModel : INotifyPropertyChanged
     public string CaptionPreview => Item.Caption;
     public string HashtagsDisplay => Item.Hashtags;
     public string SourceDisplay => $"Source: {Item.SourceUrl}";
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set { _isSelected = value; OnPropertyChanged(); _parentViewModel?.OnPostSelectionChanged(); }
+    }
 
     public string CopyButtonText
     {
@@ -89,6 +96,7 @@ public class PostItemViewModel : INotifyPropertyChanged
             {
                 IsPosted = true;
                 PostButtonText = "✅ Posted!";
+                _parentViewModel.MarkAsPosted(Item);
             }
             else
             {

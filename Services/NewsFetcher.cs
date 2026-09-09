@@ -130,6 +130,108 @@ public static class NewsFetcher
         return results;
     }
 
+    public static async Task<List<Article>> FetchCelebrityImagesAsync(string category, int limit = 10)
+    {
+        var config = RemoteConfigService.GetConfig();
+        var catConfig = config.Categories.GetValueOrDefault(category);
+        if (catConfig == null || catConfig.Celebrities == null || catConfig.Celebrities.Length == 0)
+            return new List<Article>();
+
+        var allImages = new List<Article>();
+        var seenImageUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var random = new Random();
+        var shuffledCelebs = catConfig.Celebrities.OrderBy(x => random.Next()).ToList();
+
+        foreach (var celeb in shuffledCelebs)
+        {
+            if (allImages.Count >= limit) break;
+
+            try
+            {
+                var query = $"{celeb} hd portrait photo 2024 2025";
+                var parameters = new Dictionary<string, string>
+                {
+                    { "engine", "google_images" },
+                    { "q", query },
+                    { "api_key", Config.SERPAPI_KEY },
+                    { "ijn", "0" },
+                    { "tbm", "isch" }
+                };
+
+                var queryString = string.Join("&", parameters.Select(p => $"{Uri.EscapeDataString(p.Key)}={Uri.EscapeDataString(p.Value)}"));
+                var url = $"{Config.API_URL}?{queryString}";
+
+                var response = await _httpClient.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                var data = JObject.Parse(json);
+                var imageResults = data["images_results"] as JArray;
+
+                if (imageResults != null)
+                {
+                    foreach (var item in imageResults.Take(3))
+                    {
+                        if (allImages.Count >= limit) break;
+
+                        var imageUrl = item["original"]?.ToString() ?? "";
+                        
+                        if (string.IsNullOrEmpty(imageUrl) || seenImageUrls.Contains(imageUrl))
+                            continue;
+
+                        if (!IsValidImageUrl(imageUrl))
+                            continue;
+
+                        seenImageUrls.Add(imageUrl);
+                        var source = item["source"]?.ToString() ?? "";
+                        var title = item["title"]?.ToString() ?? celeb;
+
+                        var article = new Article
+                        {
+                            Title = $"{celeb} - HD Portrait",
+                            Link = imageUrl,
+                            Thumbnail = imageUrl,
+                            Source = new InstaPostGenerator.Models.SourceInfo { Name = source },
+                            Summary = $"HD portrait of {celeb}",
+                            IsoDate = DateTime.UtcNow.ToString("o"),
+                            Category = category
+                        };
+                        allImages.Add(article);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error fetching images for {celeb}: {ex.Message}");
+            }
+
+            await Task.Delay(200);
+        }
+
+        return allImages.Take(limit).ToList();
+    }
+
+    private static bool IsValidImageUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url)) return false;
+        if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && 
+            !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return false;
+        
+        var lowerUrl = url.ToLowerInvariant();
+        var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff" };
+        if (!validExtensions.Any(ext => lowerUrl.Contains(ext)))
+            return false;
+
+        if (lowerUrl.Contains("data:") || lowerUrl.Contains("base64"))
+            return false;
+
+        if (lowerUrl.Contains("thumbnail") || lowerUrl.Contains("thumb") || lowerUrl.Contains("small"))
+            return false;
+
+        return true;
+    }
+
     private static bool IsExcluded(Article article)
     {
         var title = (article.Title ?? "").ToLowerInvariant();
@@ -237,7 +339,7 @@ public static class NewsFetcher
         return results.OrderByDescending(a => ParseDate(a.IsoDate ?? a.Summary ?? "") ?? DateTime.MinValue).ToList();
     }
 
-    public static async Task<List<Article>> PickFreshArticlesAsync(List<Article> results, SeenStore seen, int limit = 10, Func<Task<List<Article>>> fetchMoreFn = null)
+    public static async Task<List<Article>> PickFreshArticlesAsync(List<Article> results, SeenStore seen, PostedStore posted, int limit = 10, Func<Task<List<Article>>> fetchMoreFn = null)
     {
         // Rank by priority
         results = ContentEngine.RankArticles(results);
@@ -257,13 +359,14 @@ public static class NewsFetcher
             foreach (var item in group)
             {
                 var articleId = ExtractArticleId(item);
-                if (string.IsNullOrEmpty(articleId) || seen.Ids.Contains(articleId) || picked.Contains(articleId))
+                if (string.IsNullOrEmpty(articleId) || seen.Ids.Contains(articleId) || posted.Ids.Contains(articleId) || picked.Contains(articleId))
                     continue;
 
                 var title = item.Title ?? "";
                 if (string.IsNullOrEmpty(title)) continue;
 
-                if (seen.Titles.Contains(title.ToLowerInvariant().Trim()) || TitleIsDuplicate(title, pickedTitles))
+                var titleLower = title.ToLowerInvariant().Trim();
+                if (seen.Titles.Contains(titleLower) || posted.Titles.Contains(titleLower) || TitleIsDuplicate(title, pickedTitles))
                     continue;
 
                 if (string.IsNullOrEmpty(item.Thumbnail)) continue;
@@ -292,7 +395,7 @@ public static class NewsFetcher
             var moreResults = await fetchMoreFn();
             if (moreResults.Any())
             {
-                var moreFresh = await PickFreshArticlesAsync(moreResults, seen, limit - fresh.Count, fetchMoreFn);
+                var moreFresh = await PickFreshArticlesAsync(moreResults, seen, posted, limit - fresh.Count, fetchMoreFn);
                 fresh.AddRange(moreFresh);
             }
         }

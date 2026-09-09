@@ -1,5 +1,5 @@
 {
-  "config_url": "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/config.json",
+  "config_url": "https://raw.githubusercontent.com/mayank11991/insta-post-generator/main/config.json",
   "refresh_interval_hours": 6,
 
   "api": {
@@ -28,6 +28,24 @@
       "color": "#D1FF02",
       "emoji": "🎬"
     },
+    "bollywood_images": {
+      "display_name": "Bollywood HD Images",
+      "query": "bollywood celebrity hd photo portrait",
+      "color": "#E91E63",
+      "emoji": "📸",
+      "mode": "image_only",
+      "search_type": "images",
+      "celebrities": ["Shah Rukh Khan", "Deepika Padukone", "Ranbir Kapoor", "Alia Bhatt", "Salman Khan", "Katrina Kaif", "Akshay Kumar", "Priyanka Chopra", "Hrithik Roshan", "Kareena Kapoor", "Varun Dhawan", "Kriti Sanon", "Vicky Kaushal", "Kiara Advani", "Ayushmann Khurrana", "Sara Ali Khan", "Kartik Aaryan", "Ananya Panday", "Tiger Shroff", "Disha Patani"]
+    },
+    "celebrity_portraits": {
+      "display_name": "Celebrity Portraits",
+      "query": "indian celebrity hd portrait photo",
+      "color": "#9C27B0",
+      "emoji": "✨",
+      "mode": "image_only",
+      "search_type": "images",
+      "celebrities": ["Amitabh Bachchan", "Aishwarya Rai", "Madhuri Dixit", "Rekha", "Sridevi", "Kajol", "Rani Mukerji", "Preity Zinta", "John Abraham", "Saif Ali Khan", "Kajol", "Rani Mukerji", "Vidya Balan", "Anushka Sharma", "Sonam Kapoor", "Parineeti Chopra", "Bhumi Pednekar", "Taapsee Pannu", "Radhika Apte", "Sobhita Dhulipala"]
+    },
     "india_news": {
       "display_name": "India News",
       "query": "india latest news headlines today breaking",
@@ -40,12 +58,30 @@
       "color": "#E63946",
       "emoji": "🏛️"
     },
-     "ai": {
-      "display_name": "Artificial Intelligence ",
+    "ai": {
+      "display_name": "Artificial Intelligence",
       "query": "artificial intelligence news latest",
       "color": "#D1FF02",
       "emoji": "✨"
     },
+    "ai_news": {
+      "display_name": "AI News",
+      "query": "latest artificial intelligence breakthroughs and innovations 2026",
+      "color": "#00D4FF",
+      "emoji": "🤖"
+    },
+    "history_facts": {
+      "display_name": "History Facts",
+      "query": "amazing history facts you never knew about world events",
+      "color": "#C8A951",
+      "emoji": "📜"
+    },
+    "history_events": {
+      "display_name": "History Events",
+      "query": "major historical events that happened on this day in history",
+      "color": "#8B6914",
+      "emoji": "🏛️"
+    }
   },
 
   "exclude_keywords": [
@@ -70,7 +106,18 @@
     { "url": "https://www.thehindu.com/news/national/feeder/default.rss", "source": "The Hindu National", "category": "india_news" },
     { "url": "https://indianexpress.com/section/political-pulse/feed/", "source": "Indian Express Politics", "category": "india_politics" },
     { "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "source": "Times of India Politics", "category": "india_politics" },
-    { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "india_politics" }
+    { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "india_politics" },
+    { "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "source": "TechCrunch AI", "category": "ai_news" },
+    { "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "source": "The Verge AI", "category": "ai_news" },
+    { "url": "https://venturebeat.com/category/ai/feed/", "source": "VentureBeat AI", "category": "ai_news" },
+    { "url": "https://arstechnica.com/ai/feed", "source": "Ars Technica AI", "category": "ai_news" },
+    { "url": "https://www.onthisday.com/rss/today-in-history.xml", "source": "On This Day", "category": "history_facts" },
+    { "url": "https://historyfacts.com/feed/", "source": "History Facts", "category": "history_facts" },
+    { "url": "https://www.worldhistory.org/rss2/?lang=en", "source": "World History Encyclopedia", "category": "history_facts" },
+    { "url": "https://feeds.feedburner.com/TodayIFoundOut", "source": "Today I Found Out", "category": "history_facts" },
+    { "url": "https://www.history.com/this-day-in-history/rss", "source": "HISTORY.com", "category": "history_events" },
+    { "url": "https://www.ancientpages.com/feed/", "source": "Ancient Pages", "category": "history_events" },
+    { "url": "https://www.historyhit.com/feed/", "source": "History Hit", "category": "history_events" }
   ],
 
   "image": {

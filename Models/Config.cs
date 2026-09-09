@@ -130,6 +130,16 @@ public static class Config
         return Path.Combine(GetOutputDir(), "seen.json");
     }
 
+    public static string GetContentMixFile()
+    {
+        return Path.Combine(GetOutputDir(), "content_mix.json");
+    }
+
+    public static string GetPostedFile()
+    {
+        return Path.Combine(GetOutputDir(), "posted.json");
+    }
+
     // Font paths
     public const string FONT_BRICOLAGE = "BricolageGrotesque.ttf";
     public const string FONT_HEADING = "Rougan.otf";

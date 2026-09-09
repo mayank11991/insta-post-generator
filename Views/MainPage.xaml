@@ -121,6 +121,20 @@
                     HorizontalOptions="Fill"
                     Margin="0,4,0,0" />
 
+            <!-- Post Carousel Button -->
+            <Button Text="📱 Post Selected as Carousel ({Binding SelectedPostCount})"
+                    Command="{Binding PostCarouselCommand}"
+                    IsEnabled="{Binding CanPostCarousel}"
+                    BackgroundColor="#E1306C"
+                    TextColor="#FFFFFF"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="44"
+                    HorizontalOptions="Fill"
+                    Margin="0,4,0,0"
+                    IsVisible="{Binding CanPostCarousel}" />
+
             <!-- Status Message -->
             <Label Text="{Binding StatusMessage}"
                    FontSize="14"
@@ -138,19 +152,29 @@
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Posts}" Spacing="12">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:PostItemViewModel">
-                        <Frame BackgroundColor="#1A1D24"
-                               BorderColor="#333"
+                        <Frame BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected_bg}"
+                               BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
                                CornerRadius="12"
                                Padding="16"
                                HasShadow="False">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.TogglePostSelectionCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
                             <VerticalStackLayout Spacing="12">
                                 <!-- Header with Index, Category, Series -->
                                 <HorizontalStackLayout>
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              Color="#D1FF02"
+                                              HorizontalOptions="Start"
+                                              VerticalOptions="Center" />
                                     <Label Text="{Binding DisplayTitle}"
                                            FontSize="16"
                                            FontAttributes="Bold"
                                            TextColor="#D1FF02"
-                                           LineBreakMode="WordWrap" />
+                                           LineBreakMode="WordWrap"
+                                           HorizontalOptions="FillAndExpand" />
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Spacing="12">

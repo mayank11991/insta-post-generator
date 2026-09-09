@@ -157,6 +157,8 @@ public static class PostGenerator
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
 
+        var isImageOnly = processedArticle.Category == "bollywood_images" || processedArticle.Category == "celebrity_portraits";
+
         var templateArgs = new TemplateArgs
         {
             Canvas = drawCanvas,
@@ -170,7 +172,8 @@ public static class PostGenerator
             Pad = Config.EXPORT_WIDTH * 0.04f,
             CornerRadius = Config.EXPORT_WIDTH * 0.045f,
             ImageWidth = Config.EXPORT_WIDTH,
-            ImageHeight = Config.EXPORT_HEIGHT
+            ImageHeight = Config.EXPORT_HEIGHT,
+            ImageOnlyMode = isImageOnly
         };
 
         await CreateCustomTemplateAsync(templateArgs);
@@ -198,6 +201,7 @@ public static class PostGenerator
         public float CornerRadius { get; set; }
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
+        public bool ImageOnlyMode { get; set; }
     }
 
     private static SKFont CreateFont(string fontFamily, float size, SKFontStyleWeight weight)
@@ -281,6 +285,12 @@ public static class PostGenerator
         using (var paintBuzz = new SKPaint { Color = new SKColor(0xFF, 0xFF, 0x00), IsAntialias = true })
         {
             canvas.DrawText(textBuzz, textStartX + w360, textBaselineY, appFont, paintBuzz);
+        }
+
+        if (args.ImageOnlyMode)
+        {
+            // Image-only mode: just draw the border and app name, no overlay/badge/headline
+            return;
         }
 
         // ========== BOTTOM 1/3: Semi-transparent black blurry fade ==========

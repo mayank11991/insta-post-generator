@@ -50,6 +50,12 @@ public class SeenStore
     public HashSet<string> Titles { get; set; } = new();
 }
 
+public class PostedStore
+{
+    public HashSet<string> Ids { get; set; } = new();
+    public HashSet<string> Titles { get; set; } = new();
+}
+
 public class ContentMixData
 {
     public List<string> RecentCategories { get; set; } = new();

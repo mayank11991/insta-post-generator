@@ -192,6 +192,92 @@ public static class ContentEngine
                 "Stay informed — follow for more!"
             },
             TemplateIds = new[] { 14 }
+        },
+        ["bollywood_images"] = new CategoryInfo
+        {
+            Label = "Bollywood HD Images",
+            PriorityWeight = 10,
+            Keywords = new[]
+            {
+                "bollywood", "celebrity", "actor", "actress", "star", "portrait", "hd", "photo"
+            },
+            HookTemplates = new[]
+            {
+                "Stunning portrait of {entity} ✨",
+                "{entity} looking absolutely gorgeous 📸",
+                "This photo of {entity} is everything 💫",
+                "{entity} serving looks as always 🔥",
+                "Can't get over this {entity} portrait 😍",
+                "HD perfection: {entity} in all their glory ✨",
+                "{entity} just proving why they're a star 🌟",
+                "Frame this photo of {entity} 🖼️",
+                "{entity} radiating main character energy ✨",
+                "This {entity} portrait is iconic 📸",
+                "Absolutely mesmerizing: {entity} 💫",
+                "{entity} looking like a dream ✨",
+                "Pure stardom: {entity} 🌟",
+                "Every angle is their best angle: {entity} 📸",
+                "{entity} serving Bollywood royalty 👑"
+            },
+            Hashtags = new[]
+            {
+                "#Bollywood", "#BollywoodCelebrities", "#IndianCelebrities",
+                "#BollywoodStars", "#CelebrityPortrait", "#HDPhoto",
+                "#BollywoodFashion", "#IndianCinema", "#StarPower",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "Who's your favorite Bollywood star?",
+                "This look is 🔥 — agree?",
+                "Save this portrait! 📸",
+                "Tag a fan of {entity}!",
+                "Which celebrity portrait should be next?"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["celebrity_portraits"] = new CategoryInfo
+        {
+            Label = "Celebrity HD Portraits",
+            PriorityWeight = 9,
+            Keywords = new[]
+            {
+                "celebrity", "actor", "actress", "portrait", "hd", "photo", "indian", "star"
+            },
+            HookTemplates = new[]
+            {
+                "Timeless beauty: {entity} ✨",
+                "{entity} — a legend in every frame 📸",
+                "Iconic portrait of {entity} 🌟",
+                "{entity} defining elegance 💫",
+                "This {entity} photo is pure art 🖼️",
+                "HD portrait perfection: {entity} ✨",
+                "{entity} capturing hearts since forever ❤️",
+                "Frame-worthy: {entity} in HD 📸",
+                "{entity} — Bollywood's eternal star 🌟",
+                "Absolute perfection: {entity} 💫",
+                "The magic of {entity} in one frame ✨",
+                "{entity} looking absolutely timeless 👑",
+                "Celebrity portrait goals: {entity} 📸",
+                "{entity} serving pure elegance ✨",
+                "Iconic. Legendary. {entity} 🌟"
+            },
+            Hashtags = new[]
+            {
+                "#CelebrityPortrait", "#IndianCelebrities", "#HDPhoto",
+                "#BollywoodLegends", "#IconicStars", "#CelebrityPhotos",
+                "#IndianCinema", "#StarPortrait", "#TimelessBeauty",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "Who's your all-time favorite star?",
+                "This portrait is everything 💫",
+                "Save for your celebrity collection! 📸",
+                "Tag someone who loves {entity}!",
+                "Which legend should we feature next?"
+            },
+            TemplateIds = new[] { 14 }
         }
     };
 
@@ -776,7 +862,7 @@ public class ContentMixTracker
 
     public ContentMixTracker(string path = null)
     {
-        _path = path ?? Config.GetSeenFile();
+        _path = path ?? Config.GetContentMixFile();
         Load();
     }
 

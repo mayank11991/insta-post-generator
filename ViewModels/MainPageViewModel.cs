@@ -42,9 +42,27 @@ public class MainPageViewModel : INotifyPropertyChanged
                 cat.IsSelected = false;
             c.IsSelected = true;
         });
+        PostCarouselCommand = new Command(async () => await PostCarouselAsync(), () => CanPostCarousel && !IsGenerating);
+        TogglePostSelectionCommand = new Command<PostItemViewModel>(p => 
+        {
+            if (p != null)
+            {
+                p.IsSelected = !p.IsSelected;
+            }
+        });
 
         // Load saved posts
         LoadSavedPosts();
+    }
+
+    public int SelectedPostCount => Posts.Count(p => p.IsSelected);
+    public bool CanPostCarousel => SelectedPostCount >= 2;
+
+    public void OnPostSelectionChanged()
+    {
+        OnPropertyChanged(nameof(SelectedPostCount));
+        OnPropertyChanged(nameof(CanPostCarousel));
+        ((Command)PostCarouselCommand).ChangeCanExecute();
     }
 
     public ObservableCollection<CategorySelection> Categories { get; }
@@ -86,6 +104,8 @@ public class MainPageViewModel : INotifyPropertyChanged
     public ICommand GenerateCommand { get; }
     public ICommand TestImageCommand { get; }
     public ICommand ToggleCategoryCommand { get; }
+    public ICommand PostCarouselCommand { get; }
+    public ICommand TogglePostSelectionCommand { get; }
 
     private async Task GenerateTestImageAsync()
     {
@@ -142,7 +162,9 @@ public class MainPageViewModel : INotifyPropertyChanged
             Directory.CreateDirectory(outputDir);
 
             var seen = LoadSeenStore();
+            var posted = LoadPostedStore();
             Log($"Seen store: {seen.Ids.Count} ids, {seen.Titles.Count} titles");
+            Log($"Posted store: {posted.Ids.Count} ids, {posted.Titles.Count} titles");
             var mix = new ContentMixTracker();
 
             var allPosts = new List<PostDisplayItem>();
@@ -150,8 +172,12 @@ public class MainPageViewModel : INotifyPropertyChanged
 
             foreach (var category in selectedCategories)
             {
-                StatusMessage = $"Fetching news for {category}...";
-                Log($"=== Starting category: {category} ===");
+                var config = RemoteConfigService.GetConfig();
+                var catConfig = config.Categories.GetValueOrDefault(category);
+                var isImageOnly = catConfig?.Mode == "image_only";
+
+                StatusMessage = isImageOnly ? $"Fetching HD images for {category}..." : $"Fetching news for {category}...";
+                Log($"=== Starting category: {category} (imageOnly={isImageOnly}) ===");
                 
                 var fetchMore = new Func<Task<List<Article>>>(async () =>
                 {
@@ -161,9 +187,17 @@ public class MainPageViewModel : INotifyPropertyChanged
                 List<Article> initialResults;
                 try
                 {
-                    StatusMessage = $"Calling API for {category}...";
-                    initialResults = await NewsFetcher.FetchResultsAsync(category, maxPages: 2, fetchMore);
-                    Log($"Fetched {initialResults.Count} articles for {category}");
+                    StatusMessage = isImageOnly ? $"Fetching celebrity images..." : $"Calling API for {category}...";
+                    
+                    if (isImageOnly)
+                    {
+                        initialResults = await NewsFetcher.FetchCelebrityImagesAsync(category, Config.POSTS_PER_RUN);
+                    }
+                    else
+                    {
+                        initialResults = await NewsFetcher.FetchResultsAsync(category, maxPages: 2, fetchMore);
+                    }
+                    Log($"Fetched {initialResults.Count} items for {category}");
                 }
                 catch (Exception ex)
                 {
@@ -173,13 +207,20 @@ public class MainPageViewModel : INotifyPropertyChanged
                     break;
                 }
                 
-                StatusMessage = $"Fetched {initialResults.Count} articles. Filtering...";
+                StatusMessage = $"Fetched {initialResults.Count} items. Filtering...";
 
                 List<Article> articles;
                 try
                 {
-                    articles = await NewsFetcher.PickFreshArticlesAsync(initialResults, seen, limit: Config.POSTS_PER_RUN, fetchMore);
-                    Log($"After PickFresh: {articles.Count} articles");
+                    if (isImageOnly)
+                    {
+                        articles = initialResults.Take(Config.POSTS_PER_RUN).ToList();
+                    }
+                    else
+                    {
+                        articles = await NewsFetcher.PickFreshArticlesAsync(initialResults, seen, posted, limit: Config.POSTS_PER_RUN, fetchMore);
+                    }
+                    Log($"After filtering: {articles.Count} articles");
                 }
                 catch (Exception ex)
                 {
@@ -236,7 +277,11 @@ public class MainPageViewModel : INotifyPropertyChanged
                         await PostGenerator.CreateNewsImageAsync(processed, imagePath, template: 0, processed.TemplateIds);
                         Log($"  Image saved: {File.Exists(imagePath)}");
 
-                        var summaryText = await NewsFetcher.SummarizeForCaptionAsync(article.Link);
+                        var summaryText = "";
+                        if (!isImageOnly)
+                        {
+                            summaryText = await NewsFetcher.SummarizeForCaptionAsync(article.Link);
+                        }
                         var caption = ContentEngine.BuildSmartCaption(
                             article, processed.Category, processed.Hook, processed.CTA, processed.Hashtags, summaryText);
 
@@ -331,6 +376,48 @@ public class MainPageViewModel : INotifyPropertyChanged
         File.WriteAllText(path, json);
     }
 
+    private PostedStore LoadPostedStore()
+    {
+        var path = Config.GetPostedFile();
+        if (File.Exists(path))
+        {
+            try
+            {
+                var json = File.ReadAllText(path);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<PostedStore>(json) ?? new PostedStore();
+            }
+            catch { }
+        }
+        return new PostedStore();
+    }
+
+    private void SavePostedStore(PostedStore posted)
+    {
+        var path = Config.GetPostedFile();
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(posted, Newtonsoft.Json.Formatting.Indented);
+        File.WriteAllText(path, json);
+    }
+
+    public void MarkAsPosted(PostDisplayItem item)
+    {
+        try
+        {
+            var posted = LoadPostedStore();
+            var articleId = NewsFetcher.ExtractArticleId(new Article { Title = item.Hook, Link = item.SourceUrl });
+            if (!string.IsNullOrEmpty(articleId))
+            {
+                posted.Ids.Add(articleId);
+                posted.Titles.Add(item.Hook.ToLowerInvariant().Trim());
+                SavePostedStore(posted);
+                Log($"Marked as posted: {articleId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"Error marking as posted: {ex}");
+        }
+    }
+
     private string GetPostsFile()
     {
         return Path.Combine(Config.GetOutputDir(), "saved_posts.json");
@@ -370,6 +457,60 @@ public class MainPageViewModel : INotifyPropertyChanged
             }
         }
         catch { }
+    }
+
+    private async Task PostCarouselAsync()
+    {
+        if (IsGenerating) return;
+
+        var selectedPosts = Posts.Where(p => p.IsSelected).ToList();
+        if (selectedPosts.Count < 2)
+        {
+            await ShowToastAsync("Select at least 2 posts for carousel");
+            return;
+        }
+
+        IsGenerating = true;
+        StatusMessage = "Posting carousel...";
+
+        try
+        {
+            var imagePaths = selectedPosts.Select(p => p.Item.ImagePath).ToArray();
+            var caption = selectedPosts[0].Item.Caption;
+            var hashtags = selectedPosts[0].Item.Hashtags;
+
+            var result = await InstagramService.PostToInstagramAsync(
+                imagePaths,
+                caption,
+                hashtags,
+                status => StatusMessage = status);
+
+            if (result.StartsWith("Posted!"))
+            {
+                foreach (var post in selectedPosts)
+                {
+                    post.IsPosted = true;
+                    post.PostButtonText = "✅ Posted!";
+                    MarkAsPosted(post.Item);
+                }
+                StatusMessage = $"Carousel posted! {selectedPosts.Count} images";
+                await ShowToastAsync($"Carousel posted successfully!\n{selectedPosts.Count} images in one post");
+            }
+            else
+            {
+                StatusMessage = "Carousel post failed";
+                await ShowToastAsync($"Failed: {result}");
+            }
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error: {ex.Message}";
+            await ShowToastAsync($"Error: {ex.Message}");
+        }
+        finally
+        {
+            IsGenerating = false;
+        }
     }
 
     private static string SafeSlug(string text, int maxLen = 40)

@@ -87,6 +87,15 @@ public class CategoryConfig
 
     [JsonPropertyName("emoji")]
     public string Emoji { get; set; } = "";
+
+    [JsonPropertyName("mode")]
+    public string Mode { get; set; } = "news";
+
+    [JsonPropertyName("search_type")]
+    public string SearchType { get; set; } = "news";
+
+    [JsonPropertyName("celebrities")]
+    public string[] Celebrities { get; set; } = Array.Empty<string>();
 }
 
 public class RssFeedConfig
