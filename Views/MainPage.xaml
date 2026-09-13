@@ -223,7 +223,7 @@
                                 </VerticalStackLayout>
 
                                 <!-- Buttons -->
-                                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <VerticalStackLayout Spacing="8">
                                     <Button Text="{Binding CopyButtonText}"
                                             Command="{Binding CopyCommand}"
                                             BackgroundColor="#2A2D35"
@@ -232,7 +232,7 @@
                                             FontAttributes="Bold"
                                             CornerRadius="8"
                                             HeightRequest="40"
-                                            Grid.Column="0" />
+                                            HorizontalOptions="Fill" />
                                     <Button Text="{Binding PostButtonText}"
                                             Command="{Binding PostCommand}"
                                             BackgroundColor="#E1306C"
@@ -241,8 +241,8 @@
                                             FontAttributes="Bold"
                                             CornerRadius="8"
                                             HeightRequest="40"
-                                            Grid.Column="1" />
-                                </Grid>
+                                            HorizontalOptions="Fill" />
+                                </VerticalStackLayout>
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
