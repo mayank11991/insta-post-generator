@@ -18,6 +18,8 @@ public static class PostGenerator
         new[] { SKColors.White, new SKColor(0xEA, 0xFF, 0x00) },                                         // white + #EAFF00
         new[] { SKColors.White, new SKColor(0xE5, 0x00, 0x6A) },                                         // white + #E5006A
         new[] { SKColors.White, new SKColor(0xFF, 0xFF, 0x00), new SKColor(0x22, 0x7D, 0xFC) },          // white + yellow + #227DFC
+        new[] { SKColors.White, new SKColor(0xFF, 0xFF, 0x0C) },                                         // white + #FFFF0C
+        new[] { SKColors.White, new SKColor(0xFE, 0x33, 0x2C), new SKColor(0xFF, 0xFF, 0x0C) },         // white + #FE332C + #FFFF0C
     };
 
     // Font name constants
@@ -36,11 +38,8 @@ public static class PostGenerator
     {
         var bitmap = new SKBitmap(Config.EXPORT_WIDTH, Config.EXPORT_HEIGHT);
         using var canvas = new SKCanvas(bitmap);
-
-        // Dark background first (fills gaps around centered image)
         canvas.Clear(new SKColor(0x10, 0x10, 0x10));
 
-        // Download a test image for background
         SKBitmap testImage = null;
         try
         {
@@ -51,9 +50,18 @@ public static class PostGenerator
         }
         catch { }
 
-            // Draw test image - CONTAIN MODE (center fitted, full quality, entire image visible)
         if (testImage != null)
         {
+            var bgScale = Math.Max((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
+            var bgNewW = Math.Max(1, (int)(testImage.Width * bgScale));
+            var bgNewH = Math.Max(1, (int)(testImage.Height * bgScale));
+            var bgResized = testImage.Resize(new SKImageInfo(bgNewW, bgNewH), SKSamplingOptions.Default);
+            var bgOffsetX = (Config.EXPORT_WIDTH - bgNewW) / 2;
+            var bgOffsetY = (Config.EXPORT_HEIGHT - bgNewH) / 2;
+            using var bgPaint = new SKPaint();
+            bgPaint.ImageFilter = SKImageFilter.CreateBlur(20, 20);
+            canvas.DrawBitmap(bgResized, bgOffsetX, bgOffsetY, bgPaint);
+
             var scale = Math.Min((float)Config.EXPORT_WIDTH / testImage.Width, (float)Config.EXPORT_HEIGHT / testImage.Height);
             var newW = Math.Max(1, (int)(testImage.Width * scale));
             var newH = Math.Max(1, (int)(testImage.Height * scale));
@@ -66,10 +74,10 @@ public static class PostGenerator
         var W = Config.EXPORT_WIDTH;
         var H = Config.EXPORT_HEIGHT;
 
-        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.055f, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.025f, SKFontStyleWeight.Bold);
-        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.018f, SKFontStyleWeight.Normal);
-        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.042f, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.05775f, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.02625f, SKFontStyleWeight.Bold);
+        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.0189f, SKFontStyleWeight.Normal);
+        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.0441f, SKFontStyleWeight.Bold);
 
         var templateArgs = new TemplateArgs
         {
@@ -130,16 +138,25 @@ public static class PostGenerator
         var H = Config.EXPORT_HEIGHT;
         using (var canvas = new SKCanvas(canvasBitmap))
         {
-            // Dark background first (fills gaps around centered image)
             canvas.Clear(new SKColor(0x10, 0x10, 0x10));
             
-            // Draw article image - CONTAIN MODE (center fitted, full quality, entire image visible)
             if (articleBitmap != null)
             {
+                // Blurred background - COVER MODE (fills entire canvas)
+                var bgScale = Math.Max((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
+                var bgNewW = Math.Max(1, (int)(articleBitmap.Width * bgScale));
+                var bgNewH = Math.Max(1, (int)(articleBitmap.Height * bgScale));
+                var bgResized = articleBitmap.Resize(new SKImageInfo(bgNewW, bgNewH), SKSamplingOptions.Default);
+                var bgOffsetX = (Config.EXPORT_WIDTH - bgNewW) / 2;
+                var bgOffsetY = (Config.EXPORT_HEIGHT - bgNewH) / 2;
+                using var bgPaint = new SKPaint();
+                bgPaint.ImageFilter = SKImageFilter.CreateBlur(20, 20);
+                canvas.DrawBitmap(bgResized, bgOffsetX, bgOffsetY, bgPaint);
+
+                // Actual image - CONTAIN MODE (center fitted)
                 var scale = Math.Min((float)Config.EXPORT_WIDTH / articleBitmap.Width, (float)Config.EXPORT_HEIGHT / articleBitmap.Height);
                 var newW = Math.Max(1, (int)(articleBitmap.Width * scale));
                 var newH = Math.Max(1, (int)(articleBitmap.Height * scale));
-                
                 var fitted = articleBitmap.Resize(new SKImageInfo(newW, newH), SKSamplingOptions.Default);
                 var offsetX = (Config.EXPORT_WIDTH - newW) / 2;
                 var offsetY = (Config.EXPORT_HEIGHT - newH) / 2;
@@ -150,10 +167,10 @@ public static class PostGenerator
         using var drawCanvas = new SKCanvas(canvasBitmap);
 
         // Draw custom template
-        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.055f, SKFontStyleWeight.Bold);
-        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.025f, SKFontStyleWeight.Bold);
-        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.018f, SKFontStyleWeight.Normal);
-        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.042f, SKFontStyleWeight.Bold);
+        var headingFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.05775f, SKFontStyleWeight.Bold);
+        var sourceFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.02625f, SKFontStyleWeight.Bold);
+        var timestampFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.0189f, SKFontStyleWeight.Normal);
+        var brandFont = CreateFont(FONT_LEAGUE_SPARTAN, Config.EXPORT_WIDTH * 0.0441f, SKFontStyleWeight.Bold);
 
         var sourceName = (article.Source?.Name ?? "Source").ToUpperInvariant();
 
@@ -248,7 +265,7 @@ public static class PostGenerator
         }
 
         // ========== APP NAME: Two vertical lines + "360" orange + "buzz_" yellow ==========
-        var appFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.032f, SKFontStyleWeight.Normal);
+        var appFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.0336f, SKFontStyleWeight.Normal);
         var appMetrics = appFont.GetMetrics();
         var lineThick = Math.Max(2, W * 0.005f);
         var lineTop = margin;
@@ -316,7 +333,7 @@ public static class PostGenerator
 
         // ========== RED SOURCE BADGE (top of bottom overlay) ==========
         var sourceText = args.SourceName.ToUpperInvariant();
-        var sourceBadgeFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.028f, SKFontStyleWeight.Bold);
+        var sourceBadgeFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.0294f, SKFontStyleWeight.Bold);
         var sourceBadgeMetrics = sourceBadgeFont.GetMetrics();
         var sourceTextWidth = sourceBadgeFont.MeasureText(sourceText);
 
@@ -348,7 +365,7 @@ public static class PostGenerator
         var textMaxWidth = W - margin * 2;
 
         // Start with heading font, auto-shrink to fit
-        var headlineFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.058f, SKFontStyleWeight.Bold);
+        var headlineFont = CreateFont(FONT_LEAGUE_SPARTAN, W * 0.0609f, SKFontStyleWeight.Bold);
         var headlineLines = WrapText(canvas, args.Title, headlineFont, textMaxWidth);
         var lineMetrics = headlineFont.GetMetrics();
         var headlineLineHeight = lineMetrics.Descent - lineMetrics.Ascent + W * 0.01f;
