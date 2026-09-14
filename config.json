@@ -9,7 +9,8 @@
     "meta_app_id": "2648649438885764",
     "meta_app_secret": "93e438eec5d19c0e56739093b739e195",
     "meta_access_token": "EAAlo7sDwd4QBSWL5HZCQtxj02D8NuJHYXT1JyYsG1fUBmT5deCHS0SRZAH3RgrzZACzEJ4EDnmEyZB4XX7IMGtfZCvxpGK14zEeZA6XSK9CONeNBDBjZCvNZB7V5ruWeDpFm8HSATFlE9DtNoIuQyQ2evvIf4CORZBlTgiaZBhEOaelAxFmemTkaTQ70fJEKlBTR8aoWdo2YbT193Gw2nY",
-    "instagram_business_account_id": "17841467714909055"
+    "instagram_business_account_id": "17841467714909055",
+    "youtube_api_key": ""
   },
 
   "settings": {
@@ -18,7 +19,8 @@
     "max_article_age_hours": 24,
     "min_article_score": 5,
     "story_similarity_threshold": 0.5,
-    "page_name": "360buzz"
+    "page_name": "360buzz",
+    "max_reel_duration_seconds": 60
   },
 
   "categories": {
@@ -26,61 +28,93 @@
       "display_name": "Bollywood",
       "query": "bollywood hindi movie tv celebrity news latest",
       "color": "#D1FF02",
-      "emoji": "🎬"
-    },
-    "bollywood_images": {
-      "display_name": "Bollywood HD Images",
-      "query": "bollywood celebrity hd photo portrait",
-      "color": "#E91E63",
-      "emoji": "📸",
-      "mode": "image_only",
-      "search_type": "images",
-      "celebrities": ["Shah Rukh Khan", "Deepika Padukone", "Ranbir Kapoor", "Alia Bhatt", "Salman Khan", "Katrina Kaif", "Akshay Kumar", "Priyanka Chopra", "Hrithik Roshan", "Kareena Kapoor", "Varun Dhawan", "Kriti Sanon", "Vicky Kaushal", "Kiara Advani", "Ayushmann Khurrana", "Sara Ali Khan", "Kartik Aaryan", "Ananya Panday", "Tiger Shroff", "Disha Patani"]
-    },
-    "celebrity_portraits": {
-      "display_name": "Celebrity Portraits",
-      "query": "indian celebrity hd portrait photo",
-      "color": "#9C27B0",
-      "emoji": "✨",
-      "mode": "image_only",
-      "search_type": "images",
-      "celebrities": ["Amitabh Bachchan", "Aishwarya Rai", "Madhuri Dixit", "Rekha", "Sridevi", "Kajol", "Rani Mukerji", "Preity Zinta", "John Abraham", "Saif Ali Khan", "Kajol", "Rani Mukerji", "Vidya Balan", "Anushka Sharma", "Sonam Kapoor", "Parineeti Chopra", "Bhumi Pednekar", "Taapsee Pannu", "Radhika Apte", "Sobhita Dhulipala"]
-    },
-    "india_news": {
-      "display_name": "India News",
-      "query": "india latest news headlines today breaking",
-      "color": "#FF6B35",
-      "emoji": "📰"
-    },
-    "india_politics": {
-      "display_name": "India Politics",
-      "query": "india politics latest news today breaking headlines",
-      "color": "#E63946",
-      "emoji": "🏛️"
-    },
-    "ai": {
-      "display_name": "Artificial Intelligence",
-      "query": "artificial intelligence news latest",
-      "color": "#D1FF02",
-      "emoji": "✨"
+      "emoji": "🎬",
+      "content_type": "post"
     },
     "ai_news": {
-      "display_name": "AI News",
-      "query": "latest artificial intelligence breakthroughs and innovations 2026",
+      "display_name": "Artificial Intelligence",
+      "query": "openai anthropic google deepmind china ai artificial intelligence news latest 2026",
       "color": "#00D4FF",
-      "emoji": "🤖"
+      "emoji": "🤖",
+      "content_type": "post"
     },
-    "history_facts": {
-      "display_name": "History Facts",
-      "query": "amazing history facts you never knew about world events",
-      "color": "#C8A951",
-      "emoji": "📜"
+    "india_politics": {
+      "display_name": "Indian Politics",
+      "query": "india politics latest news today modi opposition parliament",
+      "color": "#E63946",
+      "emoji": "🏛️",
+      "content_type": "post"
     },
-    "history_events": {
-      "display_name": "History Events",
-      "query": "major historical events that happened on this day in history",
-      "color": "#8B6914",
-      "emoji": "🏛️"
+    "bollywood_facts": {
+      "display_name": "Bollywood Facts",
+      "query": "bollywood unknown facts secrets behind scenes trivia",
+      "color": "#9C27B0",
+      "emoji": "🎭",
+      "content_type": "post"
+    },
+    "quiz": {
+      "display_name": "Quiz",
+      "query": "bollywood quiz trivia guess the movie celebrity quiz",
+      "color": "#FF9800",
+      "emoji": "❓",
+      "content_type": "post",
+      "mode": "quiz"
+    },
+    "bollywood_reels": {
+      "display_name": "Bollywood Reels",
+      "query": "bollywood latest movie song trailer clip scene",
+      "color": "#E91E63",
+      "emoji": "🎬",
+      "content_type": "reel",
+      "youtube_query": "bollywood latest movie song trailer 2026"
+    },
+    "ai_reels": {
+      "display_name": "AI/Tech Reels",
+      "query": "artificial intelligence technology news latest breakthrough",
+      "color": "#00BCD4",
+      "emoji": "🤖",
+      "content_type": "reel",
+      "youtube_query": "artificial intelligence technology news latest 2026"
+    },
+    "politics_reels": {
+      "display_name": "Politics Reels",
+      "query": "india politics news latest modi parliament",
+      "color": "#F44336",
+      "emoji": "🏛️",
+      "content_type": "reel",
+      "youtube_query": "india politics news latest 2026"
+    },
+    "cricket_reels": {
+      "display_name": "Cricket Reels",
+      "query": "cricket highlights india latest match ipl",
+      "color": "#4CAF50",
+      "emoji": "🏏",
+      "content_type": "reel",
+      "youtube_query": "cricket highlights india latest 2026"
+    },
+    "viral_reels": {
+      "display_name": "Viral Reels",
+      "query": "trending viral video india funny trending",
+      "color": "#FF5722",
+      "emoji": "🔥",
+      "content_type": "reel",
+      "youtube_query": "trending viral video india 2026"
+    },
+    "singer_clips": {
+      "display_name": "Singer Clips",
+      "query": "arijit singh shreya ghoshal latest song live performance",
+      "color": "#E1BEE7",
+      "emoji": "🎤",
+      "content_type": "reel",
+      "youtube_query": "arijit singh shreya ghoshal latest song live 2026"
+    },
+    "webseries_clips": {
+      "display_name": "Web Series Clips",
+      "query": "netflix amazon prime hotstar hindi web series trailer",
+      "color": "#7B1FA2",
+      "emoji": "📺",
+      "content_type": "reel",
+      "youtube_query": "hindi web series trailer netflix amazon prime 2026"
     }
   },
 
@@ -100,24 +134,13 @@
     { "url": "https://www.pinkvilla.com/rss.xml", "source": "Pinkvilla", "category": "bollywood" },
     { "url": "https://www.bollywoodshaadis.com/rss", "source": "Bollywood Shaadis", "category": "bollywood" },
     { "url": "https://www.tellychakkar.com/rss.xml", "source": "Tellychakkar", "category": "bollywood" },
-    { "url": "https://indianexpress.com/section/india/feed/", "source": "Indian Express India", "category": "india_news" },
-    { "url": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms", "source": "Times of India India", "category": "india_news" },
-    { "url": "https://www.ndtv.com/india/rss", "source": "NDTV India", "category": "india_news" },
-    { "url": "https://www.thehindu.com/news/national/feeder/default.rss", "source": "The Hindu National", "category": "india_news" },
     { "url": "https://indianexpress.com/section/political-pulse/feed/", "source": "Indian Express Politics", "category": "india_politics" },
     { "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "source": "Times of India Politics", "category": "india_politics" },
     { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "india_politics" },
     { "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "source": "TechCrunch AI", "category": "ai_news" },
     { "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "source": "The Verge AI", "category": "ai_news" },
     { "url": "https://venturebeat.com/category/ai/feed/", "source": "VentureBeat AI", "category": "ai_news" },
-    { "url": "https://arstechnica.com/ai/feed", "source": "Ars Technica AI", "category": "ai_news" },
-    { "url": "https://www.onthisday.com/rss/today-in-history.xml", "source": "On This Day", "category": "history_facts" },
-    { "url": "https://historyfacts.com/feed/", "source": "History Facts", "category": "history_facts" },
-    { "url": "https://www.worldhistory.org/rss2/?lang=en", "source": "World History Encyclopedia", "category": "history_facts" },
-    { "url": "https://feeds.feedburner.com/TodayIFoundOut", "source": "Today I Found Out", "category": "history_facts" },
-    { "url": "https://www.history.com/this-day-in-history/rss", "source": "HISTORY.com", "category": "history_events" },
-    { "url": "https://www.ancientpages.com/feed/", "source": "Ancient Pages", "category": "history_events" },
-    { "url": "https://www.historyhit.com/feed/", "source": "History Hit", "category": "history_events" }
+    { "url": "https://arstechnica.com/ai/feed", "source": "Ars Technica AI", "category": "ai_news" }
   ],
 
   "image": {

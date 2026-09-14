@@ -51,6 +51,9 @@ public class ApiConfig
 
     [JsonPropertyName("instagram_business_account_id")]
     public string InstagramBusinessAccountId { get; set; } = "";
+
+    [JsonPropertyName("youtube_api_key")]
+    public string YouTubeApiKey { get; set; } = "";
 }
 
 public class SettingsConfig
@@ -96,6 +99,12 @@ public class CategoryConfig
 
     [JsonPropertyName("celebrities")]
     public string[] Celebrities { get; set; } = Array.Empty<string>();
+
+    [JsonPropertyName("content_type")]
+    public string ContentType { get; set; } = "post";
+
+    [JsonPropertyName("youtube_query")]
+    public string YouTubeQuery { get; set; } = "";
 }
 
 public class RssFeedConfig

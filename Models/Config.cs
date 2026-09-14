@@ -21,6 +21,7 @@ public static class Config
     public static string META_ACCESS_TOKEN => Remote.Api.MetaAccessToken;
     public static string INSTAGRAM_BUSINESS_ACCOUNT_ID => Remote.Api.InstagramBusinessAccountId;
     public static string IMGBB_API_KEY => Remote.Api.ImgbbKey;
+    public static string YOUTUBE_API_KEY => Remote.Api.YouTubeApiKey;
 
     // Settings
     public static string LANGUAGE => Remote.Settings.Language;
@@ -95,6 +96,28 @@ public static class Config
         if (Remote.Categories.TryGetValue(key, out var cat))
             return cat.Color;
         return "#D1FF02";
+    }
+
+    public static string GetCategoryContentType(string key)
+    {
+        if (Remote.Categories.TryGetValue(key, out var cat))
+            return cat.ContentType;
+        return "post";
+    }
+
+    public static string GetCategoryYouTubeQuery(string key)
+    {
+        if (Remote.Categories.TryGetValue(key, out var cat))
+            return cat.YouTubeQuery;
+        return "";
+    }
+
+    // Get categories by content type (post or reel)
+    public static Dictionary<string, CategoryConfig> GetCategoriesByContentType(string contentType)
+    {
+        return Remote.Categories
+            .Where(kv => kv.Value.ContentType == contentType)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
     }
 
     // Output paths

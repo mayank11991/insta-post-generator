@@ -17,21 +17,12 @@ public class MainPageViewModel : INotifyPropertyChanged
     private string _statusMessage = "Ready to generate posts";
     private ObservableCollection<PostItemViewModel> _posts = new();
     private int _liveCount;
+    private bool _isPostMode = true;
 
     public MainPageViewModel()
     {
-        // Initialize categories from remote config
-        var config = RemoteConfigService.GetConfig();
-        Categories = new ObservableCollection<CategorySelection>();
-        foreach (var kv in config.Categories)
-        {
-            Categories.Add(new CategorySelection
-            {
-                Name = kv.Key,
-                DisplayName = $"{kv.Value.Emoji} {kv.Value.DisplayName}",
-                IsSelected = Categories.Count == 0
-            });
-        }
+        // Initialize categories from remote config (default to post mode)
+        LoadCategories("post");
 
         GenerateCommand = new Command(async () => await GeneratePostsAsync(), () => !IsGenerating);
         TestImageCommand = new Command(async () => await GenerateTestImageAsync(), () => !IsGenerating);
@@ -50,10 +41,41 @@ public class MainPageViewModel : INotifyPropertyChanged
                 p.IsSelected = !p.IsSelected;
             }
         });
+        SetPostModeCommand = new Command(() => SetMode("post"));
+        SetReelModeCommand = new Command(() => SetMode("reel"));
 
         // Load saved posts
         LoadSavedPosts();
     }
+
+    private void LoadCategories(string contentType)
+    {
+        Categories.Clear();
+        var config = RemoteConfigService.GetConfig();
+        foreach (var kv in config.Categories)
+        {
+            if (kv.Value.ContentType == contentType)
+            {
+                Categories.Add(new CategorySelection
+                {
+                    Name = kv.Key,
+                    DisplayName = $"{kv.Value.Emoji} {kv.Value.DisplayName}",
+                    IsSelected = Categories.Count == 0
+                });
+            }
+        }
+    }
+
+    private void SetMode(string mode)
+    {
+        IsPostMode = mode == "post";
+        LoadCategories(mode);
+        OnPropertyChanged(nameof(IsPostMode));
+        OnPropertyChanged(nameof(ModeLabel));
+        OnPropertyChanged(nameof(GenerateButtonText));
+    }
+
+    public string ModeLabel => IsPostMode ? "📝 Posts" : "🎬 Reels";
 
     public int SelectedPostCount => Posts.Count(p => p.IsSelected);
     public bool CanPostCarousel => SelectedPostCount >= 2;
@@ -85,7 +107,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         set { _generateProgress = value; OnPropertyChanged(); _liveCount = (int)(value * 10); OnPropertyChanged(nameof(GenerateButtonText)); OnPropertyChanged(nameof(ShowTick)); }
     }
 
-    public string GenerateButtonText => IsDone ? "✓ Done" : IsGenerating ? $"Generating... {_liveCount}/10" : "Generate Posts";
+    public string GenerateButtonText => IsDone ? "✓ Done" : IsGenerating ? $"Generating... {_liveCount}/10" : IsPostMode ? "Generate Posts" : "Generate Reels";
     public bool ShowTick => IsDone;
 
     private bool _isDone;
@@ -106,6 +128,14 @@ public class MainPageViewModel : INotifyPropertyChanged
     public ICommand ToggleCategoryCommand { get; }
     public ICommand PostCarouselCommand { get; }
     public ICommand TogglePostSelectionCommand { get; }
+    public ICommand SetPostModeCommand { get; }
+    public ICommand SetReelModeCommand { get; }
+
+    public bool IsPostMode
+    {
+        get => _isPostMode;
+        set { _isPostMode = value; OnPropertyChanged(); }
+    }
 
     private async Task GenerateTestImageAsync()
     {

@@ -22,11 +22,83 @@
                        FontAttributes="Bold"
                        TextColor="#D1FF02"
                        HorizontalOptions="Center" />
-                <Label Text="Generate Instagram-ready posts with images, captions and hashtags"
+                <Label Text="Generate Instagram-ready posts and reels"
                        FontSize="14"
                        TextColor="#888"
                        HorizontalOptions="Center" />
             </VerticalStackLayout>
+
+            <!-- Post/Reel Mode Selection -->
+            <Frame BackgroundColor="#1A1D24"
+                   BorderColor="#333"
+                   CornerRadius="12"
+                   Padding="16"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Select Mode"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#D1FF02" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected}"
+                               BorderColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
+                               CornerRadius="10"
+                               Padding="16"
+                               HasShadow="False"
+                               Grid.Column="0">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetPostModeCommand}" />
+                            </Frame.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="📝"
+                                       FontSize="32"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Posts"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="True">
+                                            <Setter Property="TextColor" Value="#D1FF02" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="False">
+                                            <Setter Property="TextColor" Value="#888" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Frame>
+                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource InverseBoolConverter}, ConverterParameter=selected}"
+                               BorderColor="{Binding IsPostMode, Converter={StaticResource InverseBoolConverter}, ConverterParameter=border}"
+                               CornerRadius="10"
+                               Padding="16"
+                               HasShadow="False"
+                               Grid.Column="1">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SetReelModeCommand}" />
+                            </Frame.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                                <Label Text="🎬"
+                                       FontSize="32"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Reels"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="False">
+                                            <Setter Property="TextColor" Value="#D1FF02" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="True">
+                                            <Setter Property="TextColor" Value="#888" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
 
             <!-- Category Selection -->
             <Frame BackgroundColor="#1A1D24"

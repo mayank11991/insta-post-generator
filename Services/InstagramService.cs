@@ -71,6 +71,50 @@ public static class InstagramService
         }
     }
 
+    public static async Task<string> PostReelAsync(string videoPath, string caption, string hashtags, Action<string>? onStatus = null)
+    {
+        var accessToken = Config.META_ACCESS_TOKEN;
+        var igUserId = Config.INSTAGRAM_BUSINESS_ACCOUNT_ID;
+
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(igUserId))
+            return "Error: Meta API credentials not configured";
+
+        if (string.IsNullOrEmpty(videoPath) || !File.Exists(videoPath))
+            return "Error: Video file not found";
+
+        onStatus?.Invoke("Uploading video...");
+
+        // Upload video to accessible URL
+        var videoUrl = await UploadVideoToFacebookPageAsync(videoPath, accessToken);
+        if (string.IsNullOrEmpty(videoUrl))
+        {
+            videoUrl = await UploadToImgbbAsync(videoPath);
+        }
+        if (string.IsNullOrEmpty(videoUrl))
+            return "Error: Failed to upload video";
+
+        onStatus?.Invoke("Creating Instagram reel...");
+
+        var fullCaption = caption + "\n\n" + hashtags;
+
+        // Create reel container
+        var containerId = await CreateReelContainerAsync(igUserId, videoUrl, fullCaption, accessToken);
+        if (string.IsNullOrEmpty(containerId))
+            return "Error: Failed to create reel container";
+
+        onStatus?.Invoke("Waiting for processing...");
+        var ready = await WaitForContainerAsync(containerId, accessToken, maxWait: 300); // Reels take longer
+        if (!ready)
+            return "Error: Processing timed out";
+
+        onStatus?.Invoke("Publishing reel...");
+        var mediaId = await PublishAsync(igUserId, containerId, accessToken);
+        if (string.IsNullOrEmpty(mediaId))
+            return "Error: Failed to publish";
+
+        return "Reel posted! Media ID: " + mediaId;
+    }
+
     private static async Task<string> PostCarouselAsync(string igUserId, List<string> imageUrls, string caption, string accessToken, Action<string>? onStatus)
     {
         try
@@ -176,6 +220,38 @@ public static class InstagramService
         return null;
     }
 
+    private static async Task<string> CreateReelContainerAsync(string igUserId, string videoUrl, string caption, string accessToken)
+    {
+        try
+        {
+            var url = "https://graph.facebook.com/v19.0/" + igUserId + "/media";
+            var payload = new
+            {
+                media_type = "REELS",
+                video_url = videoUrl,
+                caption = caption,
+                share_to_feed = true,
+                access_token = accessToken
+            };
+
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _http.PostAsync(url, content);
+            var responseJson = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(responseJson);
+
+            if (doc.RootElement.TryGetProperty("id", out var id))
+                return id.GetString();
+
+            System.Diagnostics.Debug.WriteLine("[IG] Reel container failed: " + responseJson);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("[IG] Reel container error: " + ex.Message);
+        }
+        return null;
+    }
+
     private static async Task<string> UploadToFacebookPageAsync(string imagePath, string accessToken)
     {
         try
@@ -228,6 +304,62 @@ public static class InstagramService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine("[IG] FB upload failed: " + ex.Message);
+        }
+        return null;
+    }
+
+    private static async Task<string> UploadVideoToFacebookPageAsync(string videoPath, string accessToken)
+    {
+        try
+        {
+            // Get connected Facebook Page
+            var accountsUrl = "https://graph.facebook.com/v19.0/me/accounts?access_token=" + accessToken;
+            var accountsResp = await _http.GetStringAsync(accountsUrl);
+            var accountsDoc = JsonDocument.Parse(accountsResp);
+
+            if (!accountsDoc.RootElement.TryGetProperty("data", out var pages) || pages.GetArrayLength() == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("[IG] No Facebook Pages found for video upload");
+                return null;
+            }
+
+            var pageId = pages[0].GetProperty("id").GetString();
+            var pageToken = pages[0].GetProperty("access_token").GetString();
+
+            // Upload video to Page
+            var uploadUrl = "https://graph.facebook.com/v19.0/" + pageId + "/videos";
+            var videoBytes = await File.ReadAllBytesAsync(videoPath);
+
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(videoBytes), "source", Path.GetFileName(videoPath));
+            content.Add(new StringContent("false"), "published");
+            content.Add(new StringContent(pageToken), "access_token");
+
+            var response = await _http.PostAsync(uploadUrl, content);
+            var responseJson = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(responseJson);
+
+            if (doc.RootElement.TryGetProperty("id", out var videoId))
+            {
+                var vid = videoId.GetString();
+                // Get the video URL
+                var infoUrl = "https://graph.facebook.com/v19.0/" + vid + "?fields=source&access_token=" + pageToken;
+                var infoResp = await _http.GetStringAsync(infoUrl);
+                var infoDoc = JsonDocument.Parse(infoResp);
+
+                if (infoDoc.RootElement.TryGetProperty("source", out var source))
+                {
+                    var videoUrl = source.GetString();
+                    System.Diagnostics.Debug.WriteLine("[IG] Facebook video upload OK: " + videoUrl);
+                    return videoUrl;
+                }
+            }
+
+            System.Diagnostics.Debug.WriteLine("[IG] FB video upload response: " + responseJson);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("[IG] FB video upload failed: " + ex.Message);
         }
         return null;
     }
