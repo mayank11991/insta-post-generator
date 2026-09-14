@@ -278,7 +278,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                             if (!string.IsNullOrEmpty(videoPath) && File.Exists(videoPath))
                             {
                                 // Video downloaded successfully - process it
-                                var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 60);
+                                var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 90);
                                 if (trimmedPath != videoPath && File.Exists(trimmedPath))
                                     videoPath = trimmedPath;
 

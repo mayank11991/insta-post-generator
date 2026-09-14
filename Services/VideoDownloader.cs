@@ -51,7 +51,7 @@ public static class VideoDownloader
                         $"echo start > \"{logFile}\"\n" +
                         $"yt-dlp -f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\" " +
                         $"--merge-output-format mp4 " +
-                        $"--download-sections \"*0-60\" " +
+                        $"--download-sections \"*0-90\" " +
                         $"-o \"{outputPath}\" " +
                         $"--no-playlist " +
                         $"--socket-timeout 30 " +

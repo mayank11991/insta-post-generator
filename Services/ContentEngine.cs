@@ -403,32 +403,32 @@ public static class ContentEngine
             },
             TemplateIds = new[] { 14 }
         },
-        ["bollywood_reels"] = new CategoryInfo
+        ["bollywood_teasers"] = new CategoryInfo
         {
-            Label = "Bollywood Reels",
+            Label = "Bollywood Teasers",
             PriorityWeight = 9,
             Keywords = new[]
             {
-                "bollywood", "movie clip", "song clip", "trailer",
-                "scene", "dialogue", "dance", "action", "romance"
+                "bollywood", "movie teaser", "official teaser", "trailer",
+                "film teaser", "first look", "movie clip", "song"
             },
             HookTemplates = new[]
             {
-                "🎬 This {entity} clip is going viral!",
-                "Watch this epic {entity} moment!",
-                "This {entity} scene is everything!",
-                "{entity} just dropped this amazing clip!",
-                "You NEED to see this {entity} reel!",
+                "🎬 {entity} teaser just dropped!",
+                "Watch this epic {entity} teaser!",
+                "This {entity} looks INSANE!",
+                "{entity} official teaser is here!",
+                "You NEED to see this {entity} teaser!",
                 "This {entity} moment is iconic!",
-                "Viral alert: {entity} clip! 🔥",
-                "This {entity} scene is pure gold!",
-                "Can't stop watching this {entity} reel!",
+                "Viral alert: {entity} teaser! 🔥",
+                "This {entity} is going to be HUGE!",
+                "Can't wait for {entity}!",
                 "{entity} just set the internet on fire! 🔥"
             },
             Hashtags = new[]
             {
-                "#BollywoodReels", "#MovieClip", "#BollywoodScene",
-                "#ViralReels", "#BollywoodMoments", "#Reels",
+                "#BollywoodTeaser", "#MovieTeaser", "#Bollywood",
+                "#ViralReels", "#NewMovie", "#Reels",
                 "#360buzz"
             },
             CTAs = new[]
@@ -436,14 +436,128 @@ public static class ContentEngine
                 "Watch till the end! 🔥",
                 "Tag someone who loves {entity}!",
                 "Share this reel!",
-                "Comment your favorite part!",
-                "Follow for more such clips!"
+                "Comment your excitement!",
+                "Follow for more such teasers!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["viral_trends"] = new CategoryInfo
+        {
+            Label = "Viral Trends",
+            PriorityWeight = 9,
+            Keywords = new[]
+            {
+                "viral", "trending", "funny", "comedy", "challenge",
+                "trending video", "viral video", "funny video", "dance"
+            },
+            HookTemplates = new[]
+            {
+                "🔥 This is going VIRAL right now!",
+                "Watch this before it blows up!",
+                "This is the funniest thing today!",
+                "Everyone is sharing this!",
+                "You NEED to watch this viral reel!",
+                "This is breaking the internet! 🔥",
+                "Viral alert: Can't miss this!",
+                "This is the most shared video today!",
+                "Can't stop watching this!",
+                "This is why internet is amazing! 🔥"
+            },
+            Hashtags = new[]
+            {
+                "#ViralTrends", "#Trending", "#Viral",
+                "#Funny", "#TrendingNow", "#Reels",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "Tag someone who needs to see this!",
+                "Share with your friends!",
+                "Comment if this made you laugh!",
+                "Follow for more viral content!",
+                "Too good not to share!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["viral_paparazzi"] = new CategoryInfo
+        {
+            Label = "Viral Paparazzi",
+            PriorityWeight = 9,
+            Keywords = new[]
+            {
+                "paparazzi", "spotted", "celebrity", "airport",
+                "bollywood", "party", "outing", "couple", "wedding"
+            },
+            HookTemplates = new[]
+            {
+                "📸 {entity} just got SPOTTED!",
+                "Look what {entity} was doing!",
+                "{entity} spotted and it's going viral!",
+                "You won't believe where {entity} was spotted!",
+                "This {entity} sighting is EVERYTHING!",
+                "{entity} looking stunning as always! 🔥",
+                "Viral alert: {entity} spotted! 📸",
+                "Can't stop looking at {entity}!",
+                "{entity} just made our day! ✨",
+                "This {entity} moment is pure gold! 🔥"
+            },
+            Hashtags = new[]
+            {
+                "#Paparazzi", "#Spotted", "#BollywoodSpotted",
+                "#CelebritySpotted", "#Viral", "#Reels",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "Tag someone who loves {entity}!",
+                "Share this sighting!",
+                "Comment your reaction!",
+                "Follow for more celebrity updates!",
+                "What do you think about this look?"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["political_highlights"] = new CategoryInfo
+        {
+            Label = "Political Highlights",
+            PriorityWeight = 8,
+            Keywords = new[]
+            {
+                "politics", "modi", "parliament", "election",
+                "political", "minister", "government", "debate"
+            },
+            HookTemplates = new[]
+            {
+                "🏛️ This political moment is going viral!",
+                "Watch this {entity} political clip!",
+                "This {entity} moment is iconic!",
+                "{entity} just made this big move!",
+                "You NEED to see this political reel!",
+                "This {entity} speech is powerful!",
+                "Viral alert: {entity} political clip! 🔥",
+                "This {entity} moment is historic!",
+                "Can't stop watching this political reel!",
+                "{entity} just set the internet on fire! 🔥"
+            },
+            Hashtags = new[]
+            {
+                "#PoliticalHighlights", "#PoliticalNews", "#Modi",
+                "#Parliament", "#IndianPolitics", "#Reels",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "What's your take on this?",
+                "Tag someone who follows politics!",
+                "Share this reel!",
+                "Comment your thoughts!",
+                "Follow for more political updates!"
             },
             TemplateIds = new[] { 14 }
         },
         ["ai_reels"] = new CategoryInfo
         {
-            Label = "AI/Tech Reels",
+            Label = "AI Reels",
             PriorityWeight = 8,
             Keywords = new[]
             {
@@ -465,7 +579,7 @@ public static class ContentEngine
             },
             Hashtags = new[]
             {
-                "#AITech", "#TechReels", "#AIDemo",
+                "#AITech", "#AIReels", "#AIDemo",
                 "#FutureTech", "#Innovation", "#TechNews",
                 "#360buzz"
             },
@@ -479,166 +593,14 @@ public static class ContentEngine
             },
             TemplateIds = new[] { 14 }
         },
-        ["politics_reels"] = new CategoryInfo
+        ["webseries_reels"] = new CategoryInfo
         {
-            Label = "Politics Reels",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "politics", "modi", "parliament", "election",
-                "political", "minister", "government", "policy"
-            },
-            HookTemplates = new[]
-            {
-                "🏛️ This political moment is going viral!",
-                "Watch this {entity} political clip!",
-                "This {entity} moment is iconic!",
-                "{entity} just made this big move!",
-                "You NEED to see this political reel!",
-                "This {entity} speech is powerful!",
-                "Viral alert: {entity} political clip! 🔥",
-                "This {entity} moment is historic!",
-                "Can't stop watching this political reel!",
-                "{entity} just set the internet on fire! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#PoliticsReels", "#PoliticalNews", "#Modi",
-                "#Parliament", "#IndianPolitics", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "What's your take on this?",
-                "Tag someone who follows politics!",
-                "Share this reel!",
-                "Comment your thoughts!",
-                "Follow for more political updates!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["cricket_reels"] = new CategoryInfo
-        {
-            Label = "Cricket Reels",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "cricket", "ipl", "match", "batting", "bowling",
-                "virat kohli", "rohit sharma", "ms dhoni", "cricket highlight"
-            },
-            HookTemplates = new[]
-            {
-                "🏏 This cricket moment is EPIC!",
-                "Watch this {entity} cricket highlight!",
-                "This {entity} shot is pure class!",
-                "{entity} just hit this amazing shot!",
-                "You NEED to see this cricket reel!",
-                "This {entity} moment is legendary!",
-                "Viral alert: {entity} cricket clip! 🔥",
-                "This {entity} performance is fire!",
-                "Can't stop watching this cricket reel!",
-                "{entity} just set the cricket world on fire! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#CricketReels", "#IPL", "#CricketHighlights",
-                "#ViratKohli", "#RohitSharma", "#Cricket",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Who's your favorite cricketer?",
-                "Tag a cricket fan!",
-                "Share this reel!",
-                "Comment your favorite cricket moment!",
-                "Follow for more cricket updates!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["viral_reels"] = new CategoryInfo
-        {
-            Label = "Viral Reels",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "viral", "trending", "funny", "comedy", "meme",
-                "trending video", "viral video", "funny video"
-            },
-            HookTemplates = new[]
-            {
-                "🔥 This video is going VIRAL!",
-                "Watch this before it gets taken down!",
-                "This is the funniest thing you'll see today!",
-                "Everyone is sharing this right now!",
-                "You NEED to watch this viral reel!",
-                "This is breaking the internet! 🔥",
-                "Viral alert: You can't miss this!",
-                "This is the most shared video today!",
-                "Can't stop watching this viral clip!",
-                "This is why the internet is amazing! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#ViralReels", "#Trending", "#Viral",
-                "#Funny", "#TrendingNow", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Tag someone who needs to see this!",
-                "Share this with your friends!",
-                "Comment if this made you laugh!",
-                "Follow for more viral content!",
-                "This is too good not to share!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["singer_clips"] = new CategoryInfo
-        {
-            Label = "Singer Clips",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "singer", "song", "music", "live performance",
-                "arijit singh", "shreya ghoshal", "演唱会", "concert"
-            },
-            HookTemplates = new[]
-            {
-                "🎤 This {entity} performance is FIRE!",
-                "Watch {entity} sing live!",
-                "This {entity} song is going viral!",
-                "{entity} just dropped this amazing clip!",
-                "You NEED to hear {entity} sing!",
-                "This {entity} performance gave me chills!",
-                "Viral alert: {entity} singing! 🔥",
-                "This {entity} song is pure magic!",
-                "Can't stop listening to {entity}!",
-                "{entity} just set the stage on fire! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#SingerReels", "#LivePerformance", "#MusicReels",
-                "#ArijitSingh", "#ShreyaGhoshal", "#Songs",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Which is your favorite {entity} song?",
-                "Tag a music lover!",
-                "Share this reel!",
-                "Comment your favorite song!",
-                "Follow for more music clips!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["webseries_clips"] = new CategoryInfo
-        {
-            Label = "Web Series Clips",
+            Label = "Web Series Reels",
             PriorityWeight = 8,
             Keywords = new[]
             {
                 "web series", "netflix", "amazon prime", "hotstar",
-                "series trailer", "show trailer", "web show"
+                "series trailer", "show trailer", "web show", "ott"
             },
             HookTemplates = new[]
             {
@@ -655,7 +617,7 @@ public static class ContentEngine
             },
             Hashtags = new[]
             {
-                "#WebSeries", "#NetflixSeries", "#AmazonPrime",
+                "#WebSeriesReels", "#NetflixSeries", "#AmazonPrime",
                 "#SeriesReels", "#OTTShows", "#Reels",
                 "#360buzz"
             },
@@ -682,13 +644,12 @@ public static class ContentEngine
         ["politics_breaking"] = new SeriesInfo { Name = "Politics Breaking", BestFor = new[] { "india_politics" }, Description = "Breaking political developments" },
         ["facts_daily"] = new SeriesInfo { Name = "Bollywood Facts", BestFor = new[] { "bollywood_facts" }, Description = "Unknown Bollywood facts & trivia" },
         ["quiz_daily"] = new SeriesInfo { Name = "Bollywood Quiz", BestFor = new[] { "quiz" }, Description = "Daily Bollywood quiz challenge" },
-        ["reels_bollywood"] = new SeriesInfo { Name = "Bollywood Reels", BestFor = new[] { "bollywood_reels" }, Description = "Best Bollywood clips & moments" },
-        ["reels_ai"] = new SeriesInfo { Name = "AI/Tech Reels", BestFor = new[] { "ai_reels" }, Description = "Latest AI & tech clips" },
-        ["reels_politics"] = new SeriesInfo { Name = "Politics Reels", BestFor = new[] { "politics_reels" }, Description = "Political moments & clips" },
-        ["reels_cricket"] = new SeriesInfo { Name = "Cricket Reels", BestFor = new[] { "cricket_reels" }, Description = "Cricket highlights & moments" },
-        ["reels_viral"] = new SeriesInfo { Name = "Viral Reels", BestFor = new[] { "viral_reels" }, Description = "Trending viral clips" },
-        ["reels_singers"] = new SeriesInfo { Name = "Singer Clips", BestFor = new[] { "singer_clips" }, Description = "Live performances & song clips" },
-        ["reels_webseries"] = new SeriesInfo { Name = "Web Series Clips", BestFor = new[] { "webseries_clips" }, Description = "Best web series moments" }
+        ["reels_bollywood_teasers"] = new SeriesInfo { Name = "Bollywood Teasers", BestFor = new[] { "bollywood_teasers" }, Description = "Latest Bollywood teasers & trailers" },
+        ["reels_viral_trends"] = new SeriesInfo { Name = "Viral Trends", BestFor = new[] { "viral_trends" }, Description = "Trending viral clips" },
+        ["reels_paparazzi"] = new SeriesInfo { Name = "Viral Paparazzi", BestFor = new[] { "viral_paparazzi" }, Description = "Celebrity spotted moments" },
+        ["reels_politics"] = new SeriesInfo { Name = "Political Highlights", BestFor = new[] { "political_highlights" }, Description = "Political moments & clips" },
+        ["reels_ai"] = new SeriesInfo { Name = "AI Reels", BestFor = new[] { "ai_reels" }, Description = "Latest AI & tech clips" },
+        ["reels_webseries"] = new SeriesInfo { Name = "Web Series Reels", BestFor = new[] { "webseries_reels" }, Description = "Best web series moments" }
     };
 
     // Celebrity names for entity extraction

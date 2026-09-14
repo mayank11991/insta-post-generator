@@ -20,7 +20,7 @@
     "min_article_score": 5,
     "story_similarity_threshold": 0.5,
     "page_name": "360buzz",
-    "max_reel_duration_seconds": 60
+    "max_reel_duration_seconds": 90
   },
 
   "categories": {
@@ -60,77 +60,95 @@
       "content_type": "post",
       "mode": "quiz"
     },
-    "bollywood_reels": {
-      "display_name": "Bollywood Reels",
-      "query": "bollywood latest movie song trailer clip scene",
+    "bollywood_teasers": {
+      "display_name": "Bollywood Teasers",
+      "query": "bollywood movie teaser official 2026",
       "color": "#E91E63",
       "emoji": "🎬",
       "content_type": "reel",
       "youtube_queries": [
-        "bollywood paparazzi spotted celebrity 2026",
-        "bollywood celebrity interview funny moment viral",
-        "bollywood couple relationship dating wedding",
-        "bollywood behind the scenes bts funny",
-        "bollywood actor actress dance performance show",
-        "bollywood movie teaser trailer official 2026",
-        "bollywood news latest gossip controversy",
-        "bollywood song music video official 2026",
-        "indian celebrity lifestyle party spotted"
+        "bollywood official teaser 2026 hindi",
+        "bollywood movie trailer short official",
+        "bollywood song teaser clip 2026",
+        "new bollywood movie look reveal",
+        "bollywood upcoming movie teaser"
       ]
     },
-    "ai_reels": {
-      "display_name": "AI/Tech Reels",
-      "query": "artificial intelligence technology news latest breakthrough",
-      "color": "#00BCD4",
-      "emoji": "🤖",
-      "content_type": "reel",
-      "youtube_query": "artificial intelligence technology news latest 2026"
-    },
-    "politics_reels": {
-      "display_name": "Politics Reels",
-      "query": "india politics news latest modi parliament",
-      "color": "#F44336",
-      "emoji": "🏛️",
-      "content_type": "reel",
-      "youtube_query": "india politics news latest 2026"
-    },
-    "cricket_reels": {
-      "display_name": "Cricket Reels",
-      "query": "cricket highlights india latest match ipl",
-      "color": "#4CAF50",
-      "emoji": "🏏",
-      "content_type": "reel",
-      "youtube_query": "cricket highlights india latest 2026"
-    },
-    "viral_reels": {
-      "display_name": "Viral Reels",
-      "query": "trending viral video india funny trending",
+    "viral_trends": {
+      "display_name": "Viral Trends",
+      "query": "trending viral video india funny",
       "color": "#FF5722",
       "emoji": "🔥",
       "content_type": "reel",
-      "youtube_query": "trending viral video india 2026"
+      "youtube_queries": [
+        "india trending viral video 2026",
+        "funny viral video india trending",
+        "viral challenge trending india",
+        "trending dance video india 2026",
+        "viral reel trending india short"
+      ]
     },
-    "singer_clips": {
-      "display_name": "Singer Clips",
-      "query": "arijit singh shreya ghoshal latest song live performance",
-      "color": "#E1BEE7",
-      "emoji": "🎤",
+    "viral_paparazzi": {
+      "display_name": "Viral Paparazzi",
+      "query": "bollywood paparazzi spotted celebrity",
+      "color": "#FF9800",
+      "emoji": "📸",
       "content_type": "reel",
-      "youtube_query": "arijit singh shreya ghoshal latest song live 2026"
+      "youtube_queries": [
+        "bollywood paparazzi spotted 2026",
+        "celebrity airport spotted bollywood",
+        "bollywood celebrity gym outing spotted",
+        "bollywood couple spotted dinner party",
+        "celebrity birthday party bollywood spotted"
+      ]
     },
-    "webseries_clips": {
-      "display_name": "Web Series Clips",
-      "query": "netflix amazon prime hotstar hindi web series trailer",
+    "political_highlights": {
+      "display_name": "Political Highlights",
+      "query": "india politics news modi parliament debate",
+      "color": "#F44336",
+      "emoji": "🏛️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india parliament debate funny moment",
+        "modi speech highlight viral 2026",
+        "india politics funny viral clip",
+        "india political debate intense moment",
+        "india election campaign rally 2026"
+      ]
+    },
+    "ai_reels": {
+      "display_name": "AI Reels",
+      "query": "artificial intelligence technology news latest",
+      "color": "#00BCD4",
+      "emoji": "🤖",
+      "content_type": "reel",
+      "youtube_queries": [
+        "artificial intelligence demo 2026",
+        "AI robot technology viral video",
+        "chatgpt AI funny viral video",
+        "AI generated art video trending",
+        "future technology AI short video"
+      ]
+    },
+    "webseries_reels": {
+      "display_name": "Web Series Reels",
+      "query": "hindi web series trailer netflix amazon prime",
       "color": "#7B1FA2",
       "emoji": "📺",
       "content_type": "reel",
-      "youtube_query": "hindi web series trailer netflix amazon prime 2026"
+      "youtube_queries": [
+        "hindi web series trailer 2026 netflix",
+        "amazon prime india web series trailer",
+        "hotstar web series official trailer",
+        "best hindi web series scene clip",
+        "OTT web series trailer short 2026"
+      ]
     }
   },
 
   "exclude_keywords": [
     "tamil", "telugu", "malayalam", "kannada", "tollywood", "kollywood",
-    "rajinikanth", "chiranjeevi", "allu arjun", "mahesh babu", "prabhas",
+    "rajinikanth", "chiranjeeeevi", "allu arjun", "mahesh babu", "prabhas",
     "ram charan", "jr ntr", "vijay", "ajith", "suriya", "dulquer",
     "mammoth", "mohanlal", "fahadh", "pan india", "south indian",
     " jr ", " jr.", " kannada", " tamil", " telugu", " malayalam"
