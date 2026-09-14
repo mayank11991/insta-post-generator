@@ -205,9 +205,114 @@ public class MainPageViewModel : INotifyPropertyChanged
                 var config = RemoteConfigService.GetConfig();
                 var catConfig = config.Categories.GetValueOrDefault(category);
                 var isImageOnly = catConfig?.Mode == "image_only";
+                var isReelCategory = catConfig?.ContentType == "reel";
 
-                StatusMessage = isImageOnly ? $"Fetching HD images for {category}..." : $"Fetching news for {category}...";
-                Log($"=== Starting category: {category} (imageOnly={isImageOnly}) ===");
+                StatusMessage = isReelCategory ? $"Fetching videos for {category}..." : isImageOnly ? $"Fetching HD images for {category}..." : $"Fetching news for {category}...";
+                Log($"=== Starting category: {category} (imageOnly={isImageOnly}, isReel={isReelCategory}) ===");
+                
+                if (isReelCategory)
+                {
+                    // Fetch YouTube videos for reel categories
+                    var youtubeQuery = Config.GetCategoryYouTubeQuery(category);
+                    if (string.IsNullOrEmpty(youtubeQuery))
+                        youtubeQuery = catConfig?.Query ?? category;
+
+                    List<VideoItem> videos;
+                    try
+                    {
+                        StatusMessage = $"Searching YouTube for {category}...";
+                        videos = await VideoFetcher.FetchYouTubeVideosAsync(youtubeQuery, Config.POSTS_PER_RUN);
+                        Log($"Fetched {videos.Count} videos for {category}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log($"VIDEO FETCH ERROR: {ex}");
+                        StatusMessage = $"Video fetch error: {ex.Message}";
+                        break;
+                    }
+
+                    if (!videos.Any())
+                    {
+                        Log($"No videos found for {category}");
+                        continue;
+                    }
+
+                    foreach (var video in videos)
+                    {
+                        try
+                        {
+                            if (allPosts.Count >= 10) break;
+
+                            Log($"Processing video: {video.Title?.Substring(0, Math.Min(40, video.Title?.Length ?? 0))}");
+                            StatusMessage = $"[{allPosts.Count + 1}/10] Downloading: {(video.Title?.Length > 50 ? video.Title[..50] : video.Title)}...";
+
+                            // Download video
+                            var videoPath = await VideoDownloader.DownloadVideoAsync(video.VideoUrl, outputDir);
+                            if (string.IsNullOrEmpty(videoPath) || !File.Exists(videoPath))
+                            {
+                                Log($"  Failed to download video: {video.VideoUrl}");
+                                continue;
+                            }
+
+                            // Trim if needed
+                            var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 60);
+                            if (trimmedPath != videoPath && File.Exists(trimmedPath))
+                            {
+                                videoPath = trimmedPath;
+                            }
+
+                            // Convert to reel format (9:16)
+                            var reelPath = await VideoProcessor.ConvertToReelFormatAsync(videoPath);
+                            if (reelPath != videoPath && File.Exists(reelPath))
+                            {
+                                videoPath = reelPath;
+                            }
+
+                            // Extract thumbnail for display
+                            var thumbPath = await VideoProcessor.ExtractThumbnailAsync(videoPath);
+                            if (string.IsNullOrEmpty(thumbPath) || !File.Exists(thumbPath))
+                            {
+                                // Use video path as fallback
+                                thumbPath = videoPath;
+                            }
+
+                            // Build caption for reel
+                            var caption = $"🎬 {video.Title}\n\n📺 Channel: {video.ChannelName}\n\n{video.Description}";
+                            var hashtags = $"#Reels #{category} #Viral #Trending #360buzz";
+
+                            var displayItem = new PostDisplayItem
+                            {
+                                Index = globalIndex + 1,
+                                ImagePath = thumbPath,
+                                VideoPath = videoPath,
+                                Caption = caption,
+                                SourceUrl = video.VideoUrl,
+                                SourceName = video.ChannelName,
+                                Hashtags = hashtags,
+                                CategoryLabel = catConfig?.DisplayName ?? category,
+                                Hook = video.Title,
+                                SeriesName = $"{catConfig?.DisplayName ?? category} Reels",
+                                IsReel = true
+                            };
+
+                            allPosts.Add(displayItem);
+                            globalIndex++;
+                            GenerateProgress = (double)allPosts.Count / 10;
+                            Log($"  REEL {allPosts.Count}/10 CREATED: {SafeSlug(video.Title)}");
+                            StatusMessage = $"[{allPosts.Count}/10] Generated reel: {video.Title?.Substring(0, Math.Min(30, video.Title?.Length ?? 0))}...";
+                        }
+                        catch (Exception ex)
+                        {
+                            Log($"  ERROR processing video: {ex}");
+                            StatusMessage = $"Error: {ex.Message}";
+                            await Task.Delay(1000);
+                        }
+                    }
+
+                    if (allPosts.Count >= 10) break;
+                }
+                else
+                {
                 
                 var fetchMore = new Func<Task<List<Article>>>(async () =>
                 {
@@ -325,6 +430,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                             ImagePath = imagePath,
                             Caption = caption,
                             SourceUrl = article.Link,
+                            SourceName = article.Source?.Name ?? "",
                             Hashtags = string.Join(" ", processed.Hashtags),
                             CategoryLabel = processed.CategoryLabel,
                             Hook = processed.Hook,
@@ -349,6 +455,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                 }
 
                 if (allPosts.Count >= 10) break;
+                }
             }
 
             SaveSeenStore(seen);

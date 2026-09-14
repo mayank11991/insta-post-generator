@@ -26,12 +26,12 @@ public class PostItemViewModel : INotifyPropertyChanged
 
     public PostDisplayItem Item { get; }
     public int Index { get; }
-    public string DisplayTitle => $"{Index}. {Item.Hook}";
+    public string DisplayTitle => Item.IsReel ? $"{Index}. 🎬 {Item.Hook}" : $"{Index}. {Item.Hook}";
     public string CategoryDisplay => $"[{Item.CategoryLabel}]";
     public string SeriesDisplay => $"Series: {Item.SeriesName}";
     public string CaptionPreview => Item.Caption;
     public string HashtagsDisplay => Item.Hashtags;
-    public string SourceDisplay => $"Source: {Item.SourceUrl}";
+    public string SourceDisplay => !string.IsNullOrEmpty(Item.SourceName) ? $"Source: {Item.SourceName}" : $"Source: {Item.SourceUrl}";
 
     public bool IsSelected
     {
@@ -86,11 +86,23 @@ public class PostItemViewModel : INotifyPropertyChanged
 
         try
         {
-            var result = await InstagramService.PostToInstagramAsync(
-                Item.ImagePath,
-                Item.Caption,
-                Item.Hashtags,
-                status => PostButtonText = $"📤 {status}");
+            string result;
+            if (Item.IsReel && !string.IsNullOrEmpty(Item.VideoPath) && File.Exists(Item.VideoPath))
+            {
+                result = await InstagramService.PostReelAsync(
+                    Item.VideoPath,
+                    Item.Caption,
+                    Item.Hashtags,
+                    status => PostButtonText = $"📤 {status}");
+            }
+            else
+            {
+                result = await InstagramService.PostToInstagramAsync(
+                    Item.ImagePath,
+                    Item.Caption,
+                    Item.Hashtags,
+                    status => PostButtonText = $"📤 {status}");
+            }
 
             if (result.StartsWith("Posted!"))
             {

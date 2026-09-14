@@ -69,8 +69,11 @@ public class PostDisplayItem
     public string ImagePath { get; set; } = "";
     public string Caption { get; set; } = "";
     public string SourceUrl { get; set; } = "";
+    public string SourceName { get; set; } = "";
     public string Hashtags { get; set; } = "";
     public string CategoryLabel { get; set; } = "";
     public string Hook { get; set; } = "";
     public string SeriesName { get; set; } = "";
+    public bool IsReel { get; set; }
+    public string VideoPath { get; set; } = "";
 }
