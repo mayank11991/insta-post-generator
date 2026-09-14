@@ -66,7 +66,17 @@
       "color": "#E91E63",
       "emoji": "🎬",
       "content_type": "reel",
-      "youtube_query": "bollywood latest movie song trailer 2026"
+      "youtube_queries": [
+        "bollywood paparazzi spotted celebrity 2026",
+        "bollywood celebrity interview funny moment viral",
+        "bollywood couple relationship dating wedding",
+        "bollywood behind the scenes bts funny",
+        "bollywood actor actress dance performance show",
+        "bollywood movie teaser trailer official 2026",
+        "bollywood news latest gossip controversy",
+        "bollywood song music video official 2026",
+        "indian celebrity lifestyle party spotted"
+      ]
     },
     "ai_reels": {
       "display_name": "AI/Tech Reels",

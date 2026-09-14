@@ -105,6 +105,9 @@ public class CategoryConfig
 
     [JsonPropertyName("youtube_query")]
     public string YouTubeQuery { get; set; } = "";
+
+    [JsonPropertyName("youtube_queries")]
+    public string[] YouTubeQueries { get; set; } = Array.Empty<string>();
 }
 
 public class RssFeedConfig

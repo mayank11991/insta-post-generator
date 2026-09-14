@@ -112,6 +112,14 @@ public static class Config
         return "";
     }
 
+    public static string[] GetCategoryYouTubeQueries(string key)
+    {
+        if (Remote.Categories.TryGetValue(key, out var cat) && cat.YouTubeQueries.Length > 0)
+            return cat.YouTubeQueries;
+        var single = GetCategoryYouTubeQuery(key);
+        return string.IsNullOrEmpty(single) ? Array.Empty<string>() : new[] { single };
+    }
+
     // Get categories by content type (post or reel)
     public static Dictionary<string, CategoryConfig> GetCategoriesByContentType(string contentType)
     {

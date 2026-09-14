@@ -114,10 +114,9 @@ public static class VideoFetcher
         // Exclude unwanted content
         var excludePatterns = new[]
         {
-            "compilation", "best of", "top 10", "funny moments",
-            "live stream", "full episode", "full movie",
-            "behind the scenes", "interview", "press conference",
-            "podcast", "reaction", "review"
+            "full episode", "full movie", "full song", "full video",
+            "live stream", "podcast", "lyrics", "karaoke",
+            "tutorial", "how to", "subscribe", "follow me"
         };
 
         foreach (var pattern in excludePatterns)
@@ -126,7 +125,6 @@ public static class VideoFetcher
                 return false;
         }
 
-        // Must have some relevance
         return true;
     }
 }

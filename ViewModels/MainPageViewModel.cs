@@ -212,17 +212,36 @@ public class MainPageViewModel : INotifyPropertyChanged
                 
                 if (isReelCategory)
                 {
-                    // Fetch YouTube videos for reel categories
-                    var youtubeQuery = Config.GetCategoryYouTubeQuery(category);
-                    if (string.IsNullOrEmpty(youtubeQuery))
-                        youtubeQuery = catConfig?.Query ?? category;
+                    // Fetch YouTube videos for reel categories (multiple queries for diversity)
+                    var youtubeQueries = Config.GetCategoryYouTubeQueries(category);
+                    if (youtubeQueries.Length == 0)
+                        youtubeQueries = new[] { catConfig?.Query ?? category };
 
                     List<VideoItem> videos;
                     try
                     {
                         StatusMessage = $"Searching YouTube for {category}...";
-                        videos = await VideoFetcher.FetchYouTubeVideosAsync(youtubeQuery, Config.POSTS_PER_RUN);
-                        Log($"Fetched {videos.Count} videos for {category}");
+                        var allVideos = new List<VideoItem>();
+                        var seenIds = new HashSet<string>();
+
+                        // Fetch from each query and deduplicate
+                        foreach (var q in youtubeQueries)
+                        {
+                            Log($"  Query: {q}");
+                            var fetched = await VideoFetcher.FetchYouTubeVideosAsync(q, 10);
+                            foreach (var v in fetched)
+                            {
+                                if (seenIds.Add(v.VideoId))
+                                    allVideos.Add(v);
+                            }
+                            if (allVideos.Count >= 15) break;
+                        }
+
+                        // Shuffle for diversity, take up to POSTS_PER_RUN
+                        var rng = new Random();
+                        videos = allVideos.OrderBy(_ => rng.Next()).Take(Config.POSTS_PER_RUN).ToList();
+
+                        Log($"Fetched {videos.Count} unique diverse videos for {category}");
                     }
                     catch (Exception ex)
                     {
