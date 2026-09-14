@@ -1,17 +1,16 @@
 using System.Diagnostics;
-using System.Text.Json;
 
 namespace InstaPostGenerator.Services;
 
 public static class VideoDownloader
 {
-    private static readonly string[] LogFile = { "/sdcard/Download/insta-post/dl_debug.log" };
+    private static readonly string LogFile = "/sdcard/Download/insta-post/dl_debug.log";
 
     private static void Log(string msg)
     {
         var line = $"{DateTime.Now:HH:mm:ss} {msg}";
         Debug.WriteLine($"[VideoDownloader] {msg}");
-        try { File.AppendAllText(LogFile[0], line + "\n"); } catch { }
+        try { File.AppendAllText(LogFile, line + "\n"); } catch { }
     }
 
     public static async Task<string> DownloadVideoAsync(string videoUrl, string outputDir)
@@ -19,14 +18,15 @@ public static class VideoDownloader
         try
         {
             Directory.CreateDirectory(outputDir);
-            File.WriteAllText(LogFile[0], "");
+            File.WriteAllText(LogFile, "");
 
-            // Try cobalt v7 API
-            var result = await DownloadViaCobaltAsync(videoUrl, outputDir);
+            Log($"Starting download: {videoUrl}");
+
+            var result = await DownloadViaTermuxAsync(videoUrl, outputDir);
             if (!string.IsNullOrEmpty(result) && File.Exists(result))
                 return result;
 
-            Log("All methods failed");
+            Log("Termux download failed");
             return null;
         }
         catch (Exception ex)
@@ -36,69 +36,109 @@ public static class VideoDownloader
         }
     }
 
-    private static async Task<string> DownloadViaCobaltAsync(string videoUrl, string outputDir)
+    private static async Task<string> DownloadViaTermuxAsync(string videoUrl, string outputDir)
     {
+#if ANDROID
         try
         {
-            using var httpClient = new HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(120);
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36");
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            var id = Guid.NewGuid().ToString("N")[..8];
+            var filename = $"{id}.mp4";
+            var outputPath = Path.Combine(outputDir, filename);
+            var doneFile = outputPath + ".done";
+            var logFile = outputPath + ".log";
 
-            // Try cobalt v7 API (no auth needed)
-            var requestBody = new Dictionary<string, object>
+            var script = $"#!/data/data/com.termux/files/usr/bin/bash\n" +
+                        $"echo start > \"{logFile}\"\n" +
+                        $"yt-dlp -f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\" " +
+                        $"--merge-output-format mp4 " +
+                        $"--download-sections \"*0-60\" " +
+                        $"-o \"{outputPath}\" " +
+                        $"--no-playlist " +
+                        $"--socket-timeout 30 " +
+                        $"\"{videoUrl}\" 2>>\"{logFile}\"\n" +
+                        $"RESULT=$?\n" +
+                        $"echo $RESULT > \"{doneFile}\"\n" +
+                        $"exit $RESULT\n";
+
+            var dir = "/sdcard/Download/insta-post";
+            Directory.CreateDirectory(dir);
+            var scriptPath = Path.Combine(dir, $"dl_{id}.sh");
+            File.WriteAllText(scriptPath, script);
+            Log($"Script: {scriptPath}");
+
+            var intent = new Android.Content.Intent("com.termux.RUN_COMMAND");
+            intent.SetClassName("com.termux", "com.termux.app.RunCommandService");
+            intent.PutExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash");
+            intent.PutExtra("com.termux.RUN_COMMAND_ARGUMENTS", new[] { scriptPath });
+            intent.PutExtra("com.termux.RUN_COMMAND_WORK_DIRECTORY", dir);
+            intent.PutExtra("com.termux.RUN_COMMAND_BACKGROUND", true);
+
+            try
             {
-                ["url"] = videoUrl,
-                ["vCodec"] = "h264",
-                ["vQuality"] = "720",
-                ["aFormat"] = "mp3",
-                ["isAudioOnly"] = false,
-                ["isNoTTWatermark"] = true
-            };
-
-            var json = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            Log($"Calling cobalt API: {videoUrl}");
-
-            var response = await httpClient.PostAsync("https://co.wuk.sh/api/json", content);
-            var responseJson = await response.Content.ReadAsStringAsync();
-
-            Log($"Cobalt {response.StatusCode}: {responseJson[..Math.Min(300, responseJson.Length)]}");
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var doc = JsonDocument.Parse(responseJson);
-            var root = doc.RootElement;
-
-            if (root.TryGetProperty("url", out var dlUrlProp))
+                Android.App.Application.Context.StartForegroundService(intent);
+                Log("ForegroundService started");
+            }
+            catch (Exception ex1)
             {
-                var dlUrl = dlUrlProp.GetString();
-                Log($"Download URL: {dlUrl?[..Math.Min(80, dlUrl?.Length ?? 0)]}");
-
-                var videoBytes = await httpClient.GetByteArrayAsync(dlUrl);
-                var outputPath = Path.Combine(outputDir, $"{Guid.NewGuid():N}.mp4");
-                await File.WriteAllBytesAsync(outputPath, videoBytes);
-
-                var fi = new FileInfo(outputPath);
-                Log($"Saved: {fi.Length} bytes -> {outputPath}");
-
-                if (fi.Length > 10000)
-                    return outputPath;
+                Log($"ForegroundService failed: {ex1.Message}");
+                try
+                {
+                    Android.App.Application.Context.StartService(intent);
+                    Log("StartService started");
+                }
+                catch (Exception ex2)
+                {
+                    Log($"StartService failed: {ex2.Message}");
+                    return null;
+                }
             }
 
-            if (root.TryGetProperty("error", out var errProp))
+            for (int i = 0; i < 90; i++)
             {
-                Log($"API error: {errProp.GetString()}");
+                await Task.Delay(2000);
+
+                if (i % 10 == 0)
+                    Log($"Waiting... {i * 2}s");
+
+                if (File.Exists(doneFile))
+                {
+                    var exitCode = (await File.ReadAllTextAsync(doneFile)).Trim();
+                    File.Delete(doneFile);
+
+                    if (exitCode == "0" && File.Exists(outputPath))
+                    {
+                        var fi = new FileInfo(outputPath);
+                        if (fi.Length > 10000)
+                        {
+                            var log = File.Exists(logFile) ? await File.ReadAllTextAsync(logFile) : "";
+                            File.Delete(logFile);
+                            File.Delete(scriptPath);
+                            Log($"SUCCESS: {fi.Length} bytes");
+                            if (!string.IsNullOrWhiteSpace(log))
+                                Log($"yt-dlp: {log[..Math.Min(200, log.Length)]}");
+                            return outputPath;
+                        }
+                    }
+
+                    var failLog = File.Exists(logFile) ? await File.ReadAllTextAsync(logFile) : "empty";
+                    File.Delete(logFile);
+                    File.Delete(scriptPath);
+                    Log($"yt-dlp FAILED (exit={exitCode}): {failLog[..Math.Min(300, failLog.Length)]}");
+                    return null;
+                }
             }
 
+            File.Delete(scriptPath);
+            Log("Timed out after 180s");
             return null;
         }
         catch (Exception ex)
         {
-            Log($"Cobalt error: {ex.Message}");
+            Log($"Termux error: {ex.Message}");
             return null;
         }
+#else
+        return null;
+#endif
     }
 }
