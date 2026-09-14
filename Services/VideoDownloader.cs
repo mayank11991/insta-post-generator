@@ -4,20 +4,20 @@ namespace InstaPostGenerator.Services;
 
 public static class VideoDownloader
 {
+    private static readonly HttpClient _http = new();
+
     public static async Task<string> DownloadVideoAsync(string videoUrl, string outputDir)
     {
         try
         {
             Directory.CreateDirectory(outputDir);
-            var outputPath = Path.Combine(outputDir, $"{Guid.NewGuid()}.mp4");
 
-            // Try yt-dlp first (most reliable)
-            if (await IsYtDlpAvailable())
-            {
-                return await DownloadWithYtDlpAsync(videoUrl, outputPath);
-            }
+            // Use Termux intent to run yt-dlp
+            var result = await DownloadViaTermuxAsync(videoUrl, outputDir);
+            if (!string.IsNullOrEmpty(result) && File.Exists(result))
+                return result;
 
-            Debug.WriteLine("[VideoDownloader] yt-dlp not found. Install via Termux: pkg install yt-dlp");
+            Debug.WriteLine("[VideoDownloader] Download failed");
             return null;
         }
         catch (Exception ex)
@@ -27,152 +27,86 @@ public static class VideoDownloader
         }
     }
 
-    private static async Task<bool> IsYtDlpAvailable()
+    private static async Task<string> DownloadViaTermuxAsync(string videoUrl, string outputDir)
     {
-        // Check standard paths including Termux
-        var paths = new[] { "yt-dlp", "/data/data/com.termux/files/usr/bin/yt-dlp" };
-        foreach (var path in paths)
+#if ANDROID
+        try
         {
-            try
+            var filename = $"{Guid.NewGuid()}.mp4";
+            var outputPath = Path.Combine(outputDir, filename);
+            var markerFile = Path.Combine(outputDir, $"{filename}.done");
+
+            // Write download script to shared storage
+            var scriptPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
+                Android.OS.Environment.DirectoryDownloads)?.AbsolutePath;
+            if (string.IsNullOrEmpty(scriptPath)) return null;
+
+            var scriptFile = Path.Combine(scriptPath, "insta-post", "dl_reel.sh");
+            Directory.CreateDirectory(Path.GetDirectoryName(scriptFile)!);
+
+            var script = $"#!/data/data/com.termux/files/usr/bin/bash\n" +
+                         $"yt-dlp -f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\" " +
+                         $"--merge-output-format mp4 " +
+                         $"--download-sections \"*0-60\" " +
+                         $"-o \"{outputPath}\" " +
+                         $"--no-playlist " +
+                         $"--socket-timeout 30 " +
+                         $"\"{videoUrl}\"\n" +
+                         $"echo done > \"{markerFile}\"\n";
+
+            File.WriteAllText(scriptFile, script);
+            Debug.WriteLine($"[VideoDownloader] Script written to: {scriptFile}");
+
+            // Send Termux RUN_COMMAND intent using Android API
+            var intent = new Android.Content.Intent("com.termux.RUN_COMMAND");
+            intent.SetComponent(new Android.Content.ComponentName(
+                "com.termux", "com.termux.app.RunCommandService"));
+            intent.PutExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash");
+            intent.PutExtra("com.termux.RUN_COMMAND_ARGUMENTS", new[] { scriptFile });
+            intent.PutExtra("com.termux.RUN_COMMAND_WORK_DIRECTORY", scriptPath);
+
+            Android.App.Application.Context.StartService(intent);
+            Debug.WriteLine("[VideoDownloader] Termux intent sent, waiting for download...");
+
+            // Poll for completion
+            for (int i = 0; i < 60; i++)
             {
-                var process = new Process
+                await Task.Delay(2000);
+
+                if (File.Exists(markerFile))
                 {
-                    StartInfo = new ProcessStartInfo
+                    // Check if actual video file exists and is valid
+                    if (File.Exists(outputPath))
                     {
-                        FileName = path,
-                        Arguments = "--version",
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true
+                        var info = new FileInfo(outputPath);
+                        if (info.Length > 10000)
+                        {
+                            File.Delete(markerFile);
+                            File.Delete(scriptFile);
+                            Debug.WriteLine($"[VideoDownloader] Download OK: {outputPath} ({info.Length} bytes)");
+                            return outputPath;
+                        }
                     }
-                };
 
-                process.Start();
-                await process.WaitForExitAsync();
-                if (process.ExitCode == 0)
-                {
-                    _ytDlpPath = path;
-                    return true;
+                    // Marker exists but no valid video - download failed
+                    File.Delete(markerFile);
+                    File.Delete(scriptFile);
+                    Debug.WriteLine("[VideoDownloader] Download failed (yt-dlp error)");
+                    return null;
                 }
             }
-            catch { }
-        }
-        return false;
-    }
 
-    private static string _ytDlpPath = "yt-dlp";
-
-    private static async Task<string> DownloadWithYtDlpAsync(string videoUrl, string outputPath)
-    {
-        try
-        {
-            // Download best quality MP4, max 60 seconds
-            var arguments = $"-f \"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\"" +
-                          $" --merge-output-format mp4" +
-                          $" --download-sections \"*0-60\"" +
-                          $" -o \"{outputPath}\"" +
-                          $" --no-playlist" +
-                          $" --socket-timeout 30" +
-                          $" \"{videoUrl}\"";
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _ytDlpPath,
-                    Arguments = arguments,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            var stdout = await process.StandardOutput.ReadToEndAsync();
-            var stderr = await process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync();
-
-            if (process.ExitCode == 0 && File.Exists(outputPath))
-            {
-                Debug.WriteLine($"[VideoDownloader] yt-dlp download OK: {outputPath}");
-                return outputPath;
-            }
-
-            Debug.WriteLine($"[VideoDownloader] yt-dlp failed: {stderr}");
+            File.Delete(scriptFile);
+            Debug.WriteLine("[VideoDownloader] Download timed out");
             return null;
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[VideoDownloader] yt-dlp error: {ex.Message}");
+            Debug.WriteLine($"[VideoDownloader] Termux error: {ex.Message}");
             return null;
         }
-    }
-
-    private static async Task<string> DownloadDirectAsync(string videoUrl, string outputPath)
-    {
-        try
-        {
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
-
-            var response = await httpClient.GetAsync(videoUrl);
-            response.EnsureSuccessStatusCode();
-
-            await using var stream = await response.Content.ReadAsStreamAsync();
-            await using var fileStream = File.Create(outputPath);
-            await stream.CopyToAsync(fileStream);
-
-            if (File.Exists(outputPath))
-            {
-                Debug.WriteLine($"[VideoDownloader] Direct download OK: {outputPath}");
-                return outputPath;
-            }
-
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[VideoDownloader] Direct download error: {ex.Message}");
-            return null;
-        }
-    }
-
-    public static async Task<string> ExtractAudioAsync(string videoPath)
-    {
-        try
-        {
-            var audioPath = Path.ChangeExtension(videoPath, ".mp3");
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "ffmpeg",
-                    Arguments = $"-i \"{videoPath}\" -vn -acodec libmp3lame -q:a 2 \"{audioPath}\" -y",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            process.Start();
-            await process.WaitForExitAsync();
-
-            if (process.ExitCode == 0 && File.Exists(audioPath))
-            {
-                Debug.WriteLine($"[VideoDownloader] Audio extraction OK: {audioPath}");
-                return audioPath;
-            }
-
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[VideoDownloader] Audio extraction error: {ex.Message}");
-            return null;
-        }
+#else
+        return null;
+#endif
     }
 }
