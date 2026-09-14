@@ -285,6 +285,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                                     Title = video.Title,
                                     Summary = video.Description,
                                     Link = video.VideoUrl,
+                                    Thumbnail = video.ThumbnailUrl,
                                     Source = new Models.SourceInfo { Name = video.ChannelName }
                                 };
                                 var processed = ContentEngine.ProcessArticle(fakeArticle, mix);
