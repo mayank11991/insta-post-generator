@@ -404,21 +404,22 @@ public static class InstagramService
             var fileName = Path.GetFileName(filePath);
 
             var content = new MultipartFormDataContent();
-            content.Add(new ByteArrayContent(fileBytes), "file", fileName);
+            content.Add(new StringContent("fileupload"), "reqtype");
+            content.Add(new ByteArrayContent(fileBytes), "fileToUpload", fileName);
 
-            var response = await _http.PostAsync("https://0x0.st", content);
+            var response = await _http.PostAsync("https://catbox.moe/user/api.php", content);
             var url = await response.Content.ReadAsStringAsync();
             url = url.Trim();
 
             if (!string.IsNullOrEmpty(url) && url.StartsWith("http"))
             {
-                System.Diagnostics.Debug.WriteLine("[IG] 0x0.st upload OK: " + url);
+                System.Diagnostics.Debug.WriteLine("[IG] catbox upload OK: " + url);
                 return url;
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine("[IG] 0x0.st failed: " + ex.Message);
+            System.Diagnostics.Debug.WriteLine("[IG] catbox failed: " + ex.Message);
         }
         return null;
     }
