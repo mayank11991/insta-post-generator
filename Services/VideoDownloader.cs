@@ -17,8 +17,8 @@ public static class VideoDownloader
                 return await DownloadWithYtDlpAsync(videoUrl, outputPath);
             }
 
-            // Fallback to direct download
-            return await DownloadDirectAsync(videoUrl, outputPath);
+            Debug.WriteLine("[VideoDownloader] yt-dlp not found. Install via Termux: pkg install yt-dlp");
+            return null;
         }
         catch (Exception ex)
         {
@@ -29,30 +29,39 @@ public static class VideoDownloader
 
     private static async Task<bool> IsYtDlpAvailable()
     {
-        try
+        // Check standard paths including Termux
+        var paths = new[] { "yt-dlp", "/data/data/com.termux/files/usr/bin/yt-dlp" };
+        foreach (var path in paths)
         {
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo
+                var process = new Process
                 {
-                    FileName = "yt-dlp",
-                    Arguments = "--version",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = path,
+                        Arguments = "--version",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
 
-            process.Start();
-            await process.WaitForExitAsync();
-            return process.ExitCode == 0;
+                process.Start();
+                await process.WaitForExitAsync();
+                if (process.ExitCode == 0)
+                {
+                    _ytDlpPath = path;
+                    return true;
+                }
+            }
+            catch { }
         }
-        catch
-        {
-            return false;
-        }
+        return false;
     }
+
+    private static string _ytDlpPath = "yt-dlp";
 
     private static async Task<string> DownloadWithYtDlpAsync(string videoUrl, string outputPath)
     {
@@ -71,7 +80,7 @@ public static class VideoDownloader
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "yt-dlp",
+                    FileName = _ytDlpPath,
                     Arguments = arguments,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
