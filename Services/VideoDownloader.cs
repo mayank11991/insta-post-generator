@@ -9,13 +9,7 @@ public static class VideoDownloader
         try
         {
             Directory.CreateDirectory(outputDir);
-
-            var result = await DownloadViaTermuxAsync(videoUrl, outputDir);
-            if (!string.IsNullOrEmpty(result) && File.Exists(result))
-                return result;
-
-            Debug.WriteLine("[VideoDownloader] Download failed");
-            return null;
+            return await DownloadViaTermuxAsync(videoUrl, outputDir);
         }
         catch (Exception ex)
         {
@@ -51,36 +45,36 @@ public static class VideoDownloader
             var scriptPath = Path.Combine(dir, $"dl_{id}.sh");
             File.WriteAllText(scriptPath, script);
 
-            Debug.WriteLine($"[VideoDownloader] Script: {scriptPath}");
-            Debug.WriteLine($"[VideoDownloader] Output: {outputPath}");
+            Debug.WriteLine($"[VideoDownloader] Script written: {scriptPath}");
 
-            // Use am start-foreground-service via shell
-            var args = $"am start-foreground-service " +
-                       $"-n com.termux/.app.RunCommandService " +
-                       $"--es com.termux.RUN_COMMAND_PATH /data/data/com.termux/files/usr/bin/bash " +
-                       $"--esa com.termux.RUN_COMMAND_ARGUMENTS {scriptPath} " +
-                       $"--es com.termux.RUN_COMMAND_WORK_DIRECTORY {dir}";
+            // Start Termux service using Android API
+            var intent = new Android.Content.Intent("com.termux.RUN_COMMAND");
+            intent.SetClassName("com.termux", "com.termux.app.RunCommandService");
+            intent.PutExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash");
+            intent.PutExtra("com.termux.RUN_COMMAND_ARGUMENTS", new[] { scriptPath });
+            intent.PutExtra("com.termux.RUN_COMMAND_WORK_DIRECTORY", dir);
+            intent.PutExtra("com.termux.RUN_COMMAND_BACKGROUND", true);
 
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo
+                Android.App.Application.Context.StartForegroundService(intent);
+                Debug.WriteLine("[VideoDownloader] ForegroundService started");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[VideoDownloader] ForegroundService failed: {ex.Message}");
+                try
                 {
-                    FileName = "/system/bin/sh",
-                    Arguments = $"-c \"{args.Replace("\"", "\\\"")}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
+                    Android.App.Application.Context.StartService(intent);
+                    Debug.WriteLine("[VideoDownloader] StartService started");
                 }
-            };
+                catch (Exception ex2)
+                {
+                    Debug.WriteLine($"[VideoDownloader] StartService also failed: {ex2.Message}");
+                }
+            }
 
-            process.Start();
-            var output = await process.StandardOutput.ReadToEndAsync();
-            var err = await process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync();
-            Debug.WriteLine($"[VideoDownloader] am result: {output} err: {err}");
-
-            // Poll for completion (max 2 minutes)
+            // Poll for completion
             for (int i = 0; i < 60; i++)
             {
                 await Task.Delay(2000);
@@ -111,7 +105,7 @@ public static class VideoDownloader
             }
 
             File.Delete(scriptPath);
-            Debug.WriteLine("[VideoDownloader] Timed out after 120s");
+            Debug.WriteLine("[VideoDownloader] Timed out");
             return null;
         }
         catch (Exception ex)
