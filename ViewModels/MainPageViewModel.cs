@@ -244,36 +244,51 @@ public class MainPageViewModel : INotifyPropertyChanged
                             if (allPosts.Count >= 10) break;
 
                             Log($"Processing video: {video.Title?.Substring(0, Math.Min(40, video.Title?.Length ?? 0))}");
-                            StatusMessage = $"[{allPosts.Count + 1}/10] Downloading: {(video.Title?.Length > 50 ? video.Title[..50] : video.Title)}...";
+                            StatusMessage = $"[{allPosts.Count + 1}/10] Processing: {(video.Title?.Length > 50 ? video.Title[..50] : video.Title)}...";
 
-                            // Download video
-                            var videoPath = await VideoDownloader.DownloadVideoAsync(video.VideoUrl, outputDir);
-                            if (string.IsNullOrEmpty(videoPath) || !File.Exists(videoPath))
+                            string videoPath = null;
+                            string imagePath = null;
+
+                            // Try to download video
+                            try
                             {
-                                Log($"  Failed to download video: {video.VideoUrl}");
-                                continue;
+                                videoPath = await VideoDownloader.DownloadVideoAsync(video.VideoUrl, outputDir);
                             }
+                            catch { }
 
-                            // Trim if needed
-                            var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 60);
-                            if (trimmedPath != videoPath && File.Exists(trimmedPath))
+                            if (!string.IsNullOrEmpty(videoPath) && File.Exists(videoPath))
                             {
-                                videoPath = trimmedPath;
+                                // Video downloaded successfully - process it
+                                var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 60);
+                                if (trimmedPath != videoPath && File.Exists(trimmedPath))
+                                    videoPath = trimmedPath;
+
+                                var reelPath = await VideoProcessor.ConvertToReelFormatAsync(videoPath);
+                                if (reelPath != videoPath && File.Exists(reelPath))
+                                    videoPath = reelPath;
+
+                                imagePath = await VideoProcessor.ExtractThumbnailAsync(videoPath);
+                                if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
+                                    imagePath = videoPath;
                             }
-
-                            // Convert to reel format (9:16)
-                            var reelPath = await VideoProcessor.ConvertToReelFormatAsync(videoPath);
-                            if (reelPath != videoPath && File.Exists(reelPath))
+                            else
                             {
-                                videoPath = reelPath;
-                            }
+                                // Video download failed - generate image post instead
+                                Log($"  Video download failed, generating image post");
+                                StatusMessage = $"[{allPosts.Count + 1}/10] Generating image for: {(video.Title?.Length > 40 ? video.Title[..40] : video.Title)}...";
 
-                            // Extract thumbnail for display
-                            var thumbPath = await VideoProcessor.ExtractThumbnailAsync(videoPath);
-                            if (string.IsNullOrEmpty(thumbPath) || !File.Exists(thumbPath))
-                            {
-                                // Use video path as fallback
-                                thumbPath = videoPath;
+                                imagePath = Path.Combine(outputDir, $"{globalIndex + 1:D2}_{SafeSlug(video.Title)}.png");
+
+                                // Create a ProcessedArticle-like object for image generation
+                                var fakeArticle = new Article
+                                {
+                                    Title = video.Title,
+                                    Summary = video.Description,
+                                    Link = video.VideoUrl,
+                                    Source = new Models.SourceInfo { Name = video.ChannelName }
+                                };
+                                var processed = ContentEngine.ProcessArticle(fakeArticle, mix);
+                                await PostGenerator.CreateNewsImageAsync(processed, imagePath, template: 0, processed.TemplateIds);
                             }
 
                             // Build caption for reel
@@ -283,8 +298,8 @@ public class MainPageViewModel : INotifyPropertyChanged
                             var displayItem = new PostDisplayItem
                             {
                                 Index = globalIndex + 1,
-                                ImagePath = thumbPath,
-                                VideoPath = videoPath,
+                                ImagePath = imagePath ?? "",
+                                VideoPath = videoPath ?? "",
                                 Caption = caption,
                                 SourceUrl = video.VideoUrl,
                                 SourceName = video.ChannelName,
@@ -292,14 +307,14 @@ public class MainPageViewModel : INotifyPropertyChanged
                                 CategoryLabel = catConfig?.DisplayName ?? category,
                                 Hook = video.Title,
                                 SeriesName = $"{catConfig?.DisplayName ?? category} Reels",
-                                IsReel = true
+                                IsReel = !string.IsNullOrEmpty(videoPath)
                             };
 
                             allPosts.Add(displayItem);
                             globalIndex++;
                             GenerateProgress = (double)allPosts.Count / 10;
                             Log($"  REEL {allPosts.Count}/10 CREATED: {SafeSlug(video.Title)}");
-                            StatusMessage = $"[{allPosts.Count}/10] Generated reel: {video.Title?.Substring(0, Math.Min(30, video.Title?.Length ?? 0))}...";
+                            StatusMessage = $"[{allPosts.Count}/10] Generated: {video.Title?.Substring(0, Math.Min(30, video.Title?.Length ?? 0))}...";
                         }
                         catch (Exception ex)
                         {
