@@ -670,6 +670,329 @@
         "upcoming bollywood movie trailer",
         "bollywood trailer reaction viral 2026"
       ]
+    },
+
+    "post_bollywood_top10": {
+      "display_name": "Bollywood Top 10",
+      "query": "bollywood top 10 today trending",
+      "color": "#FC5A11",
+      "emoji": "🔥",
+      "content_type": "post"
+    },
+    "post_politics_top10": {
+      "display_name": "Political Top 10",
+      "query": "india politics top 10 today trending",
+      "color": "#BEFA05",
+      "emoji": "📰",
+      "content_type": "post"
+    },
+    "post_upcoming_movies": {
+      "display_name": "Upcoming Movies List",
+      "query": "upcoming bollywood movies 2026 list",
+      "color": "#BEFA05",
+      "emoji": "🎬",
+      "content_type": "post"
+    },
+    "post_top_actors": {
+      "display_name": "Top Bollywood Actors",
+      "query": "top bollywood actors ranking 2026",
+      "color": "#FC5A11",
+      "emoji": "⭐",
+      "content_type": "post"
+    },
+    "post_biggest_stars": {
+      "display_name": "Biggest Stars Comparison",
+      "query": "bollywood biggest stars comparison",
+      "color": "#BEFA05",
+      "emoji": "👑",
+      "content_type": "post"
+    },
+    "post_stars_then_now": {
+      "display_name": "90s Stars Then vs Now",
+      "query": "90s bollywood stars then vs now photos",
+      "color": "#FC5A11",
+      "emoji": "🕰️",
+      "content_type": "post"
+    },
+    "post_celebrity_transform": {
+      "display_name": "Celebrity Transformation",
+      "query": "bollywood celebrity transformation before after",
+      "color": "#BEFA05",
+      "emoji": "📸",
+      "content_type": "post"
+    },
+    "post_couples_timeline": {
+      "display_name": "Couples Timeline",
+      "query": "bollywood couples relationship timeline",
+      "color": "#FC5A11",
+      "emoji": "❤️",
+      "content_type": "post"
+    },
+    "post_family_tree": {
+      "display_name": "Family Tree",
+      "query": "bollywood family tree kapoor bachchan khan",
+      "color": "#BEFA05",
+      "emoji": "👨‍👩‍👧",
+      "content_type": "post"
+    },
+    "post_biggest_budgets": {
+      "display_name": "Biggest Budgets",
+      "query": "bollywood biggest budget movies ranking",
+      "color": "#FC5A11",
+      "emoji": "💰",
+      "content_type": "post"
+    },
+    "post_biggest_hits": {
+      "display_name": "Biggest Hits",
+      "query": "bollywood biggest hits movies ranking",
+      "color": "#BEFA05",
+      "emoji": "💵",
+      "content_type": "post"
+    },
+    "post_biggest_flops": {
+      "display_name": "Biggest Flops",
+      "query": "bollywood biggest flops movies ranking",
+      "color": "#FC5A11",
+      "emoji": "💀",
+      "content_type": "post"
+    },
+    "post_remake_movies": {
+      "display_name": "Movies You Didnt Know Were Remakes",
+      "query": "bollywood movies remake list",
+      "color": "#BEFA05",
+      "emoji": "🎬",
+      "content_type": "post"
+    },
+    "post_rejected_roles": {
+      "display_name": "Actors Who Almost Played Roles",
+      "query": "bollywood actors rejected roles almost played",
+      "color": "#FC5A11",
+      "emoji": "🎭",
+      "content_type": "post"
+    },
+    "post_iconic_songs": {
+      "display_name": "Iconic Songs",
+      "query": "bollywood iconic songs nostalgia",
+      "color": "#BEFA05",
+      "emoji": "🎵",
+      "content_type": "post"
+    },
+    "post_bollywood_facts": {
+      "display_name": "10 Bollywood Facts",
+      "query": "bollywood facts you didnt know",
+      "color": "#FC5A11",
+      "emoji": "🧠",
+      "content_type": "post"
+    },
+    "post_controversies_timeline": {
+      "display_name": "Controversies Timeline",
+      "query": "bollywood controversies timeline",
+      "color": "#BEFA05",
+      "emoji": "🔥",
+      "content_type": "post"
+    },
+    "post_releases_month": {
+      "display_name": "Releases This Month",
+      "query": "bollywood releases this month calendar",
+      "color": "#FC5A11",
+      "emoji": "📅",
+      "content_type": "post"
+    },
+    "post_awards_tracker": {
+      "display_name": "Awards Tracker",
+      "query": "bollywood awards tracker updates",
+      "color": "#BEFA05",
+      "emoji": "🏆",
+      "content_type": "post"
+    },
+    "post_weekly_boxoffice": {
+      "display_name": "Weekly Box Office",
+      "query": "bollywood weekly box office report",
+      "color": "#FC5A11",
+      "emoji": "📊",
+      "content_type": "post"
+    },
+    "post_political_week": {
+      "display_name": "Indian Political Week",
+      "query": "indian politics weekly roundup",
+      "color": "#BEFA05",
+      "emoji": "🇮🇳",
+      "content_type": "post"
+    },
+    "post_parliament_week": {
+      "display_name": "Parliament This Week",
+      "query": "india parliament this week update",
+      "color": "#FC5A11",
+      "emoji": "🏛️",
+      "content_type": "post"
+    },
+    "post_election_tracker": {
+      "display_name": "Election Tracker",
+      "query": "india election tracker update",
+      "color": "#BEFA05",
+      "emoji": "🗳️",
+      "content_type": "post"
+    },
+    "post_politician_week": {
+      "display_name": "Politician of the Week",
+      "query": "india politician profile week",
+      "color": "#FC5A11",
+      "emoji": "👤",
+      "content_type": "post"
+    },
+    "post_govt_decisions": {
+      "display_name": "New Government Decisions",
+      "query": "india new government decisions rules",
+      "color": "#BEFA05",
+      "emoji": "📜",
+      "content_type": "post"
+    },
+    "post_budget_explained": {
+      "display_name": "Budget Explained",
+      "query": "india budget explained money impact",
+      "color": "#FC5A11",
+      "emoji": "💰",
+      "content_type": "post"
+    },
+    "post_economy_explained": {
+      "display_name": "Economy Explained",
+      "query": "india economy explained simple graphics",
+      "color": "#BEFA05",
+      "emoji": "📈",
+      "content_type": "post"
+    },
+    "post_new_law": {
+      "display_name": "New Law Explained",
+      "query": "india new law explained what does this mean",
+      "color": "#FC5A11",
+      "emoji": "⚖️",
+      "content_type": "post"
+    },
+    "post_political_timeline": {
+      "display_name": "Political Timeline",
+      "query": "india political timeline event chronology",
+      "color": "#BEFA05",
+      "emoji": "📰",
+      "content_type": "post"
+    },
+    "post_claim_vs_fact": {
+      "display_name": "Claim vs Fact",
+      "query": "india viral claim fact check",
+      "color": "#FC5A11",
+      "emoji": "🔍",
+      "content_type": "post"
+    },
+    "post_who_said_what": {
+      "display_name": "Who Said What",
+      "query": "india politician statement comparison",
+      "color": "#BEFA05",
+      "emoji": "🗣️",
+      "content_type": "post"
+    },
+    "post_political_debate": {
+      "display_name": "Political Debate",
+      "query": "india political debate both sides",
+      "color": "#FC5A11",
+      "emoji": "⚔️",
+      "content_type": "post"
+    },
+    "post_election_numbers": {
+      "display_name": "Election Numbers",
+      "query": "india election numbers seats votes data",
+      "color": "#BEFA05",
+      "emoji": "📊",
+      "content_type": "post"
+    },
+    "post_india_numbers": {
+      "display_name": "India in Numbers",
+      "query": "india interesting statistics numbers",
+      "color": "#FC5A11",
+      "emoji": "🇮🇳",
+      "content_type": "post"
+    },
+    "post_india_vs_other": {
+      "display_name": "India vs Other Countries",
+      "query": "india compared other countries data",
+      "color": "#BEFA05",
+      "emoji": "🌍",
+      "content_type": "post"
+    },
+    "post_political_history": {
+      "display_name": "Political History",
+      "query": "india political history context",
+      "color": "#FC5A11",
+      "emoji": "🕰️",
+      "content_type": "post"
+    },
+    "post_week_history": {
+      "display_name": "This Week in History",
+      "query": "india this week history events",
+      "color": "#BEFA05",
+      "emoji": "📅",
+      "content_type": "post"
+    },
+    "post_most_discussed": {
+      "display_name": "Most Discussed Topics",
+      "query": "india most discussed topics weekly trends",
+      "color": "#FC5A11",
+      "emoji": "🔥",
+      "content_type": "post"
+    },
+    "post_internet_searches": {
+      "display_name": "Internets Biggest Searches",
+      "query": "india internet biggest searches trending",
+      "color": "#BEFA05",
+      "emoji": "👀",
+      "content_type": "post"
+    },
+    "post_viral_social": {
+      "display_name": "Viral Social Media Stories",
+      "query": "india viral social media stories posts",
+      "color": "#FC5A11",
+      "emoji": "📱",
+      "content_type": "post"
+    },
+    "post_missed_today": {
+      "display_name": "Things You Missed Today",
+      "query": "india things missed today smaller stories",
+      "color": "#BEFA05",
+      "emoji": "🤯",
+      "content_type": "post"
+    },
+    "post_nightly_recap": {
+      "display_name": "Nightly News Recap",
+      "query": "india nightly news recap stories",
+      "color": "#FC5A11",
+      "emoji": "🌙",
+      "content_type": "post"
+    },
+    "post_morning_brief": {
+      "display_name": "Morning News Brief",
+      "query": "india morning news brief quick updates",
+      "color": "#BEFA05",
+      "emoji": "☀️",
+      "content_type": "post"
+    },
+    "post_weekend_trending": {
+      "display_name": "Weekend Trending",
+      "query": "india weekend trending weekly roundup",
+      "color": "#FC5A11",
+      "emoji": "🔥",
+      "content_type": "post"
+    },
+    "post_best_of_week": {
+      "display_name": "Best of the Week",
+      "query": "india best stories of the week",
+      "color": "#BEFA05",
+      "emoji": "🏆",
+      "content_type": "post"
+    },
+    "post_next_week": {
+      "display_name": "Next Week Preview",
+      "query": "india next week upcoming events preview",
+      "color": "#FC5A11",
+      "emoji": "🔮",
+      "content_type": "post"
     }
   },
 
