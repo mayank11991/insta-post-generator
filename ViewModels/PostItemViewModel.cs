@@ -104,7 +104,7 @@ public class PostItemViewModel : INotifyPropertyChanged
                     status => PostButtonText = $"📤 {status}");
             }
 
-            if (result.StartsWith("Posted!"))
+            if (result.StartsWith("Posted!") || result.StartsWith("Reel posted!") || result.StartsWith("Posted carousel!"))
             {
                 IsPosted = true;
                 PostButtonText = "✅ Posted!";

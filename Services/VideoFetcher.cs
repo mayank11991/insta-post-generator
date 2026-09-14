@@ -18,22 +18,23 @@ public static class VideoFetcher
 
         try
         {
-            // Search for videos uploaded in last 24 hours, sorted by date
-            var publishedAfter = DateTime.UtcNow.AddHours(-24).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            var publishedAfter = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddTHH:mm:ssZ");
             var url = $"https://www.googleapis.com/youtube/v3/search" +
                       $"?part=snippet" +
                       $"&q={Uri.EscapeDataString(query)}" +
                       $"&type=video" +
-                      $"&videoDuration=short" +  // Under 4 minutes
-                      $"&order=date" +
+                      $"&videoDuration=short" +
+                      $"&order=relevance" +
                       $"&publishedAfter={publishedAfter}" +
-                      $"&maxResults={maxResults}" +
+                      $"&maxResults=50" +
                       $"&key={apiKey}";
 
             var response = await _http.GetStringAsync(url);
             var doc = JsonDocument.Parse(response);
 
-            var videos = new List<VideoItem>();
+            var allVideos = new List<VideoItem>();
+            var seenIds = new HashSet<string>();
+            var seenTitles = new List<string>();
 
             if (doc.RootElement.TryGetProperty("items", out var items))
             {
@@ -42,6 +43,10 @@ public static class VideoFetcher
                     if (item.TryGetProperty("id", out var id) &&
                         id.TryGetProperty("videoId", out var videoId))
                     {
+                        var vid = videoId.GetString() ?? "";
+                        if (seenIds.Contains(vid)) continue;
+                        seenIds.Add(vid);
+
                         if (item.TryGetProperty("snippet", out var snippet))
                         {
                             var title = snippet.TryGetProperty("title", out var t) ? t.GetString() ?? "" : "";
@@ -56,17 +61,17 @@ public static class VideoFetcher
                                 thumbnail = thumbUrl.GetString() ?? "";
                             }
 
-                            // Filter for relevant content (exclude shorts, compilations, etc.)
-                            if (IsRelevantVideo(title, description))
+                            if (IsRelevantVideo(title, description) && !IsDuplicateTitle(title, seenTitles))
                             {
-                                videos.Add(new VideoItem
+                                seenTitles.Add(title.ToLowerInvariant());
+                                allVideos.Add(new VideoItem
                                 {
-                                    VideoId = videoId.GetString() ?? "",
+                                    VideoId = vid,
                                     Title = title,
                                     Description = description,
                                     ChannelName = channelTitle,
                                     ThumbnailUrl = thumbnail,
-                                    VideoUrl = $"https://www.youtube.com/watch?v={videoId.GetString()}"
+                                    VideoUrl = $"https://www.youtube.com/watch?v={vid}"
                                 });
                             }
                         }
@@ -74,14 +79,32 @@ public static class VideoFetcher
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine($"[VideoFetcher] Found {videos.Count} relevant videos for query: {query}");
-            return videos;
+            var result = allVideos.Take(maxResults).ToList();
+            System.Diagnostics.Debug.WriteLine($"[VideoFetcher] Found {result.Count} unique videos for query: {query}");
+            return result;
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[VideoFetcher] YouTube API error: {ex.Message}");
             return new List<VideoItem>();
         }
+    }
+
+    private static bool IsDuplicateTitle(string title, List<string> seenTitles)
+    {
+        var normalized = title.ToLowerInvariant().Replace(" ", "").Replace("|", "").Replace("-", "").Replace("#", "");
+        foreach (var seen in seenTitles)
+        {
+            var seenNorm = seen.Replace(" ", "").Replace("|", "").Replace("-", "").Replace("#", "");
+            if (normalized.Length > 10 && seenNorm.Length > 10)
+            {
+                var shorter = Math.Min(normalized.Length, seenNorm.Length);
+                var compareLen = (int)(shorter * 0.7);
+                if (compareLen > 10 && normalized[..compareLen] == seenNorm[..compareLen])
+                    return true;
+            }
+        }
+        return false;
     }
 
     private static bool IsRelevantVideo(string title, string description)
