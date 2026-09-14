@@ -277,11 +277,7 @@ public class MainPageViewModel : INotifyPropertyChanged
 
                             if (!string.IsNullOrEmpty(videoPath) && File.Exists(videoPath))
                             {
-                                // Video downloaded successfully - process it
-                                var trimmedPath = await VideoProcessor.TrimVideoAsync(videoPath, 90);
-                                if (trimmedPath != videoPath && File.Exists(trimmedPath))
-                                    videoPath = trimmedPath;
-
+                                // Video downloaded - convert to 9:16 portrait format
                                 var reelPath = await VideoProcessor.ConvertToReelFormatAsync(videoPath);
                                 if (reelPath != videoPath && File.Exists(reelPath))
                                     videoPath = reelPath;

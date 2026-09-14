@@ -441,6 +441,44 @@ public static class ContentEngine
             },
             TemplateIds = new[] { 14 }
         },
+        ["bollywood_trailers"] = new CategoryInfo
+        {
+            Label = "Bollywood Trailers",
+            PriorityWeight = 9,
+            Keywords = new[]
+            {
+                "bollywood", "official trailer", "movie trailer", "film trailer",
+                "trailer launch", "trailer reaction", "upcoming movie", "release"
+            },
+            HookTemplates = new[]
+            {
+                "🎥 {entity} trailer is OUT!",
+                "This {entity} trailer is EPIC!",
+                "{entity} official trailer just dropped!",
+                "Watch this {entity} trailer NOW!",
+                "This {entity} is going to be a BLOCKBUSTER!",
+                "{entity} trailer broke the internet! 🔥",
+                "You CAN'T miss this {entity} trailer!",
+                "This {entity} looks like a HIT!",
+                "{entity} trailer is trending #1!",
+                "Blockbuster alert: {entity} trailer! 🔥"
+            },
+            Hashtags = new[]
+            {
+                "#BollywoodTrailer", "#MovieTrailer", "#Bollywood",
+                "#Trailer", "#NewMovie", "#Reels",
+                "#360buzz"
+            },
+            CTAs = new[]
+            {
+                "Are you excited for {entity}?",
+                "Tag someone who needs to watch this!",
+                "Share this trailer!",
+                "Comment your expectations!",
+                "Follow for more trailers!"
+            },
+            TemplateIds = new[] { 14 }
+        },
         ["viral_trends"] = new CategoryInfo
         {
             Label = "Viral Trends",
@@ -644,7 +682,8 @@ public static class ContentEngine
         ["politics_breaking"] = new SeriesInfo { Name = "Politics Breaking", BestFor = new[] { "india_politics" }, Description = "Breaking political developments" },
         ["facts_daily"] = new SeriesInfo { Name = "Bollywood Facts", BestFor = new[] { "bollywood_facts" }, Description = "Unknown Bollywood facts & trivia" },
         ["quiz_daily"] = new SeriesInfo { Name = "Bollywood Quiz", BestFor = new[] { "quiz" }, Description = "Daily Bollywood quiz challenge" },
-        ["reels_bollywood_teasers"] = new SeriesInfo { Name = "Bollywood Teasers", BestFor = new[] { "bollywood_teasers" }, Description = "Latest Bollywood teasers & trailers" },
+        ["reels_bollywood_teasers"] = new SeriesInfo { Name = "Bollywood Teasers", BestFor = new[] { "bollywood_teasers" }, Description = "Latest Bollywood teasers" },
+        ["reels_bollywood_trailers"] = new SeriesInfo { Name = "Bollywood Trailers", BestFor = new[] { "bollywood_trailers" }, Description = "Latest Bollywood trailers" },
         ["reels_viral_trends"] = new SeriesInfo { Name = "Viral Trends", BestFor = new[] { "viral_trends" }, Description = "Trending viral clips" },
         ["reels_paparazzi"] = new SeriesInfo { Name = "Viral Paparazzi", BestFor = new[] { "viral_paparazzi" }, Description = "Celebrity spotted moments" },
         ["reels_politics"] = new SeriesInfo { Name = "Political Highlights", BestFor = new[] { "political_highlights" }, Description = "Political moments & clips" },

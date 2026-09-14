@@ -74,7 +74,6 @@ public static class VideoProcessor
                               $" -c:v libx264 -preset medium -crf 23" +
                               $" -c:a aac -b:a 128k" +
                               $" -movflags +faststart" +
-                              $" -t 90" +  // Max 90 seconds
                               $" \"{outputPath}\" -y",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

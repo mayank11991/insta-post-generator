@@ -20,7 +20,7 @@
     "min_article_score": 5,
     "story_similarity_threshold": 0.5,
     "page_name": "360buzz",
-    "max_reel_duration_seconds": 90
+    "max_reel_duration_seconds": 1800
   },
 
   "categories": {
@@ -68,10 +68,24 @@
       "content_type": "reel",
       "youtube_queries": [
         "bollywood official teaser 2026 hindi",
-        "bollywood movie trailer short official",
-        "bollywood song teaser clip 2026",
+        "bollywood movie teaser clip 2026",
         "new bollywood movie look reveal",
-        "bollywood upcoming movie teaser"
+        "bollywood upcoming movie teaser",
+        "bollywood short teaser viral"
+      ]
+    },
+    "bollywood_trailers": {
+      "display_name": "Bollywood Trailers",
+      "query": "bollywood official trailer 2026",
+      "color": "#FF1744",
+      "emoji": "🎥",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood official trailer 2026 hindi",
+        "new bollywood movie trailer latest",
+        "bollywood film trailer launch 2026",
+        "upcoming bollywood movie trailer",
+        "bollywood trailer reaction viral 2026"
       ]
     },
     "viral_trends": {
