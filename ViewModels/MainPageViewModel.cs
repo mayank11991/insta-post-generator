@@ -87,7 +87,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         ((Command)PostCarouselCommand).ChangeCanExecute();
     }
 
-    public ObservableCollection<CategorySelection> Categories { get; }
+    public ObservableCollection<CategorySelection> Categories { get; } = new();
     public ObservableCollection<PostItemViewModel> Posts
     {
         get => _posts;
