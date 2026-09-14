@@ -84,14 +84,16 @@ public static class InstagramService
 
         onStatus?.Invoke("Uploading video...");
 
-        // Upload video to accessible URL
-        var videoUrl = await UploadVideoToFacebookPageAsync(videoPath, accessToken);
+        // Upload video to a public hosting service to get a URL
+        var videoUrl = await UploadToTmpFilesAsync(videoPath);
         if (string.IsNullOrEmpty(videoUrl))
         {
-            videoUrl = await UploadToImgbbAsync(videoPath);
+            videoUrl = await UploadVideoToFacebookPageAsync(videoPath, accessToken);
         }
         if (string.IsNullOrEmpty(videoUrl))
             return "Error: Failed to upload video";
+
+        System.Diagnostics.Debug.WriteLine("[IG] Video URL for reel: " + videoUrl);
 
         onStatus?.Invoke("Creating Instagram reel...");
 
@@ -103,7 +105,7 @@ public static class InstagramService
             return "Error: Failed to create reel container";
 
         onStatus?.Invoke("Waiting for processing...");
-        var ready = await WaitForContainerAsync(containerId, accessToken, maxWait: 300); // Reels take longer
+        var ready = await WaitForContainerAsync(containerId, accessToken, maxWait: 300);
         if (!ready)
             return "Error: Processing timed out";
 
@@ -390,6 +392,33 @@ public static class InstagramService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine("[IG] IMGBB failed: " + ex.Message);
+        }
+        return null;
+    }
+
+    private static async Task<string> UploadToTmpFilesAsync(string filePath)
+    {
+        try
+        {
+            var fileBytes = await File.ReadAllBytesAsync(filePath);
+            var fileName = Path.GetFileName(filePath);
+
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(fileBytes), "file", fileName);
+
+            var response = await _http.PostAsync("https://0x0.st", content);
+            var url = await response.Content.ReadAsStringAsync();
+            url = url.Trim();
+
+            if (!string.IsNullOrEmpty(url) && url.StartsWith("http"))
+            {
+                System.Diagnostics.Debug.WriteLine("[IG] 0x0.st upload OK: " + url);
+                return url;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("[IG] 0x0.st failed: " + ex.Message);
         }
         return null;
     }
