@@ -138,7 +138,7 @@ public static class PostGenerator
         var H = Config.EXPORT_HEIGHT;
         using (var canvas = new SKCanvas(canvasBitmap))
         {
-            canvas.Clear(new SKColor(0x10, 0x10, 0x10));
+        canvas.Clear(new SKColor(0x00, 0x00, 0x00));
             
             if (articleBitmap != null)
             {

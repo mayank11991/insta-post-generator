@@ -26,27 +26,14 @@ public static class ContentEngine
     // Categories definition
     private static readonly Dictionary<string, CategoryInfo> Categories = new()
     {
-        ["bollywood"] = new CategoryInfo
+        // ═══════════════════════════════════════════════════════════════
+        // BOLLYWOOD CATEGORIES (1–25)
+        // ═══════════════════════════════════════════════════════════════
+        ["breaking_bollywood"] = new CategoryInfo
         {
-            Label = "Bollywood & Hindi Entertainment",
-            PriorityWeight = 10,
-            Keywords = new[]
-            {
-                "bollywood", "hindi", "movie", "film", "trailer", "teaser", "release",
-                "actor", "actress", "star", "celebrity", "celebrity", "gossip",
-                "party", "spotted", "wedding", "relationship", "dating", "couple",
-                "fashion", "style", "red carpet", "award", "photoshoot",
-                "tv serial", "colors", "star plus", "zee tv", "sony tv",
-                "web series", "ott", "netflix", "prime video", "hotstar", "zee5",
-                "box office", "collection", "earning", "hit", "flop", "blockbuster",
-                "shooting", "wrapped", "announced", "cast", "director", "producer",
-                "meme", "viral", "trending", "funny", "hilarious", "dance", "song",
-                "music", "album", "interview", "behind the scenes", "bts",
-                "srk", "salman", "aamir", "ranbir", "ranveer", "alia", "deepika",
-                "priyanka", "kareena", "ajay", "akshay", "kartik", "kiara",
-                "kriti", "janhvi", "sara", "vicky", "ayushmann", "rajkummar",
-                "karan johar", "sanjay leela bhansali", "amitabh", "dharmendra"
-            },
+            Label = "Breaking Bollywood News",
+            PriorityWeight = 9,
+            Keywords = new[] { "bollywood", "movie", "celebrity", "news", "latest", "breaking", "viral", "trending" },
             HookTemplates = new[]
             {
                 "BREAKING: {entity} just dropped a bombshell...",
@@ -58,283 +45,256 @@ public static class ContentEngine
                 "This is huge: {entity} just...",
                 "ALERT: Major Bollywood update just dropped",
                 "{entity} trailer just dropped and it looks insane",
-                "First look: {entity} in an avatar you've never seen",
-                "Everything we know about {entity} so far",
-                "The wait is OVER — {entity} trailer is here",
-                "{entity} just revealed something massive",
-                "This is the Bollywood movie everyone's waiting for",
-                "{entity} release date just got confirmed",
-                "{entity} just broke the internet",
-                "Why everyone is talking about {entity}",
-                "This {entity} photo is going viral",
-                "{entity} just made headlines for this reason",
-                "The real story behind {entity}'s latest move",
-                "Nobody expected this from {entity}",
-                "{entity} just surprised everyone",
-                "The internet can't stop talking about {entity}"
+                "First look: {entity} in an avatar you've never seen"
             },
-            Hashtags = new[]
-            {
-                "#Bollywood", "#BollywoodNews", "#HindiCinema",
-                "#EntertainmentNews", "#BreakingNews", "#Trending",
-                "#BollywoodUpdates", "#IndianEntertainment",
-                "#BollywoodMovies", "#BollywoodCelebrities",
-                "#BollywoodGossip", "#TVSerials", "#OTT"
-            },
+            Hashtags = new[] { "#Bollywood", "#BreakingNews", "#BollywoodNews", "#CelebrityNews", "#Trending", "#Viral", "#Entertainment" },
             CTAs = new[]
             {
                 "What do you think about this?",
                 "Did you see this coming?",
-                "Your thoughts on this development?",
                 "Share this if you're shocked too!",
                 "Tag someone who needs to see this!",
-                "Would you watch this movie?",
-                "Hit or flop — what's your prediction?",
-                "Which movie are you most excited for?",
-                "Rate this trailer 1-10!",
-                "Tag your movie buddy!"
+                "Follow for more breaking updates!"
             },
             TemplateIds = new[] { 14 }
         },
-        ["india_news"] = new CategoryInfo
+        ["celebrity_viral"] = new CategoryInfo
         {
-            Label = "India Latest News & Headlines",
+            Label = "Celebrity Viral Moment",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "india", "breaking", "latest", "news", "headlines", "today",
-                "update", "confirmed", "announced", "declared", "revealed",
-                "modi", "government", "parliament", "supreme court", "high court",
-                "election", "bjp", "congress", "aap", "policy", "scheme",
-                "economy", "gdp", "inflation", "budget", "tax", "rupee",
-                "weather", "monsoon", "flood", "earthquake", "cyclone",
-                "crime", "police", "arrested", "investigation", "court",
-                "health", "covid", "vaccine", "hospital", "disease",
-                "education", "university", "exam", "result", "admission",
-                "sports", "cricket", "ipl", "olympics", "medal", "team india",
-                "technology", "ai", "startup", "funding", "ipo", "unicorn",
-                "infrastructure", "highway", "railway", "metro", "airport",
-                "environment", "pollution", "climate", "green energy"
-            },
+            Keywords = new[] { "celebrity", "viral", "video", "photo", "trending", "funny", "spotted" },
             HookTemplates = new[]
             {
-                "BREAKING: Major development in India right now...",
-                "This just happened in India — you need to know",
-                "Nobody saw this coming: {entity} makes huge move",
-                "Just in: {entity} announces major decision",
-                "India is talking about this right now...",
-                "ALERT: Big news from {entity} just dropped",
-                "The truth about {entity} — what's really happening?",
-                "What {entity} did next left everyone shocked",
-                "This {entity} update changes everything",
-                "Major headline: {entity} just confirmed..."
+                "This {entity} moment is going VIRAL!",
+                "Watch this before it blows up!",
+                "Everyone is sharing this {entity} clip!",
+                "You NEED to see this {entity} moment!",
+                "This is the funniest {entity} thing today!",
+                "{entity} just broke the internet!",
+                "Viral alert: {entity} can't stop talking about this!",
+                "This {entity} video has everyone shocked!",
+                "Can't stop watching this {entity} clip!",
+                "The internet can't stop laughing at {entity}!"
             },
-            Hashtags = new[]
+            Hashtags = new[] { "#Viral", "#Celebrity", "#Trending", "#Bollywood", "#ViralVideo", "#Funny", "#360buzz" },
+            CTAs = new[]
             {
-                "#IndiaNews", "#BreakingNews", "#LatestNews",
-                "#IndiaHeadlines", "#TrendingInIndia", "#NewsToday",
-                "#IndianNews", "#CurrentAffairs", "#IndiaUpdates"
+                "Tag someone who needs to see this!",
+                "Share with your friends!",
+                "Comment if this made you laugh!",
+                "Follow for more viral content!",
+                "Too good not to share!"
             },
+            TemplateIds = new[] { 14 }
+        },
+        ["movie_announcement"] = new CategoryInfo
+        {
+            Label = "Movie Announcement",
+            PriorityWeight = 9,
+            Keywords = new[] { "movie", "announcement", "new film", "cast", "director", "release", "launch" },
+            HookTemplates = new[]
+            {
+                "BREAKING: {entity} movie just announced!",
+                "This is the Bollywood movie everyone's waiting for",
+                "{entity} release date just got confirmed",
+                "HUGE announcement: {entity} is coming!",
+                "{entity} just revealed something massive",
+                "Everything we know about {entity} so far",
+                "The wait is OVER — {entity} is official!",
+                "{entity} just made a blockbuster announcement",
+                "This {entity} project is going to be EPIC!",
+                "Just in: {entity} confirms new movie!"
+            },
+            Hashtags = new[] { "#Bollywood", "#MovieAnnouncement", "#NewMovie", "#ComingSoon", "#BollywoodNews", "#Film" },
+            CTAs = new[]
+            {
+                "Are you excited for this movie?",
+                "Which actor are you most excited to see?",
+                "Share this announcement!",
+                "Tag your movie buddy!",
+                "Drop a 🔥 if you're excited!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["celebrity_controversy"] = new CategoryInfo
+        {
+            Label = "Celebrity Controversy",
+            PriorityWeight = 9,
+            Keywords = new[] { "controversy", "fight", "statement", "viral", "debate", "alleged" },
+            HookTemplates = new[]
+            {
+                "BREAKING: {entity} at center of huge controversy!",
+                "Nobody expected this from {entity}...",
+                "{entity} just made a shocking statement!",
+                "The truth about {entity}'s latest controversy",
+                "This {entity} scandal is going VIRAL!",
+                "What {entity} did next left everyone shocked",
+                "ALERT: {entity} controversy just escalated!",
+                "{entity} just dropped a bombshell statement!",
+                "This {entity} drama is getting intense!",
+                "The real story behind {entity}'s controversy"
+            },
+            Hashtags = new[] { "#Controversy", "#Celebrity", "#Bollywood", "#Trending", "#Viral", "#Breaking" },
             CTAs = new[]
             {
                 "What's your take on this?",
-                "Did you see this coming?",
+                "Whose side are you on?",
                 "Share your thoughts below!",
                 "Tag someone who needs to see this!",
-                "Stay informed — follow for more!"
+                "Do you think this is fair?"
             },
             TemplateIds = new[] { 14 }
         },
-        ["india_politics"] = new CategoryInfo
+        ["box_office_update"] = new CategoryInfo
         {
-            Label = "India Politics - Big Headlines",
+            Label = "Box Office Update",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "modi", "narendra modi", "pm modi", "prime minister",
-                "rahul gandhi", "congress", "bjp", "aam aadmi party", "aap",
-                "amit shah", "arvind kejriwal", "mamata banerjee", "nitish kumar",
-                "yogi adityanath", "election", "poll", "voting", "result",
-                "parliament", "loksabha", "rajyasabha", "bill", "act",
-                "supreme court", "judgement", "verdict", "hearing",
-                "policy", "scheme", "yojana", "budget", "finance minister",
-                "minister", "cabinet", "portfolio", "resign", "appointed",
-                "alliance", "nda", "india alliance", "coalition",
-                "protest", "rally", "campaign", "manifesto", "promise",
-                "corruption", "scam", "investigation", "ed", "cbi", "raid"
-            },
+            Keywords = new[] { "box office", "collection", "hit", "flop", "budget", "earning", "blockbuster" },
             HookTemplates = new[]
             {
-                "BREAKING: Major political shakeup in India...",
-                "This just happened in Indian politics...",
-                "Nobody saw this coming: {entity} makes big move",
-                "Just in: {entity} announces major political decision",
-                "Indian politics is BUZZING right now...",
-                "ALERT: Big political news from {entity} just dropped",
-                "The truth about {entity}'s latest political move",
-                "What {entity} did next left everyone shocked",
-                "This political update from {entity} changes everything",
-                "Major headline: {entity} just confirmed..."
+                "{entity} box office collection just dropped!",
+                "Hit or flop? {entity} numbers are in!",
+                "{entity} just crossed a MASSIVE milestone!",
+                "Blockbuster alert: {entity} smashes records!",
+                "The real story behind {entity}'s box office numbers",
+                "{entity} day 1 collection will SHOCK you!",
+                "Is {entity} a hit or flop? Here's the truth!",
+                "{entity} just crushed the box office!",
+                "This {entity} box office update changes everything!",
+                "{entity} earned HOW much?! 😱"
             },
-            Hashtags = new[]
-            {
-                "#IndianPolitics", "#PoliticsNews", "#BreakingNews",
-                "#Modi", "#BJP", "#Congress", "#Election2024",
-                "#Parliament", "#SupremeCourt", "#PoliticalNews",
-                "#IndiaPolitics", "#CurrentAffairs"
-            },
+            Hashtags = new[] { "#BoxOffice", "#Bollywood", "#HitOrFlop", "#Collection", "#Blockbuster", "#MovieReview" },
             CTAs = new[]
             {
-                "What's your take on this?",
-                "Did you see this coming?",
-                "Share your thoughts below!",
-                "Tag someone who follows politics!",
-                "Stay informed — follow for more!"
+                "Hit or flop — what's your prediction?",
+                "Will you watch this movie?",
+                "Share your verdict!",
+                "Tag someone who loves box office stats!",
+                "Rate this movie 1-10!"
             },
             TemplateIds = new[] { 14 }
         },
-        ["bollywood_images"] = new CategoryInfo
+        ["box_office_battle"] = new CategoryInfo
         {
-            Label = "Bollywood HD Images",
-            PriorityWeight = 10,
-            Keywords = new[]
-            {
-                "bollywood", "celebrity", "actor", "actress", "star", "portrait", "hd", "photo"
-            },
-            HookTemplates = new[]
-            {
-                "Stunning portrait of {entity} ✨",
-                "{entity} looking absolutely gorgeous 📸",
-                "This photo of {entity} is everything 💫",
-                "{entity} serving looks as always 🔥",
-                "Can't get over this {entity} portrait 😍",
-                "HD perfection: {entity} in all their glory ✨",
-                "{entity} just proving why they're a star 🌟",
-                "Frame this photo of {entity} 🖼️",
-                "{entity} radiating main character energy ✨",
-                "This {entity} portrait is iconic 📸",
-                "Absolutely mesmerizing: {entity} 💫",
-                "{entity} looking like a dream ✨",
-                "Pure stardom: {entity} 🌟",
-                "Every angle is their best angle: {entity} 📸",
-                "{entity} serving Bollywood royalty 👑"
-            },
-            Hashtags = new[]
-            {
-                "#Bollywood", "#BollywoodCelebrities", "#IndianCelebrities",
-                "#BollywoodStars", "#CelebrityPortrait", "#HDPhoto",
-                "#BollywoodFashion", "#IndianCinema", "#StarPower",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Who's your favorite Bollywood star?",
-                "This look is 🔥 — agree?",
-                "Save this portrait! 📸",
-                "Tag a fan of {entity}!",
-                "Which celebrity portrait should be next?"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["celebrity_portraits"] = new CategoryInfo
-        {
-            Label = "Celebrity HD Portraits",
+            Label = "Box Office Battle",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "celebrity", "actor", "actress", "portrait", "hd", "photo", "indian", "star"
-            },
+            Keywords = new[] { "box office", "battle", "comparison", "vs", "earnings", "collection", "clash" },
             HookTemplates = new[]
             {
-                "Timeless beauty: {entity} ✨",
-                "{entity} — a legend in every frame 📸",
-                "Iconic portrait of {entity} 🌟",
-                "{entity} defining elegance 💫",
-                "This {entity} photo is pure art 🖼️",
-                "HD portrait perfection: {entity} ✨",
-                "{entity} capturing hearts since forever ❤️",
-                "Frame-worthy: {entity} in HD 📸",
-                "{entity} — Bollywood's eternal star 🌟",
-                "Absolute perfection: {entity} 💫",
-                "The magic of {entity} in one frame ✨",
-                "{entity} looking absolutely timeless 👑",
-                "Celebrity portrait goals: {entity} 📸",
-                "{entity} serving pure elegance ✨",
-                "Iconic. Legendary. {entity} 🌟"
+                "{entity} vs the competition — who's winning?",
+                "Box office BATTLE: {entity} dominates!",
+                "This {entity} comparison is mind-blowing!",
+                "{entity} just crushed the competition!",
+                "Who won the box office battle? {entity} or rivals?",
+                "{entity} box office numbers vs expectations!",
+                "The ultimate {entity} showdown at the box office!",
+                "{entity} vs the world — box office report!",
+                "This {entity} battle is making headlines!",
+                "Box office clash: {entity} takes the lead!"
             },
-            Hashtags = new[]
-            {
-                "#CelebrityPortrait", "#IndianCelebrities", "#HDPhoto",
-                "#BollywoodLegends", "#IconicStars", "#CelebrityPhotos",
-                "#IndianCinema", "#StarPortrait", "#TimelessBeauty",
-                "#360buzz"
-            },
+            Hashtags = new[] { "#BoxOffice", "#Battle", "#Bollywood", "#Collection", "#HitVsFlop", "#MovieClash" },
             CTAs = new[]
             {
-                "Who's your all-time favorite star?",
-                "This portrait is everything 💫",
-                "Save for your celebrity collection! 📸",
-                "Tag someone who loves {entity}!",
-                "Which legend should we feature next?"
+                "Which movie won this battle?",
+                "Share your box office prediction!",
+                "Tag someone who follows box office!",
+                "What's your verdict?",
+                "Follow for more box office updates!"
             },
             TemplateIds = new[] { 14 }
         },
-        ["ai_news"] = new CategoryInfo
+        ["celebrity_then_now"] = new CategoryInfo
         {
-            Label = "Artificial Intelligence News",
+            Label = "Celebrity Then vs Now",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "openai", "anthropic", "google deepmind", "meta ai", "china ai",
-                "artificial intelligence", "machine learning", "chatgpt", "gpt", "claude",
-                "gemini", "llama", "ai startup", "ai funding", "ai regulation",
-                "ai safety", "agi", "large language model", "llm", "generative ai",
-                "ai image", "ai video", "ai audio", "ai robot", "autonomous",
-                "deep learning", "neural network", "transformer", "diffusion",
-                "ai breakthrough", "ai research", "open source ai", "ai policy",
-                "elon musk ai", "sam altman", "dario amodei", "demis hassabis"
-            },
+            Keywords = new[] { "then vs now", "transformation", "old", "young", "comparison", "journey" },
             HookTemplates = new[]
             {
-                "BREAKING: {entity} just announced something huge...",
-                "This AI news changes everything...",
-                "Nobody saw this AI breakthrough coming...",
-                "Just in: {entity} drops bombshell AI update",
-                "AI world is SHOCKED right now...",
-                "ALERT: Major AI news from {entity}",
-                "The future just arrived: {entity} unveils...",
-                "This {entity} AI update is massive",
-                "AI will never be the same after this...",
-                "{entity} just made history in AI"
+                "Look how {entity} has changed over the years!",
+                "From then to now: {entity}'s incredible transformation!",
+                "{entity} THEN vs NOW — you won't believe the difference!",
+                "This {entity} transformation is jaw-dropping!",
+                "From nobody to superstar: {entity}'s journey!",
+                "{entity} then and now — the glow up is REAL!",
+                "Nobody expected {entity} to look like this now!",
+                "The incredible evolution of {entity}!",
+                "This {entity} then vs now will blow your mind!",
+                "{entity} has changed SO much — look at this!"
             },
-            Hashtags = new[]
-            {
-                "#AI", "#ArtificialIntelligence", "#MachineLearning",
-                "#OpenAI", "#Anthropic", "#DeepMind", "#TechNews",
-                "#AITrends", "#FutureTech", "#360buzz"
-            },
+            Hashtags = new[] { "#ThenVsNow", "#Transformation", "#Bollywood", "#Celebrity", "#GlowUp", "#Journey" },
             CTAs = new[]
             {
-                "What's your take on this AI development?",
-                "Will this change the AI landscape?",
-                "Share your thoughts on AI!",
-                "Tag someone interested in AI!",
-                "Excited or scared about this AI news?"
+                "Which era do you prefer?",
+                "Share this transformation!",
+                "Tag someone who needs to see this!",
+                "Comment your reaction!",
+                "Follow for more celebrity transformations!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["nostalgia_90s"] = new CategoryInfo
+        {
+            Label = "90s Bollywood Nostalgia",
+            PriorityWeight = 9,
+            Keywords = new[] { "90s", "nostalgic", "classic", "retro", "iconic", "old bollywood", "90s movie" },
+            HookTemplates = new[]
+            {
+                "This 90s Bollywood moment takes you back!",
+                "Remember when {entity} ruled the screen?",
+                "90s Bollywood hits different — {entity} edition!",
+                "The golden era: {entity} in the 90s!",
+                "This 90s {entity} clip is pure nostalgia!",
+                "90s Bollywood was a different world — {entity} proves it!",
+                "Take a trip back: {entity} 90s magic!",
+                "This {entity} 90s moment is ICONIC!",
+                "The 90s gave us {entity} — and we're still not over it!",
+                "90s Bollywood nostalgia: {entity} edition!"
+            },
+            Hashtags = new[] { "#90sBollywood", "#Nostalgia", "#ClassicBollywood", "#Retro", "#Iconic", "#Bollywood" },
+            CTAs = new[]
+            {
+                "Which 90s song is stuck in your head?",
+                "Tag someone who loves 90s Bollywood!",
+                "Share this with a 90s kid!",
+                "Drop a ❤️ if you miss the 90s!",
+                "Follow for more nostalgia!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["nostalgia_2000s"] = new CategoryInfo
+        {
+            Label = "2000s Bollywood Nostalgia",
+            PriorityWeight = 9,
+            Keywords = new[] { "2000s", "2000", "nostalgic", "early 2000s", "iconic", "retro" },
+            HookTemplates = new[]
+            {
+                "This 2000s Bollywood moment takes you back!",
+                "Remember when {entity} ruled the 2000s?",
+                "2000s Bollywood hits different — {entity} edition!",
+                "The early 2000s gave us {entity}!",
+                "This 2000s {entity} clip is pure nostalgia!",
+                "2000s Bollywood was a different world!",
+                "Take a trip back: {entity} 2000s magic!",
+                "This {entity} 2000s moment is ICONIC!",
+                "The 2000s gave us {entity} — and we're still vibing!",
+                "2000s Bollywood nostalgia: {entity} edition!"
+            },
+            Hashtags = new[] { "#2000sBollywood", "#Nostalgia", "#Early2000s", "#Classic", "#Bollywood", "#Retro" },
+            CTAs = new[]
+            {
+                "Which 2000s song is your favorite?",
+                "Tag someone who loves 2000s Bollywood!",
+                "Share this with a 2000s kid!",
+                "Drop a 🔥 if you miss the 2000s!",
+                "Follow for more nostalgia!"
             },
             TemplateIds = new[] { 14 }
         },
         ["bollywood_facts"] = new CategoryInfo
         {
             Label = "Bollywood Unknown Facts",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "bollywood", "fact", "unknown", "secret", "behind the scenes",
-                "trivia", "fun fact", "did you know", "movie fact", "actor fact",
-                "bollywood history", "classic bollywood", "old bollywood",
-                "bollywood controversy", "bollywood scandal", "bollywood secret",
-                "movie trivia", "film trivia", "bollywood trivia", "celebrity fact"
-            },
+            PriorityWeight = 9,
+            Keywords = new[] { "facts", "unknown", "secrets", "trivia", "behind the scenes", "did you know" },
             HookTemplates = new[]
             {
                 "Did you know this about {entity}?",
@@ -348,12 +308,7 @@ public static class ContentEngine
                 "This {entity} fact is mind-blowing...",
                 "Nobody told you this about Bollywood..."
             },
-            Hashtags = new[]
-            {
-                "#BollywoodFacts", "#BollywoodTrivia", "#UnknownFacts",
-                "#BollywoodSecrets", "#DidYouKnow", "#FunFacts",
-                "#BollywoodHistory", "#360buzz"
-            },
+            Hashtags = new[] { "#BollywoodFacts", "#UnknownFacts", "#DidYouKnow", "#BollywoodTrivia", "#Secrets", "#FunFacts" },
             CTAs = new[]
             {
                 "Did you know this fact?",
@@ -364,42 +319,993 @@ public static class ContentEngine
             },
             TemplateIds = new[] { 14 }
         },
-        ["quiz"] = new CategoryInfo
+        ["rejected_roles"] = new CategoryInfo
         {
-            Label = "Bollywood Quiz",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "quiz", "guess", "trivia", "test", "challenge",
-                "bollywood quiz", "movie quiz", "celebrity quiz",
-                "guess the movie", "guess the actor", "name the film"
-            },
+            Label = "Rejected Roles",
+            PriorityWeight = 9,
+            Keywords = new[] { "rejected", "role", "casting", "what if", "famous role", "turned down" },
             HookTemplates = new[]
             {
-                "🎯 QUIZ TIME! Can you guess this {entity}?",
-                "Test your Bollywood knowledge!",
-                "Only true fans can answer this!",
-                "Can you guess {entity} from this clue?",
-                "This quiz will test your Bollywood IQ!",
-                "Think you know Bollywood? Prove it!",
-                "Challenge: Can you name {entity}?",
-                "Bollywood quiz: How well do you know {entity}?",
-                "Only 1% can answer this correctly!",
-                "Comment your answer below! 👇"
+                "You won't believe {entity} rejected this role!",
+                "What if {entity} had taken this iconic role?",
+                "This famous role was almost played by {entity}!",
+                "{entity} turned down THIS role? 😱",
+                "The rejected role that changed Bollywood forever!",
+                "What {entity} almost played — you won't believe it!",
+                "This casting decision shocked everyone!",
+                "{entity} said NO to this blockbuster role!",
+                "The role {entity} regrets turning down!",
+                "Imagine {entity} in this role — alternate Bollywood!"
             },
-            Hashtags = new[]
-            {
-                "#BollywoodQuiz", "#GuessTheMovie", "#BollywoodTrivia",
-                "#QuizTime", "#TestYourKnowledge", "#BollywoodChallenge",
-                "#360buzz"
-            },
+            Hashtags = new[] { "#RejectedRoles", "#WhatIf", "#Bollywood", "#Casting", "#AlternateCasting", "#BollywoodFacts" },
             CTAs = new[]
             {
-                "Comment your answer below! 👇",
-                "Can you guess it? Drop your answer!",
-                "Tag someone who can solve this!",
-                "Share your score in comments!",
-                "Think you got it right?"
+                "Which role do you wish they had taken?",
+                "Share this with a Bollywood fan!",
+                "Tag someone who needs to see this!",
+                "What do you think — missed opportunity?",
+                "Follow for more Bollywood secrets!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["alternate_casting"] = new CategoryInfo
+        {
+            Label = "Alternate Casting",
+            PriorityWeight = 9,
+            Keywords = new[] { "alternate casting", "what if", "different actor", "original cast", "imagine" },
+            HookTemplates = new[]
+            {
+                "What if {entity} had been cast in this role?",
+                "Imagine {entity} in this iconic role!",
+                "This alternate casting would have changed everything!",
+                "{entity} as {entity2}? The what-if scenario!",
+                "The original casting plan that never happened!",
+                "Alternate Bollywood: {entity} in a different role!",
+                "What if {entity} had played THIS character?",
+                "This dream casting almost happened!",
+                "{entity} in an alternate Bollywood universe!",
+                "The casting that would have broken the internet!"
+            },
+            Hashtags = new[] { "#AlternateCasting", "#WhatIf", "#Bollywood", "#DreamCasting", "#Imagine", "#MovieCasting" },
+            CTAs = new[]
+            {
+                "Would you watch this alternate version?",
+                "Share your dream casting!",
+                "Tag someone who'd love this!",
+                "What do you think — better or worse?",
+                "Follow for more Bollywood what-ifs!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["bollywood_breakups"] = new CategoryInfo
+        {
+            Label = "Bollywood Breakups",
+            PriorityWeight = 9,
+            Keywords = new[] { "breakup", "split", "relationship", "dating", "love", "couple" },
+            HookTemplates = new[]
+            {
+                "BREAKING: {entity} splits up — the real story!",
+                "This {entity} breakup has everyone shocked!",
+                "The truth behind {entity}'s breakup!",
+                "{entity} and the end of a love story!",
+                "This {entity} breakup is going VIRAL!",
+                "What really happened between {entity}?",
+                "{entity} breakup: Everything we know so far!",
+                "The heartbreaking {entity} split!",
+                "{entity}'s love life just took a turn!",
+                "This {entity} breakup broke the internet!"
+            },
+            Hashtags = new[] { "#Breakup", "#Bollywood", "#Celebrity", "#Love", "#Relationship", "#Trending" },
+            CTAs = new[]
+            {
+                "Are you shocked by this breakup?",
+                "Share your thoughts below!",
+                "Tag someone who needs to see this!",
+                "What do you think really happened?",
+                "Follow for more celebrity updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["bollywood_couples"] = new CategoryInfo
+        {
+            Label = "Bollywood Couples",
+            PriorityWeight = 9,
+            Keywords = new[] { "couple", "relationship", "love story", "wedding", "dating", "partners" },
+            HookTemplates = new[]
+            {
+                "This {entity} couple is GOALS! 💕",
+                "The cutest {entity} moment you'll see today!",
+                "{entity} love story that gives us butterflies!",
+                "This {entity} couple just made our day!",
+                "{entity} spotted together — and they look amazing!",
+                "The love story everyone is talking about: {entity}!",
+                "{entity} couple goals for real! 😍",
+                "This {entity} wedding photo is EVERYTHING!",
+                "The most beautiful {entity} love story!",
+                "{entity} just proved they're Bollywood's favorite couple!"
+            },
+            Hashtags = new[] { "#CoupleGoals", "#Bollywood", "#LoveStory", "#Wedding", "#CelebrityCouple", "#Romance" },
+            CTAs = new[]
+            {
+                "Which Bollywood couple is your favorite?",
+                "Share this with your partner!",
+                "Tag someone who loves love stories!",
+                "Drop a ❤️ if you're a fan!",
+                "Follow for more couple content!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["bollywood_families"] = new CategoryInfo
+        {
+            Label = "Bollywood Families",
+            PriorityWeight = 9,
+            Keywords = new[] { "family", "kapoor", "bachchan", "khan", "dynasty", "connections", "relatives" },
+            HookTemplates = new[]
+            {
+                "The {entity} family tree is INSANE!",
+                "You won't believe these Bollywood family connections!",
+                "{entity} family dynasty: The full story!",
+                "This {entity} family photo is going viral!",
+                "The powerful {entity} family of Bollywood!",
+                "{entity} family connections will blow your mind!",
+                "Inside the {entity} family's Bollywood empire!",
+                "This {entity} family reunion photo is everything!",
+                "The {entity} dynasty that rules Bollywood!",
+                "Bollywood's most powerful family: {entity}!"
+            },
+            Hashtags = new[] { "#BollywoodFamily", "#Dynasty", "#Family", "#Bollywood", "#StarFamily", "#Connections" },
+            CTAs = new[]
+            {
+                "Which Bollywood family is your favorite?",
+                "Share this family connection!",
+                "Tag someone who loves Bollywood families!",
+                "Did you know these connections?",
+                "Follow for more Bollywood family stories!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["star_kids"] = new CategoryInfo
+        {
+            Label = "Star Kids Then and Now",
+            PriorityWeight = 9,
+            Keywords = new[] { "star kid", "child", "nepotism", "debut", "career", "growing up" },
+            HookTemplates = new[]
+            {
+                "Look how {entity}'s kid has grown! 🌟",
+                "From child to star: {entity}'s kid's journey!",
+                "This {entity} star kid transformation is incredible!",
+                "{entity} kid is all grown up — and WOW!",
+                "The {entity} star kid everyone is talking about!",
+                "From nepotism to stardom: {entity} kid's path!",
+                "This {entity} star kid debut is making headlines!",
+                "{entity} child is following in their footsteps!",
+                "The most adorable {entity} star kid photos!",
+                "{entity} kid just made a powerful debut!"
+            },
+            Hashtags = new[] { "#StarKid", "#Bollywood", "#Nepotism", "#Debut", "#GrowingUp", "#NextGen" },
+            CTAs = new[]
+            {
+                "Which star kid are you rooting for?",
+                "Share this transformation!",
+                "Tag someone who loves Bollywood families!",
+                "What do you think — talent or nepotism?",
+                "Follow for more star kid updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["celebrity_lifestyle"] = new CategoryInfo
+        {
+            Label = "Celebrity Lifestyle",
+            PriorityWeight = 9,
+            Keywords = new[] { "lifestyle", "luxury", "house", "car", "mansion", "expensive", "rich" },
+            HookTemplates = new[]
+            {
+                "Inside {entity}'s luxurious lifestyle! 🏠",
+                "Look at {entity}'s stunning mansion!",
+                "This {entity} house tour is INCREDIBLE!",
+                "{entity} lives like royalty — look at this!",
+                "The jaw-dropping {entity} lifestyle!",
+                "{entity}'s luxury car collection is insane!",
+                "This {entity} home is a dream!",
+                "{entity} really knows how to live!",
+                "The expensive side of {entity}'s life!",
+                "This {entity} lifestyle will make you jealous!"
+            },
+            Hashtags = new[] { "#LuxuryLifestyle", "#Celebrity", "#Bollywood", "#Mansion", "#Luxury", "#DreamHome" },
+            CTAs = new[]
+            {
+                "Whose lifestyle do you admire most?",
+                "Share this with a friend!",
+                "Tag someone who loves luxury!",
+                "What would you do with this lifestyle?",
+                "Follow for more celebrity content!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["celebrity_networth"] = new CategoryInfo
+        {
+            Label = "Celebrity Net Worth",
+            PriorityWeight = 9,
+            Keywords = new[] { "net worth", "wealth", "rich", "earnings", "income", "salary", "worth" },
+            HookTemplates = new[]
+            {
+                "You won't believe {entity}'s net worth! 💰",
+                "How rich is {entity} really?",
+                "This {entity} net worth number is SHOCKING!",
+                "{entity}'s wealth will blow your mind!",
+                "The real net worth of {entity}!",
+                "{entity} earns THIS much?! 😱",
+                "Inside {entity}'s massive fortune!",
+                "This {entity} wealth report is jaw-dropping!",
+                "{entity} is richer than you think!",
+                "The shocking truth about {entity}'s net worth!"
+            },
+            Hashtags = new[] { "#NetWorth", "#Celebrity", "#Bollywood", "#Wealth", "#RichList", "#Earnings" },
+            CTAs = new[]
+            {
+                "Were you surprised by this number?",
+                "Share your reaction!",
+                "Tag someone who needs to see this!",
+                "Which celebrity's net worth shocked you?",
+                "Follow for more celebrity facts!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["career_comparison"] = new CategoryInfo
+        {
+            Label = "Career Comparison",
+            PriorityWeight = 9,
+            Keywords = new[] { "career", "comparison", "achievements", "awards", "vs", "stats" },
+            HookTemplates = new[]
+            {
+                "Career showdown: {entity} vs {entity2}!",
+                "Who has the better career? {entity} or {entity2}?",
+                "This {entity} vs {entity2} comparison is EPIC!",
+                "The ultimate Bollywood career comparison!",
+                "{entity} vs {entity2} — the numbers don't lie!",
+                "Which career wins? {entity} or {entity2}!",
+                "This {entity} career stat will shock you!",
+                "{entity} vs {entity2}: Who's the real star?",
+                "The Bollywood career battle: {entity} edition!",
+                "Let's settle this: {entity} vs {entity2}!"
+            },
+            Hashtags = new[] { "#CareerComparison", "#Bollywood", "#Vs", "#Achievements", "#Awards", "#Stars" },
+            CTAs = new[]
+            {
+                "Who wins this career battle?",
+                "Share your verdict!",
+                "Tag someone who'd argue about this!",
+                "Which career impresses you more?",
+                "Follow for more comparisons!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["movie_ending_explained"] = new CategoryInfo
+        {
+            Label = "Movie Ending Explained",
+            PriorityWeight = 9,
+            Keywords = new[] { "ending", "explained", "climax", "meaning", "spoiler", "theory" },
+            HookTemplates = new[]
+            {
+                "{entity} ending explained — you won't believe what it means!",
+                "This {entity} ending has everyone confused!",
+                "The REAL meaning behind {entity}'s ending!",
+                "{entity} climax: What actually happened?",
+                "You missed THIS in {entity}'s ending!",
+                "{entity} ending breakdown — everything explained!",
+                "The hidden details in {entity}'s finale!",
+                "This {entity} theory changes EVERYTHING!",
+                "{entity} ending: What most people missed!",
+                "The shocking truth behind {entity}'s ending!"
+            },
+            Hashtags = new[] { "#EndingExplained", "#Bollywood", "#Spoiler", "#MovieTheory", "#Climax", "#FilmAnalysis" },
+            CTAs = new[]
+            {
+                "Did you catch this detail?",
+                "Share your theory!",
+                "Tag someone who needs to see this!",
+                "What did you think of the ending?",
+                "Follow for more movie breakdowns!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["biggest_flops"] = new CategoryInfo
+        {
+            Label = "Biggest Bollywood Flops",
+            PriorityWeight = 9,
+            Keywords = new[] { "flop", "disaster", "fail", "worst", "box office disaster", "bomb" },
+            HookTemplates = new[]
+            {
+                "{entity} was the BIGGEST flop in Bollywood history!",
+                "This {entity} disaster shocked everyone!",
+                "How {entity} became a massive box office bomb!",
+                "The real story behind {entity}'s failure!",
+                "{entity} flopped HARD — here's why!",
+                "This {entity} disaster is unbelievable!",
+                "{entity} budget vs collection — the math is tragic!",
+                "The most embarrassing {entity} failure!",
+                "Why {entity} failed at the box office!",
+                "{entity} is Bollywood's biggest disaster!"
+            },
+            Hashtags = new[] { "#Flop", "#Bollywood", "#BoxOfficeDisaster", "#Fail", "#WorstMovie", "#Disaster" },
+            CTAs = new[]
+            {
+                "Did you watch this flop?",
+                "Share why you think it failed!",
+                "Tag someone who needs to see this!",
+                "What went wrong with this movie?",
+                "Follow for more Bollywood disasters!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["unexpected_blockbusters"] = new CategoryInfo
+        {
+            Label = "Unexpected Blockbusters",
+            PriorityWeight = 9,
+            Keywords = new[] { "blockbuster", "surprise hit", "sleeper hit", "unexpected", "low budget" },
+            HookTemplates = new[]
+            {
+                "{entity} was an UNEXPECTED blockbuster!",
+                "Nobody expected {entity} to be this huge!",
+                "The surprise hit that broke all records: {entity}!",
+                "{entity} went from sleeper hit to MEGA blockbuster!",
+                "This {entity} success story is INSPIRING!",
+                "How {entity} became an overnight sensation!",
+                "{entity} surprised EVERYONE at the box office!",
+                "The low-budget blockbuster: {entity}!",
+                "{entity}'s success no one saw coming!",
+                "From unknown to blockbuster: {entity}'s incredible journey!"
+            },
+            Hashtags = new[] { "#Blockbuster", "#SurpriseHit", "#Bollywood", "#SleeperHit", "#Success", "#BoxOffice" },
+            CTAs = new[]
+            {
+                "Did you watch this surprise hit?",
+                "Share this success story!",
+                "Tag someone who needs to see this!",
+                "What made this movie so special?",
+                "Follow for more Bollywood stories!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["iconic_songs"] = new CategoryInfo
+        {
+            Label = "Iconic Bollywood Songs",
+            PriorityWeight = 9,
+            Keywords = new[] { "song", "music", "iconic", "hit", "melody", "classic", "legendary" },
+            HookTemplates = new[]
+            {
+                "This {entity} song is ICONIC! 🎵",
+                "The {entity} melody that lives in our hearts!",
+                "{entity} song that defined a generation!",
+                "This {entity} track is EVERYTHING! 🎶",
+                "The legendary {entity} song you can't forget!",
+                "{entity} music that still gives goosebumps!",
+                "This {entity} hit is timeless!",
+                "{entity} song = instant nostalgia! 🎵",
+                "The {entity} melody that broke the internet!",
+                "This iconic {entity} song deserves more love!"
+            },
+            Hashtags = new[] { "#IconicSong", "#Bollywood", "#Music", "#Melody", "#Classic", "#BollywoodMusic" },
+            CTAs = new[]
+            {
+                "Which Bollywood song is your all-time favorite?",
+                "Share this with a music lover!",
+                "Tag someone who loves this song!",
+                "Drop your favorite Bollywood song in comments!",
+                "Follow for more iconic music!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["movie_bts"] = new CategoryInfo
+        {
+            Label = "Movie Behind The Scenes",
+            PriorityWeight = 9,
+            Keywords = new[] { "behind the scenes", "making", "production", "shoot", "bts", "making of" },
+            HookTemplates = new[]
+            {
+                "Behind the scenes of {entity} — you NEED to see this!",
+                "The making of {entity} is INSANE!",
+                "This {entity} BTS footage is gold!",
+                "{entity} behind the scenes — the real magic!",
+                "You won't believe how {entity} was made!",
+                "The hidden world behind {entity}! 🎬",
+                "{entity} BTS: The story they didn't show!",
+                "This {entity} making-of clip is incredible!",
+                "Behind every scene of {entity} — pure effort!",
+                "{entity} production secrets revealed! 🎥"
+            },
+            Hashtags = new[] { "#BTS", "#BehindTheScenes", "#Bollywood", "#MakingOf", "#FilmProduction", "#MovieMagic" },
+            CTAs = new[]
+            {
+                "Did you know about this BTS?",
+                "Share this behind-the-scenes!",
+                "Tag someone who loves movie making!",
+                "What surprised you most?",
+                "Follow for more BTS content!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["upcoming_movies"] = new CategoryInfo
+        {
+            Label = "Upcoming Movies",
+            PriorityWeight = 9,
+            Keywords = new[] { "upcoming", "release", "next", "预告", "preview", "2026", "announcement" },
+            HookTemplates = new[]
+            {
+                "Coming soon: {entity} — get ready! 🎬",
+                "The most anticipated {entity} is almost here!",
+                "{entity} release date CONFIRMED!",
+                "This {entity} is going to be EPIC!",
+                "Get ready for {entity} — 2026's biggest movie!",
+                "{entity} is coming and we can't wait!",
+                "The countdown to {entity} begins NOW!",
+                "{entity} preview just dropped — it's INSANE!",
+                "This {entity} is going to break the internet!",
+                "{entity} is the movie everyone's waiting for!"
+            },
+            Hashtags = new[] { "#UpcomingMovie", "#Bollywood", "#ComingSoon", "#NewMovie", "#2026", "#Anticipation" },
+            CTAs = new[]
+            {
+                "Are you excited for this movie?",
+                "Share this with a movie fan!",
+                "Tag someone who needs to see this!",
+                "Which upcoming movie are you most excited for?",
+                "Follow for more movie updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+
+        // ═══════════════════════════════════════════════════════════════
+        // POLITICS CATEGORIES (26–50)
+        // ═══════════════════════════════════════════════════════════════
+        ["political_breaking"] = new CategoryInfo
+        {
+            Label = "Political Breaking News",
+            PriorityWeight = 9,
+            Keywords = new[] { "political", "breaking", "news", "government", "party", "leader", "statement" },
+            HookTemplates = new[]
+            {
+                "BREAKING: Major political development right now!",
+                "This just happened in politics — you need to know!",
+                "Nobody saw this coming: {entity} makes huge move!",
+                "Just in: {entity} announces major decision!",
+                "Political world is SHOCKED right now!",
+                "ALERT: Big political news from {entity}!",
+                "The truth about {entity} — what's really happening!",
+                "What {entity} did next left everyone shocked!",
+                "This political update changes everything!",
+                "Major headline: {entity} just confirmed..."
+            },
+            Hashtags = new[] { "#PoliticalBreaking", "#BreakingNews", "#Politics", "#India", "#PoliticalNews", "#Trending" },
+            CTAs = new[]
+            {
+                "What's your take on this?",
+                "Did you see this coming?",
+                "Share your thoughts below!",
+                "Tag someone who needs to see this!",
+                "Stay informed — follow for more!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["politics_explained"] = new CategoryInfo
+        {
+            Label = "Indian Politics Explained",
+            PriorityWeight = 9,
+            Keywords = new[] { "politics", "explained", "issue", "policy", "analysis", "simple" },
+            HookTemplates = new[]
+            {
+                "Indian politics EXPLAINED in simple terms!",
+                "This political issue in 60 seconds!",
+                "What's really happening in Indian politics?",
+                "Breaking down the {entity} issue simply!",
+                "Politics explained like never before!",
+                "The {entity} issue — what you need to know!",
+                "This political analysis will open your eyes!",
+                "{entity} explained: The full picture!",
+                "Indian politics made SIMPLE — {entity} edition!",
+                "The {entity} story everyone is confused about!"
+            },
+            Hashtags = new[] { "#PoliticsExplained", "#IndianPolitics", "#Policy", "#Analysis", "#Simple", "#Understanding" },
+            CTAs = new[]
+            {
+                "Did this help you understand better?",
+                "Share this explanation!",
+                "Tag someone who needs to see this!",
+                "What other political issue should we explain?",
+                "Follow for more political explainers!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["parliament_update"] = new CategoryInfo
+        {
+            Label = "Parliament Update",
+            PriorityWeight = 9,
+            Keywords = new[] { "parliament", "session", "debate", "question hour", "Lok Sabha", "Rajya Sabha" },
+            HookTemplates = new[]
+            {
+                "Parliament update: {entity} just happened!",
+                "Lok Sabha is BUZZING right now!",
+                "This parliament session is INTENSE!",
+                "{entity} just dropped a bombshell in Parliament!",
+                "Parliament debate heating up: {entity}!",
+                "Rajya Sabha just witnessed THIS!",
+                "The most dramatic parliament moment today!",
+                "{entity} in Parliament — what just happened!",
+                "Parliament session update: Major development!",
+                "This parliament debate is going viral!"
+            },
+            Hashtags = new[] { "#Parliament", "#LokSabha", "#RajyaSabha", "#IndianPolitics", "#Debate", "#Session" },
+            CTAs = new[]
+            {
+                "What's your take on this debate?",
+                "Share your thoughts!",
+                "Tag someone who follows politics!",
+                "What should Parliament focus on next?",
+                "Follow for more parliament updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["election_watch"] = new CategoryInfo
+        {
+            Label = "Election Watch",
+            PriorityWeight = 9,
+            Keywords = new[] { "election", "vote", "campaign", "candidate", "polling", "result" },
+            HookTemplates = new[]
+            {
+                "Election ALERT: {entity} just made a move!",
+                "This election update is HUGE!",
+                "{entity} campaign is going viral!",
+                "Election watch: {entity} dominates!",
+                "This election result is shocking!",
+                "{entity} just changed the election game!",
+                "Election campaign update: {entity}!",
+                "The {entity} election story everyone is watching!",
+                "This {entity} polling data is incredible!",
+                "Election buzz: {entity} takes the lead!"
+            },
+            Hashtags = new[] { "#Election", "#Vote", "#Campaign", "#Politics", "#India", "#ElectionWatch" },
+            CTAs = new[]
+            {
+                "Are you following this election?",
+                "Share your election prediction!",
+                "Tag someone who needs to see this!",
+                "What issues matter most to you?",
+                "Follow for more election updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["politician_statement"] = new CategoryInfo
+        {
+            Label = "Politician Statement",
+            PriorityWeight = 9,
+            Keywords = new[] { "statement", "speech", "quote", "leader", "minister", "response" },
+            HookTemplates = new[]
+            {
+                "This {entity} statement is going VIRAL!",
+                "{entity} just made a HUGE statement!",
+                "You won't believe what {entity} just said!",
+                "This {entity} speech has everyone talking!",
+                "{entity} dropped a bombshell statement!",
+                "The {entity} quote everyone is sharing!",
+                "This {entity} response is powerful!",
+                "{entity} just made HEADLINES with this!",
+                "This {entity} speech is a MUST-WATCH!",
+                "{entity} statement that broke the internet!"
+            },
+            Hashtags = new[] { "#Statement", "#Politician", "#Politics", "#Speech", "#India", "#Viral" },
+            CTAs = new[]
+            {
+                "What's your take on this statement?",
+                "Do you agree with {entity}?",
+                "Share this statement!",
+                "Tag someone who needs to see this!",
+                "Follow for more political updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["political_faceoff"] = new CategoryInfo
+        {
+            Label = "Political Face-Off",
+            PriorityWeight = 9,
+            Keywords = new[] { "face off", "debate", "vs", "argument", "clash", "confrontation" },
+            HookTemplates = new[]
+            {
+                "EPIC political face-off: {entity} vs {entity2}!",
+                "This political clash is INTENSE!",
+                "{entity} just challenged {entity2}!",
+                "The political showdown everyone is watching!",
+                "This {entity} vs {entity2} debate is FIRE!",
+                "Political clash: {entity} strikes back!",
+                "This face-off has the internet buzzing!",
+                "{entity} vs {entity2} — who wins?",
+                "The most heated political argument today!",
+                "This political confrontation is UNREAL!"
+            },
+            Hashtags = new[] { "#FaceOff", "#PoliticalDebate", "#Politics", "#Clash", "#India", "#Argument" },
+            CTAs = new[]
+            {
+                "Who won this face-off?",
+                "Share your opinion!",
+                "Tag someone who'd love this debate!",
+                "What's your take on this clash?",
+                "Follow for more political drama!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["government_rule"] = new CategoryInfo
+        {
+            Label = "New Government Rule",
+            PriorityWeight = 9,
+            Keywords = new[] { "rule", "law", "regulation", "policy", "order", "guideline", "decision" },
+            HookTemplates = new[]
+            {
+                "NEW government rule just announced! 📢",
+                "This new law affects EVERYONE!",
+                "{entity} just introduced a major rule change!",
+                "Government rule ALERT: What you need to know!",
+                "This new regulation will change everything!",
+                "{entity} just dropped a new policy!",
+                "New government order: Important update!",
+                "This law change is HUGE — {entity}!",
+                "Government just announced THIS new rule!",
+                "The new regulation everyone is talking about!"
+            },
+            Hashtags = new[] { "#GovernmentRule", "#NewLaw", "#Policy", "#India", "#Regulation", "#Update" },
+            CTAs = new[]
+            {
+                "How does this rule affect you?",
+                "Share this with someone who needs to know!",
+                "Tag someone who needs to see this!",
+                "What do you think of this rule?",
+                "Follow for more government updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["budget_economy"] = new CategoryInfo
+        {
+            Label = "Budget and Economy",
+            PriorityWeight = 9,
+            Keywords = new[] { "budget", "economy", "tax", "inflation", "GDP", "financial", "rupee" },
+            HookTemplates = new[]
+            {
+                "Budget ALERT: {entity} just dropped a bombshell!",
+                "This economic update changes everything!",
+                "{entity} budget numbers are IN!",
+                "The truth about India's economy — {entity}!",
+                "This budget breakdown you NEED to see!",
+                "{entity} just made a massive economic move!",
+                "Budget update: What it means for YOU!",
+                "This economic data is SHOCKING!",
+                "{entity} just revealed the budget numbers!",
+                "The economy is changing — here's the {entity} update!"
+            },
+            Hashtags = new[] { "#Budget", "#Economy", "#Tax", "#India", "#Finance", "#Inflation" },
+            CTAs = new[]
+            {
+                "How does this budget affect you?",
+                "Share your budget reaction!",
+                "Tag someone who needs to see this!",
+                "What do you think of the economy?",
+                "Follow for more budget updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["government_data"] = new CategoryInfo
+        {
+            Label = "Government Data",
+            PriorityWeight = 9,
+            Keywords = new[] { "data", "statistics", "report", "numbers", "survey", "index", "ranking" },
+            HookTemplates = new[]
+            {
+                "Government data just dropped — and it's SHOCKING!",
+                "This {entity} report has everyone talking!",
+                "The numbers are IN: {entity} data revealed!",
+                "This government statistic will blow your mind!",
+                "{entity} just released crucial data!",
+                "New government report: {entity} edition!",
+                "This data changes everything we thought we knew!",
+                "{entity} statistics are jaw-dropping!",
+                "The government just shared THIS data!",
+                "This {entity} index is making headlines!"
+            },
+            Hashtags = new[] { "#Data", "#Statistics", "#Government", "#India", "#Report", "#Numbers" },
+            CTAs = new[]
+            {
+                "Were you surprised by these numbers?",
+                "Share this data with someone!",
+                "Tag someone who needs to see this!",
+                "What does this data mean to you?",
+                "Follow for more government data!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["india_world"] = new CategoryInfo
+        {
+            Label = "India World News",
+            PriorityWeight = 9,
+            Keywords = new[] { "international", "global", "world", "india", "foreign", "diplomacy" },
+            HookTemplates = new[]
+            {
+                "BREAKING: India makes global headlines!",
+                "This international development involves India!",
+                "{entity} just changed India's global standing!",
+                "World is watching India right now!",
+                "This global news impacts India directly!",
+                "{entity} just made a major diplomatic move!",
+                "India vs the world — the latest development!",
+                "This international {entity} story is HUGE!",
+                "Global alert: {entity} and India!",
+                "The world is talking about India — {entity}!"
+            },
+            Hashtags = new[] { "#IndiaWorld", "#International", "#Global", "#Diplomacy", "#India", "#WorldNews" },
+            CTAs = new[]
+            {
+                "What's your take on this global issue?",
+                "Share this with someone!",
+                "Tag someone who follows world news!",
+                "How do you see India's role?",
+                "Follow for more world news!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["india_vs_world"] = new CategoryInfo
+        {
+            Label = "India vs World",
+            PriorityWeight = 9,
+            Keywords = new[] { "india vs", "comparison", "world", "global", "ranking", "data" },
+            HookTemplates = new[]
+            {
+                "India vs the world — who's winning?",
+                "This comparison is MIND-BLOWING!",
+                "India dominates the world in THIS!",
+                "How India compares to the world — {entity}!",
+                "India vs {entity} — the numbers don't lie!",
+                "This India ranking is INSANE!",
+                "India just beat the world at {entity}!",
+                "The India vs world comparison you NEED to see!",
+                "India leads the world in THIS!",
+                "India vs the world — {entity} edition!"
+            },
+            Hashtags = new[] { "#IndiaVsWorld", "#Comparison", "#Ranking", "#India", "#Global", "#Data" },
+            CTAs = new[]
+            {
+                "Did you know India leads in this?",
+                "Share this comparison!",
+                "Tag someone who needs to see this!",
+                "What other comparisons do you want?",
+                "Follow for more India updates!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["politician_profile"] = new CategoryInfo
+        {
+            Label = "Politician Profile",
+            PriorityWeight = 9,
+            Keywords = new[] { "leader", "profile", "career", "background", "journey", "biography" },
+            HookTemplates = new[]
+            {
+                "The rise of {entity} — a political journey!",
+                "This {entity} profile will blow your mind!",
+                "From nobody to power: {entity}'s incredible story!",
+                "Inside {entity}'s political career!",
+                "The {entity} story you never knew!",
+                "How {entity} became one of India's most powerful leaders!",
+                "The untold journey of {entity}!",
+                "{entity} profile: Everything you need to know!",
+                "The making of {entity} — a political biography!",
+                "This {entity} story is INCREDIBLE!"
+            },
+            Hashtags = new[] { "#PoliticianProfile", "#Leader", "#Politics", "#India", "#Journey", "#Biography" },
+            CTAs = new[]
+            {
+                "What do you think of this leader?",
+                "Share this profile!",
+                "Tag someone who needs to see this!",
+                "Which politician's journey inspires you?",
+                "Follow for more leader profiles!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["political_flashback"] = new CategoryInfo
+        {
+            Label = "Political Flashback",
+            PriorityWeight = 9,
+            Keywords = new[] { "flashback", "history", "past", "memory", "anniversary", "on this day" },
+            HookTemplates = new[]
+            {
+                "Political flashback: This day in history!",
+                "Remember when {entity} made THIS move?",
+                "On this day: {entity} changed politics forever!",
+                "This historical {entity} moment is ICONIC!",
+                "Flashback to the day {entity} shocked the nation!",
+                "The {entity} moment that made history!",
+                "On this day: The biggest political event!",
+                "This {entity} flashback gives us goosebumps!",
+                "History remembers: {entity} on this day!",
+                "The political anniversary everyone is celebrating!"
+            },
+            Hashtags = new[] { "#Flashback", "#History", "#OnThisDay", "#Politics", "#India", "#Anniversary" },
+            CTAs = new[]
+            {
+                "Do you remember this moment?",
+                "Share this flashback!",
+                "Tag someone who needs to see this!",
+                "What other historical moment should we cover?",
+                "Follow for more political history!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["myth_vs_fact"] = new CategoryInfo
+        {
+            Label = "Political Myth vs Fact",
+            PriorityWeight = 9,
+            Keywords = new[] { "myth", "fact", "claim", "check", "fake", "truth", "debunked" },
+            HookTemplates = new[]
+            {
+                "MYTH vs FACT: {entity} edition!",
+                "This claim about {entity} is FAKE — here's the truth!",
+                "Debunking the biggest {entity} myth!",
+                "The truth about {entity} — myth BUSTED!",
+                "This {entity} claim is MISLEADING — fact check!",
+                "MYTH BUSTED: The real story behind {entity}!",
+                "You believed this about {entity} — but it's FALSE!",
+                "Fact check: {entity} — what's really true?",
+                "The {entity} myth that fooled everyone!",
+                "This viral {entity} claim is completely FALSE!"
+            },
+            Hashtags = new[] { "#MythVsFact", "#FactCheck", "#Truth", "#Politics", "#Debunked", "#India" },
+            CTAs = new[]
+            {
+                "Did you know this was fake?",
+                "Share this fact check!",
+                "Tag someone who needs to see this!",
+                "What other myths should we bust?",
+                "Follow for more fact checks!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["what_actually_happened"] = new CategoryInfo
+        {
+            Label = "What Actually Happened",
+            PriorityWeight = 9,
+            Keywords = new[] { "actually happened", "timeline", "story", "incident", "event", "explained" },
+            HookTemplates = new[]
+            {
+                "What actually happened with {entity}?",
+                "The FULL timeline of {entity} — explained!",
+                "Here's the complete story behind {entity}!",
+                "{entity} incident: What REALLY went down!",
+                "Everything that happened with {entity} — in order!",
+                "The untold story of {entity}'s incident!",
+                "{entity} event breakdown — the full picture!",
+                "What actually happened: {entity} edition!",
+                "The real timeline of {entity} — no fake news!",
+                "This {entity} story is WILDER than you think!"
+            },
+            Hashtags = new[] { "#WhatHappened", "#Timeline", "#Explained", "#Politics", "#India", "#Story" },
+            CTAs = new[]
+            {
+                "Did you know the full story?",
+                "Share this timeline!",
+                "Tag someone who needs to see this!",
+                "What do you think actually happened?",
+                "Follow for more event breakdowns!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["public_reaction"] = new CategoryInfo
+        {
+            Label = "Public Reaction",
+            PriorityWeight = 9,
+            Keywords = new[] { "reaction", "response", "opinion", "viral", "social media", "twitter" },
+            HookTemplates = new[]
+            {
+                "Twitter is MELTING DOWN over {entity}!",
+                "The public reaction to {entity} is INSANE!",
+                "This {entity} response is going VIRAL!",
+                "Everyone is talking about {entity} right now!",
+                "The internet's reaction to {entity} is priceless!",
+                "{entity} just broke social media!",
+                "This public reaction to {entity} is EVERYTHING!",
+                "Twitter炸了 over {entity}!",
+                "The viral response to {entity} you NEED to see!",
+                "People are GOING OFF about {entity}!"
+            },
+            Hashtags = new[] { "#PublicReaction", "#Viral", "#Twitter", "#SocialMedia", "#Trending", "#Reaction" },
+            CTAs = new[]
+            {
+                "What's YOUR reaction to this?",
+                "Share this with someone!",
+                "Tag someone who needs to see this!",
+                "Drop your reaction in the comments!",
+                "Follow for more viral reactions!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["five_things_today"] = new CategoryInfo
+        {
+            Label = "5 Things Today",
+            PriorityWeight = 9,
+            Keywords = new[] { "top 5", "today", "biggest", "important", "summary", "roundup" },
+            HookTemplates = new[]
+            {
+                "5 things you NEED to know today!",
+                "Top 5 stories of the day — {entity} edition!",
+                "Today's BIGGEST stories in 60 seconds!",
+                "5 things that matter today!",
+                "The 5 most important stories right now!",
+                "Today's roundup: 5 stories you can't miss!",
+                "5 things happening in India today!",
+                "The top 5 headlines you need to know!",
+                "5 stories that shook the world today!",
+                "Today's essential 5 — {entity} leads!"
+            },
+            Hashtags = new[] { "#Top5", "#Today", "#Roundup", "#Headlines", "#India", "#Summary" },
+            CTAs = new[]
+            {
+                "Which story surprised you most?",
+                "Share this roundup!",
+                "Tag someone who needs to see this!",
+                "What other stories should we cover?",
+                "Follow for daily roundups!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["fact_check"] = new CategoryInfo
+        {
+            Label = "Fact Check",
+            PriorityWeight = 9,
+            Keywords = new[] { "fact check", "true", "false", "misleading", "verified", "claim" },
+            HookTemplates = new[]
+            {
+                "FACT CHECK: Is this {entity} claim TRUE?",
+                "This viral claim about {entity} — TRUE or FALSE?",
+                "We checked: {entity} claim is MISLEADING!",
+                "The truth behind this {entity} claim!",
+                "Fact check: {entity} — verified or fake?",
+                "This {entity} claim is FALSE — here's proof!",
+                "VERIFIED: The real story behind {entity}!",
+                "Fact check time: {entity} edition!",
+                "This viral {entity} post is MISLEADING!",
+                "The {entity} fact check you NEED to see!"
+            },
+            Hashtags = new[] { "#FactCheck", "#TrueOrFalse", "#Verified", "#Politics", "#India", "#Truth" },
+            CTAs = new[]
+            {
+                "Did you think this was true?",
+                "Share this fact check!",
+                "Tag someone who needs to see this!",
+                "What other claims should we fact-check?",
+                "Follow for more fact checks!"
+            },
+            TemplateIds = new[] { 14 }
+        },
+        ["what_happens_next"] = new CategoryInfo
+        {
+            Label = "What Happens Next",
+            PriorityWeight = 9,
+            Keywords = new[] { "what happens next", "prediction", "future", "outcome", "next step" },
+            HookTemplates = new[]
+            {
+                "What happens next with {entity}?",
+                "The future of {entity} — what to expect!",
+                "{entity} just changed — what's next?",
+                "The next chapter for {entity}!",
+                "What comes next for {entity}?",
+                "The prediction everyone is making about {entity}!",
+                "This {entity} story is FAR from over!",
+                "Next step: {entity} takes a new direction!",
+                "What happens next? {entity} edition!",
+                "The future outlook for {entity} — analysis!"
+            },
+            Hashtags = new[] { "#WhatHappensNext", "#Prediction", "#Future", "#Politics", "#India", "#WhatNext" },
+            CTAs = new[]
+            {
+                "What do you think happens next?",
+                "Share your prediction!",
+                "Tag someone who needs to see this!",
+                "What's your take on the future?",
+                "Follow for more predictions!"
             },
             TemplateIds = new[] { 14 }
         },
@@ -407,11 +1313,7 @@ public static class ContentEngine
         {
             Label = "Bollywood Teasers",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "bollywood", "movie teaser", "official teaser", "trailer",
-                "film teaser", "first look", "movie clip", "song"
-            },
+            Keywords = new[] { "teaser", "first look", "glimpse", "preview", "reveal" },
             HookTemplates = new[]
             {
                 "🎬 {entity} teaser just dropped!",
@@ -420,20 +1322,15 @@ public static class ContentEngine
                 "{entity} official teaser is here!",
                 "You NEED to see this {entity} teaser!",
                 "This {entity} moment is iconic!",
-                "Viral alert: {entity} teaser! 🔥",
+                "Viral alert: {entity} teaser!",
                 "This {entity} is going to be HUGE!",
                 "Can't wait for {entity}!",
-                "{entity} just set the internet on fire! 🔥"
+                "{entity} just set the internet on fire!"
             },
-            Hashtags = new[]
-            {
-                "#BollywoodTeaser", "#MovieTeaser", "#Bollywood",
-                "#ViralReels", "#NewMovie", "#Reels",
-                "#360buzz"
-            },
+            Hashtags = new[] { "#BollywoodTeaser", "#MovieTeaser", "#Bollywood", "#ViralReels", "#NewMovie", "#Reels" },
             CTAs = new[]
             {
-                "Watch till the end! 🔥",
+                "Watch till the end!",
                 "Tag someone who loves {entity}!",
                 "Share this reel!",
                 "Comment your excitement!",
@@ -445,11 +1342,7 @@ public static class ContentEngine
         {
             Label = "Bollywood Trailers",
             PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "bollywood", "official trailer", "movie trailer", "film trailer",
-                "trailer launch", "trailer reaction", "upcoming movie", "release"
-            },
+            Keywords = new[] { "trailer", "official", "launch", "preview", "upcoming" },
             HookTemplates = new[]
             {
                 "🎥 {entity} trailer is OUT!",
@@ -457,18 +1350,13 @@ public static class ContentEngine
                 "{entity} official trailer just dropped!",
                 "Watch this {entity} trailer NOW!",
                 "This {entity} is going to be a BLOCKBUSTER!",
-                "{entity} trailer broke the internet! 🔥",
+                "{entity} trailer broke the internet!",
                 "You CAN'T miss this {entity} trailer!",
                 "This {entity} looks like a HIT!",
                 "{entity} trailer is trending #1!",
-                "Blockbuster alert: {entity} trailer! 🔥"
+                "Blockbuster alert: {entity} trailer!"
             },
-            Hashtags = new[]
-            {
-                "#BollywoodTrailer", "#MovieTrailer", "#Bollywood",
-                "#Trailer", "#NewMovie", "#Reels",
-                "#360buzz"
-            },
+            Hashtags = new[] { "#BollywoodTrailer", "#MovieTrailer", "#Bollywood", "#Trailer", "#NewMovie", "#Reels" },
             CTAs = new[]
             {
                 "Are you excited for {entity}?",
@@ -476,196 +1364,6 @@ public static class ContentEngine
                 "Share this trailer!",
                 "Comment your expectations!",
                 "Follow for more trailers!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["viral_trends"] = new CategoryInfo
-        {
-            Label = "Viral Trends",
-            PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "viral", "trending", "funny", "comedy", "challenge",
-                "trending video", "viral video", "funny video", "dance"
-            },
-            HookTemplates = new[]
-            {
-                "🔥 This is going VIRAL right now!",
-                "Watch this before it blows up!",
-                "This is the funniest thing today!",
-                "Everyone is sharing this!",
-                "You NEED to watch this viral reel!",
-                "This is breaking the internet! 🔥",
-                "Viral alert: Can't miss this!",
-                "This is the most shared video today!",
-                "Can't stop watching this!",
-                "This is why internet is amazing! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#ViralTrends", "#Trending", "#Viral",
-                "#Funny", "#TrendingNow", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Tag someone who needs to see this!",
-                "Share with your friends!",
-                "Comment if this made you laugh!",
-                "Follow for more viral content!",
-                "Too good not to share!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["viral_paparazzi"] = new CategoryInfo
-        {
-            Label = "Viral Paparazzi",
-            PriorityWeight = 9,
-            Keywords = new[]
-            {
-                "paparazzi", "spotted", "celebrity", "airport",
-                "bollywood", "party", "outing", "couple", "wedding"
-            },
-            HookTemplates = new[]
-            {
-                "📸 {entity} just got SPOTTED!",
-                "Look what {entity} was doing!",
-                "{entity} spotted and it's going viral!",
-                "You won't believe where {entity} was spotted!",
-                "This {entity} sighting is EVERYTHING!",
-                "{entity} looking stunning as always! 🔥",
-                "Viral alert: {entity} spotted! 📸",
-                "Can't stop looking at {entity}!",
-                "{entity} just made our day! ✨",
-                "This {entity} moment is pure gold! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#Paparazzi", "#Spotted", "#BollywoodSpotted",
-                "#CelebritySpotted", "#Viral", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Tag someone who loves {entity}!",
-                "Share this sighting!",
-                "Comment your reaction!",
-                "Follow for more celebrity updates!",
-                "What do you think about this look?"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["political_highlights"] = new CategoryInfo
-        {
-            Label = "Political Highlights",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "politics", "modi", "parliament", "election",
-                "political", "minister", "government", "debate"
-            },
-            HookTemplates = new[]
-            {
-                "🏛️ This political moment is going viral!",
-                "Watch this {entity} political clip!",
-                "This {entity} moment is iconic!",
-                "{entity} just made this big move!",
-                "You NEED to see this political reel!",
-                "This {entity} speech is powerful!",
-                "Viral alert: {entity} political clip! 🔥",
-                "This {entity} moment is historic!",
-                "Can't stop watching this political reel!",
-                "{entity} just set the internet on fire! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#PoliticalHighlights", "#PoliticalNews", "#Modi",
-                "#Parliament", "#IndianPolitics", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "What's your take on this?",
-                "Tag someone who follows politics!",
-                "Share this reel!",
-                "Comment your thoughts!",
-                "Follow for more political updates!"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["ai_reels"] = new CategoryInfo
-        {
-            Label = "AI Reels",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "ai", "artificial intelligence", "technology", "robot",
-                "tech demo", "ai demo", "future tech", "innovation"
-            },
-            HookTemplates = new[]
-            {
-                "🤖 This AI tech is mind-blowing!",
-                "Watch this {entity} AI in action!",
-                "The future is HERE: {entity}!",
-                "This tech demo will blow your mind!",
-                "{entity} just changed AI forever!",
-                "You won't believe this AI can do this!",
-                "This {entity} tech is insane! 🔥",
-                "AI just got REAL: {entity}!",
-                "Watch AI do what humans can't!",
-                "This {entity} innovation is next level!"
-            },
-            Hashtags = new[]
-            {
-                "#AITech", "#AIReels", "#AIDemo",
-                "#FutureTech", "#Innovation", "#TechNews",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "What do you think about this tech?",
-                "Tag a tech lover!",
-                "Share this with someone who needs to see!",
-                "Follow for more tech updates!",
-                "Excited or scared about AI?"
-            },
-            TemplateIds = new[] { 14 }
-        },
-        ["webseries_reels"] = new CategoryInfo
-        {
-            Label = "Web Series Reels",
-            PriorityWeight = 8,
-            Keywords = new[]
-            {
-                "web series", "netflix", "amazon prime", "hotstar",
-                "series trailer", "show trailer", "web show", "ott"
-            },
-            HookTemplates = new[]
-            {
-                "📺 This {entity} clip is mind-blowing!",
-                "Watch this {entity} scene!",
-                "This {entity} moment is iconic!",
-                "{entity} just dropped this amazing clip!",
-                "You NEED to see this {entity} reel!",
-                "This {entity} scene is everything!",
-                "Viral alert: {entity} clip! 🔥",
-                "This {entity} moment is pure gold!",
-                "Can't stop watching this {entity} reel!",
-                "{entity} just set the internet on fire! 🔥"
-            },
-            Hashtags = new[]
-            {
-                "#WebSeriesReels", "#NetflixSeries", "#AmazonPrime",
-                "#SeriesReels", "#OTTShows", "#Reels",
-                "#360buzz"
-            },
-            CTAs = new[]
-            {
-                "Have you watched {entity}?",
-                "Tag someone who loves this series!",
-                "Share this reel!",
-                "Comment your favorite scene!",
-                "Follow for more series updates!"
             },
             TemplateIds = new[] { 14 }
         }

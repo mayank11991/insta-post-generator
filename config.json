@@ -14,56 +14,639 @@
   },
 
   "settings": {
-    "language": "en",
+    "language": "hi",
     "posts_per_run": 10,
     "max_article_age_hours": 24,
     "min_article_score": 5,
     "story_similarity_threshold": 0.5,
     "page_name": "360buzz",
-    "max_reel_duration_seconds": 1800
+    "max_reel_duration_seconds": 1800,
+    "brand_primary": "#BEFA05",
+    "brand_secondary": "#FC5A11",
+    "brand_bg": "#000000"
   },
 
   "categories": {
-    "bollywood": {
-      "display_name": "Bollywood",
-      "query": "bollywood hindi movie tv celebrity news latest",
-      "color": "#D1FF02",
+    "breaking_bollywood": {
+      "display_name": "Breaking Bollywood News",
+      "query": "bollywood latest breaking news today",
+      "color": "#FC5A11",
+      "emoji": "🔥",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood breaking news today 2026",
+        "bollywood latest news celebrity viral",
+        "hindi movie industry news latest",
+        "bollywood gossip news today",
+        "bollywood updated news trending"
+      ]
+    },
+    "celebrity_viral": {
+      "display_name": "Celebrity Viral Moment",
+      "query": "bollywood celebrity viral video photo",
+      "color": "#BEFA05",
+      "emoji": "👀",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity viral video 2026",
+        "celebrity viral moment trending",
+        "bollywood star viral photo video",
+        "indian celebrity viral clip trending",
+        "celebrity funny viral moment 2026"
+      ]
+    },
+    "movie_announcement": {
+      "display_name": "Movie Announcement",
+      "query": "bollywood new movie announcement 2026",
+      "color": "#BEFA05",
       "emoji": "🎬",
-      "content_type": "post"
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood new movie announcement 2026",
+        "new bollywood film launch cast",
+        "upcoming hindi movie announced",
+        "bollywood movie reveal official",
+        "bollywood casting news 2026"
+      ]
     },
-    "ai_news": {
-      "display_name": "Artificial Intelligence",
-      "query": "openai anthropic google deepmind china ai artificial intelligence news latest 2026",
-      "color": "#00D4FF",
-      "emoji": "🤖",
-      "content_type": "post"
+    "celebrity_controversy": {
+      "display_name": "Celebrity Controversy",
+      "query": "bollywood celebrity controversy latest",
+      "color": "#FC5A11",
+      "emoji": "🚨",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity controversy 2026",
+        "bollywood fight controversy trending",
+        "indian celebrity controversy viral",
+        "bollywood star controversy latest",
+        "celebrity statement controversy trending"
+      ]
     },
-    "india_politics": {
-      "display_name": "Indian Politics",
-      "query": "india politics latest news today modi opposition parliament",
-      "color": "#E63946",
-      "emoji": "🏛️",
-      "content_type": "post"
+    "box_office_update": {
+      "display_name": "Box Office Update",
+      "query": "bollywood box office collection latest",
+      "color": "#BEFA05",
+      "emoji": "💰",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood box office collection today",
+        "movie box office update 2026",
+        "bollywood hit flop box office",
+        "hindi movie collection latest",
+        "box office report bollywood 2026"
+      ]
+    },
+    "box_office_battle": {
+      "display_name": "Box Office Battle",
+      "query": "bollywood box office comparison battle",
+      "color": "#FC5A11",
+      "emoji": "📊",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood box office battle comparison",
+        "movie vs movie box office collection",
+        "bollywood earnings compare trending",
+        "box office clash bollywood 2026",
+        "two movies box office battle latest"
+      ]
+    },
+    "celebrity_then_now": {
+      "display_name": "Celebrity Then vs Now",
+      "query": "bollywood celebrity then vs now",
+      "color": "#BEFA05",
+      "emoji": "⭐",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity then vs now",
+        "bollywood star transformation video",
+        "indian actor old vs new look",
+        "celebrity photos comparison trending",
+        "bollywood star career journey then now"
+      ]
+    },
+    "nostalgia_90s": {
+      "display_name": "90s Bollywood Nostalgia",
+      "query": "90s bollywood nostalgia movie song",
+      "color": "#BEFA05",
+      "emoji": "🕰️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "90s bollywood movie nostalgic scene",
+        "90s bollywood song viral trending",
+        "90s bollywood actor actress viral",
+        "90s hindi movie iconic moment",
+        "90s bollywood nostalgia video viral"
+      ]
+    },
+    "nostalgia_2000s": {
+      "display_name": "2000s Bollywood Nostalgia",
+      "query": "2000s bollywood nostalgic movie",
+      "color": "#FC5A11",
+      "emoji": "📀",
+      "content_type": "reel",
+      "youtube_queries": [
+        "2000s bollywood movie nostalgic viral",
+        "2000s bollywood song trending clip",
+        "2000s hindi movie iconic scene",
+        "2000s bollywood actor actress viral",
+        "2000s bollywood nostalgia trending"
+      ]
     },
     "bollywood_facts": {
-      "display_name": "Bollywood Facts",
-      "query": "bollywood unknown facts secrets behind scenes trivia",
-      "color": "#9C27B0",
-      "emoji": "🎭",
-      "content_type": "post"
+      "display_name": "Bollywood Unknown Facts",
+      "query": "bollywood unknown facts movie actor",
+      "color": "#BEFA05",
+      "emoji": "🤯",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood unknown facts viral",
+        "movie behind the scenes facts",
+        "bollywood secrets you didnt know",
+        "hindi movie trivia facts trending",
+        "bollywood interesting facts video"
+      ]
     },
-    "quiz": {
-      "display_name": "Quiz",
-      "query": "bollywood quiz trivia guess the movie celebrity quiz",
-      "color": "#FF9800",
+    "rejected_roles": {
+      "display_name": "Rejected Roles",
+      "query": "bollywood rejected roles iconic movie",
+      "color": "#FC5A11",
+      "emoji": "🎭",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood rejected roles iconic movie",
+        "actor rejected famous role bollywood",
+        "bollywood casting rejected viral",
+        "which actor rejected which role",
+        "bollywood rejected role story viral"
+      ]
+    },
+    "alternate_casting": {
+      "display_name": "Alternate Casting",
+      "query": "bollywood alternate casting what if",
+      "color": "#BEFA05",
+      "emoji": "🎬",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood alternate casting what if",
+        "if another actor played famous role",
+        "bollywood casting change viral",
+        "bollywood movie different cast concept",
+        "what if different actor bollywood"
+      ]
+    },
+    "bollywood_breakups": {
+      "display_name": "Bollywood Breakups",
+      "query": "bollywood celebrity breakup relationship",
+      "color": "#FC5A11",
+      "emoji": "💔",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity breakup viral",
+        "bollywood couple breakup trending",
+        "indian celebrity breakup news",
+        "bollywood relationship end viral",
+        "bollywood love story breakup"
+      ]
+    },
+    "bollywood_couples": {
+      "display_name": "Bollywood Couples",
+      "query": "bollywood celebrity couple relationship",
+      "color": "#BEFA05",
+      "emoji": "❤️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity couple viral",
+        "bollywood love story trending",
+        "indian celebrity couple trending",
+        "bollywood relationship goal viral",
+        "bollywood couple cute moment trending"
+      ]
+    },
+    "bollywood_families": {
+      "display_name": "Bollywood Families",
+      "query": "bollywood family kapoor bachchan khan",
+      "color": "#BEFA05",
+      "emoji": "👨‍👩‍👧",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood family viral video",
+        "kapoor family bollywood trending",
+        "bachchan family viral moment",
+        "bollywood star family connection",
+        "bollywood family tree viral"
+      ]
+    },
+    "star_kids": {
+      "display_name": "Star Kids Then and Now",
+      "query": "bollywood star kids childhood career",
+      "color": "#FC5A11",
+      "emoji": "👶",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood star kids then and now",
+        "bollywood celebrity children viral",
+        "star kid transformation trending",
+        "bollywood actor kid now trending",
+        "star kids career bollywood viral"
+      ]
+    },
+    "celebrity_lifestyle": {
+      "display_name": "Celebrity Lifestyle",
+      "query": "bollywood celebrity lifestyle house car",
+      "color": "#BEFA05",
+      "emoji": "💎",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity luxury lifestyle",
+        "bollywood star house mansion viral",
+        "celebrity car collection trending",
+        "bollywood lifestyle viral video",
+        "celebrity luxury life trending"
+      ]
+    },
+    "celebrity_networth": {
+      "display_name": "Celebrity Net Worth",
+      "query": "bollywood celebrity net worth wealth",
+      "color": "#FC5A11",
+      "emoji": "💰",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood celebrity net worth viral",
+        "bollywood star wealth trending",
+        "richest bollywood actor actress",
+        "celebrity income net worth trending",
+        "bollywood star earnings viral"
+      ]
+    },
+    "career_comparison": {
+      "display_name": "Career Comparison",
+      "query": "bollywood career comparison two stars",
+      "color": "#BEFA05",
+      "emoji": "🏆",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood career comparison viral",
+        "two bollywood stars career compare",
+        "actor vs actor career trending",
+        "bollywood star achievement compare",
+        "career comparison bollywood viral"
+      ]
+    },
+    "movie_ending_explained": {
+      "display_name": "Movie Ending Explained",
+      "query": "bollywood movie ending explained",
+      "color": "#FC5A11",
+      "emoji": "🧠",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood movie ending explained viral",
+        "hindi movie ending scene explained",
+        "confusing movie ending explained trending",
+        "bollywood movie climax explained",
+        "movie ending meaning viral trending"
+      ]
+    },
+    "biggest_flops": {
+      "display_name": "Biggest Bollywood Flops",
+      "query": "bollywood biggest flop movies expensive",
+      "color": "#FC5A11",
+      "emoji": "😱",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood biggest flop movie viral",
+        "expensive bollywood flop trending",
+        "bollywood disaster movie box office",
+        "biggest flop bollywood movie 2026",
+        "bollywood failed movie viral video"
+      ]
+    },
+    "unexpected_blockbusters": {
+      "display_name": "Unexpected Blockbusters",
+      "query": "bollywood unexpected blockbuster low budget",
+      "color": "#BEFA05",
+      "emoji": "🚀",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood unexpected blockbuster viral",
+        "low budget bollywood blockbuster trending",
+        "bollywood surprise hit movie",
+        "bollywood sleeper hit viral",
+        "unexpected blockbuster bollywood trending"
+      ]
+    },
+    "iconic_songs": {
+      "display_name": "Iconic Bollywood Songs",
+      "query": "bollywood iconic song behind the scenes",
+      "color": "#BEFA05",
+      "emoji": "🎵",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood iconic song viral trending",
+        "bollywood song behind the scenes",
+        "hit bollywood song making trending",
+        "bollywood song facts viral",
+        "iconic hindi song video trending"
+      ]
+    },
+    "movie_bts": {
+      "display_name": "Movie Behind The Scenes",
+      "query": "bollywood movie behind the scenes making",
+      "color": "#FC5A11",
+      "emoji": "🎥",
+      "content_type": "reel",
+      "youtube_queries": [
+        "bollywood movie behind the scenes viral",
+        "movie making of video trending",
+        "bollywood scene making viral",
+        "movie production BTS trending",
+        "bollywood film shooting BTS viral"
+      ]
+    },
+    "upcoming_movies": {
+      "display_name": "Upcoming Movies",
+      "query": "upcoming bollywood movies 2026 release",
+      "color": "#BEFA05",
+      "emoji": "🔮",
+      "content_type": "reel",
+      "youtube_queries": [
+        "upcoming bollywood movie 2026",
+        "new bollywood movie release trending",
+        "bollywood movie coming soon viral",
+        "upcoming hindi film trailer",
+        "bollywood release date announcement viral"
+      ]
+    },
+    "political_breaking": {
+      "display_name": "Political Breaking News",
+      "query": "india political breaking news latest",
+      "color": "#FC5A11",
+      "emoji": "🔥",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india political breaking news today",
+        "politics latest news trending viral",
+        "indian politics breaking viral",
+        "political news update trending",
+        "india politics today viral news"
+      ]
+    },
+    "politics_explained": {
+      "display_name": "Indian Politics Explained",
+      "query": "india politics explained simple hindi",
+      "color": "#BEFA05",
+      "emoji": "🇮🇳",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india politics explained simple hindi",
+        "political issue explained trending",
+        "indian politics analysis viral",
+        "politics simple explanation trending",
+        "india political topic explained viral"
+      ]
+    },
+    "parliament_update": {
+      "display_name": "Parliament Update",
+      "query": "india parliament session update latest",
+      "color": "#FC5A11",
+      "emoji": "🏛️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india parliament session viral",
+        "parliament debate trending video",
+        "parliament question hour viral",
+        "parliament update latest trending",
+        "india parliament funny moment viral"
+      ]
+    },
+    "election_watch": {
+      "display_name": "Election Watch",
+      "query": "india election news latest development",
+      "color": "#BEFA05",
+      "emoji": "🗳️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india election news trending",
+        "election update viral latest",
+        "india election campaign trending",
+        "election result update viral",
+        "election development news trending"
+      ]
+    },
+    "politician_statement": {
+      "display_name": "Politician Statement",
+      "query": "india politician statement viral response",
+      "color": "#FC5A11",
+      "emoji": "👤",
+      "content_type": "reel",
+      "youtube_queries": [
+        "politician viral statement trending",
+        "india leader speech viral",
+        "politician statement controversy trending",
+        "political leader response viral",
+        "politician speech clip trending"
+      ]
+    },
+    "political_faceoff": {
+      "display_name": "Political Face-Off",
+      "query": "india political face off debate compare",
+      "color": "#BEFA05",
+      "emoji": "⚔️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india political debate viral trending",
+        "political leader vs leader viral",
+        "political face off trending",
+        "india politics argument viral",
+        "political debate clip trending"
+      ]
+    },
+    "government_rule": {
+      "display_name": "New Government Rule",
+      "query": "india new government rule law 2026",
+      "color": "#FC5A11",
+      "emoji": "📜",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india new government rule viral",
+        "new law rule explained trending",
+        "government rule common man viral",
+        "india policy change trending",
+        "new regulation explained viral"
+      ]
+    },
+    "budget_economy": {
+      "display_name": "Budget and Economy",
+      "query": "india budget economy tax inflation latest",
+      "color": "#BEFA05",
+      "emoji": "💰",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india budget economy explained viral",
+        "tax inflation impact trending",
+        "india economic update viral",
+        "budget decision common man viral",
+        "economy news explained trending"
+      ]
+    },
+    "government_data": {
+      "display_name": "Government Data",
+      "query": "india government data statistics latest",
+      "color": "#FC5A11",
+      "emoji": "📈",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india government data viral trending",
+        "government statistics explained",
+        "india data report trending",
+        "government numbers viral",
+        "india statistics visual trending"
+      ]
+    },
+    "india_world": {
+      "display_name": "India World News",
+      "query": "india world international news affects india",
+      "color": "#BEFA05",
+      "emoji": "🌍",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india world news viral trending",
+        "international news affects india",
+        "india global news trending",
+        "world news india impact viral",
+        "india international relation trending"
+      ]
+    },
+    "india_vs_world": {
+      "display_name": "India vs World",
+      "query": "india compared world country data policy",
+      "color": "#FC5A11",
+      "emoji": "🇮🇳",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india vs world comparison viral",
+        "india compared another country trending",
+        "india world data comparison",
+        "india vs country policy trending",
+        "india comparison world viral"
+      ]
+    },
+    "politician_profile": {
+      "display_name": "Politician Profile",
+      "query": "india politician profile career background",
+      "color": "#BEFA05",
+      "emoji": "🧑‍💼",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india politician profile viral",
+        "political leader career trending",
+        "politician background story viral",
+        "leader journey profile trending",
+        "politician milestone career viral"
+      ]
+    },
+    "political_flashback": {
+      "display_name": "Political Flashback",
+      "query": "india political past event relevant today",
+      "color": "#FC5A11",
+      "emoji": "🕰️",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india political flashback viral",
+        "past political event trending",
+        "political history moment viral",
+        "india old politics video trending",
+        "political event anniversary viral"
+      ]
+    },
+    "myth_vs_fact": {
+      "display_name": "Political Myth vs Fact",
+      "query": "india viral political claim fact check",
+      "color": "#BEFA05",
       "emoji": "❓",
-      "content_type": "post",
-      "mode": "quiz"
+      "content_type": "reel",
+      "youtube_queries": [
+        "india political myth vs fact viral",
+        "political claim fact check trending",
+        "viral political claim debunked",
+        "fact check politics trending",
+        "political misinformation fact viral"
+      ]
+    },
+    "what_actually_happened": {
+      "display_name": "What Actually Happened",
+      "query": "india viral political incident timeline",
+      "color": "#FC5A11",
+      "emoji": "🔍",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india political incident explained viral",
+        "what actually happened trending",
+        "political incident timeline viral",
+        "viral political event explained",
+        "political story explained trending"
+      ]
+    },
+    "public_reaction": {
+      "display_name": "Public Reaction",
+      "query": "india viral issue public reaction",
+      "color": "#BEFA05",
+      "emoji": "💬",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india public reaction viral trending",
+        "viral issue reaction trending",
+        "india people reaction viral",
+        "public response trending video",
+        "india social media reaction viral"
+      ]
+    },
+    "five_things_today": {
+      "display_name": "5 Things Today",
+      "query": "india bollywood politics 5 biggest updates today",
+      "color": "#FC5A11",
+      "emoji": "⚡",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india top 5 news today viral",
+        "bollywood politics 5 things trending",
+        "india biggest stories today",
+        "5 updates india trending",
+        "today 5 biggest news viral"
+      ]
+    },
+    "fact_check": {
+      "display_name": "Fact Check",
+      "query": "india viral claim true false fact check",
+      "color": "#BEFA05",
+      "emoji": "🚨",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india viral claim fact check trending",
+        "fact check india news viral",
+        "claim vs fact india trending",
+        "india misinformation fact check",
+        "viral claim true false trending"
+      ]
+    },
+    "what_happens_next": {
+      "display_name": "What Happens Next",
+      "query": "india current event next possible developments",
+      "color": "#FC5A11",
+      "emoji": "🔮",
+      "content_type": "reel",
+      "youtube_queries": [
+        "india what happens next trending",
+        "current event next development viral",
+        "india news what next trending",
+        "upcoming development india viral",
+        "india future prediction trending"
+      ]
     },
     "bollywood_teasers": {
       "display_name": "Bollywood Teasers",
       "query": "bollywood movie teaser official 2026",
-      "color": "#E91E63",
+      "color": "#BEFA05",
       "emoji": "🎬",
       "content_type": "reel",
       "youtube_queries": [
@@ -77,7 +660,7 @@
     "bollywood_trailers": {
       "display_name": "Bollywood Trailers",
       "query": "bollywood official trailer 2026",
-      "color": "#FF1744",
+      "color": "#FC5A11",
       "emoji": "🎥",
       "content_type": "reel",
       "youtube_queries": [
@@ -87,102 +670,28 @@
         "upcoming bollywood movie trailer",
         "bollywood trailer reaction viral 2026"
       ]
-    },
-    "viral_trends": {
-      "display_name": "Viral Trends",
-      "query": "trending viral video india funny",
-      "color": "#FF5722",
-      "emoji": "🔥",
-      "content_type": "reel",
-      "youtube_queries": [
-        "india trending viral video 2026",
-        "funny viral video india trending",
-        "viral challenge trending india",
-        "trending dance video india 2026",
-        "viral reel trending india short"
-      ]
-    },
-    "viral_paparazzi": {
-      "display_name": "Viral Paparazzi",
-      "query": "bollywood paparazzi spotted celebrity",
-      "color": "#FF9800",
-      "emoji": "📸",
-      "content_type": "reel",
-      "youtube_queries": [
-        "bollywood paparazzi spotted 2026",
-        "celebrity airport spotted bollywood",
-        "bollywood celebrity gym outing spotted",
-        "bollywood couple spotted dinner party",
-        "celebrity birthday party bollywood spotted"
-      ]
-    },
-    "political_highlights": {
-      "display_name": "Political Highlights",
-      "query": "india politics news modi parliament debate",
-      "color": "#F44336",
-      "emoji": "🏛️",
-      "content_type": "reel",
-      "youtube_queries": [
-        "india parliament debate funny moment",
-        "modi speech highlight viral 2026",
-        "india politics funny viral clip",
-        "india political debate intense moment",
-        "india election campaign rally 2026"
-      ]
-    },
-    "ai_reels": {
-      "display_name": "AI Reels",
-      "query": "artificial intelligence technology news latest",
-      "color": "#00BCD4",
-      "emoji": "🤖",
-      "content_type": "reel",
-      "youtube_queries": [
-        "artificial intelligence demo 2026",
-        "AI robot technology viral video",
-        "chatgpt AI funny viral video",
-        "AI generated art video trending",
-        "future technology AI short video"
-      ]
-    },
-    "webseries_reels": {
-      "display_name": "Web Series Reels",
-      "query": "hindi web series trailer netflix amazon prime",
-      "color": "#7B1FA2",
-      "emoji": "📺",
-      "content_type": "reel",
-      "youtube_queries": [
-        "hindi web series trailer 2026 netflix",
-        "amazon prime india web series trailer",
-        "hotstar web series official trailer",
-        "best hindi web series scene clip",
-        "OTT web series trailer short 2026"
-      ]
     }
   },
 
   "exclude_keywords": [
     "tamil", "telugu", "malayalam", "kannada", "tollywood", "kollywood",
-    "rajinikanth", "chiranjeeeevi", "allu arjun", "mahesh babu", "prabhas",
+    "rajinikanth", "chiranjeevi", "allu arjun", "mahesh babu", "prabhas",
     "ram charan", "jr ntr", "vijay", "ajith", "suriya", "dulquer",
-    "mammoth", "mohanlal", "fahadh", "pan india", "south indian",
+    "mammootty", "mohanlal", "fahadh", "pan india", "south indian",
     " jr ", " jr.", " kannada", " tamil", " telugu", " malayalam"
   ],
 
   "rss_feeds": [
-    { "url": "https://www.bollywoodhungama.com/feed/", "source": "Bollywood Hungama", "category": "bollywood" },
-    { "url": "https://www.koimoi.com/feed/", "source": "Koimoi", "category": "bollywood" },
-    { "url": "https://indianexpress.com/section/entertainment/feed/", "source": "Indian Express", "category": "bollywood" },
-    { "url": "https://timesofindia.indiatimes.com/rssfeeds/1081479906.cms", "source": "Times of India", "category": "bollywood" },
-    { "url": "https://www.pinkvilla.com/rss.xml", "source": "Pinkvilla", "category": "bollywood" },
-    { "url": "https://www.bollywoodshaadis.com/rss", "source": "Bollywood Shaadis", "category": "bollywood" },
-    { "url": "https://www.tellychakkar.com/rss.xml", "source": "Tellychakkar", "category": "bollywood" },
-    { "url": "https://indianexpress.com/section/political-pulse/feed/", "source": "Indian Express Politics", "category": "india_politics" },
-    { "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "source": "Times of India Politics", "category": "india_politics" },
-    { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "india_politics" },
-    { "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "source": "TechCrunch AI", "category": "ai_news" },
-    { "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "source": "The Verge AI", "category": "ai_news" },
-    { "url": "https://venturebeat.com/category/ai/feed/", "source": "VentureBeat AI", "category": "ai_news" },
-    { "url": "https://arstechnica.com/ai/feed", "source": "Ars Technica AI", "category": "ai_news" }
+    { "url": "https://www.bollywoodhungama.com/feed/", "source": "Bollywood Hungama", "category": "breaking_bollywood" },
+    { "url": "https://www.koimoi.com/feed/", "source": "Koimoi", "category": "breaking_bollywood" },
+    { "url": "https://indianexpress.com/section/entertainment/feed/", "source": "Indian Express", "category": "breaking_bollywood" },
+    { "url": "https://timesofindia.indiatimes.com/rssfeeds/1081479906.cms", "source": "Times of India", "category": "breaking_bollywood" },
+    { "url": "https://www.pinkvilla.com/rss.xml", "source": "Pinkvilla", "category": "celebrity_viral" },
+    { "url": "https://indianexpress.com/section/political-pulse/feed/", "source": "Indian Express Politics", "category": "political_breaking" },
+    { "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms", "source": "Times of India Politics", "category": "political_breaking" },
+    { "url": "https://www.ndtv.com/politics/rss", "source": "NDTV Politics", "category": "political_breaking" },
+    { "url": "https://techcrunch.com/category/artificial-intelligence/feed/", "source": "TechCrunch AI", "category": "trending_india" },
+    { "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "source": "The Verge AI", "category": "trending_india" }
   ],
 
   "image": {
@@ -190,9 +699,9 @@
     "height": 2700,
     "export_width": 1080,
     "export_height": 1350,
-    "brand_green": "#D1FF02",
-    "brand_yellow": "#FFD700",
-    "brand_red": "#DC2626",
-    "bg_dark": "#101216"
+    "brand_green": "#BEFA05",
+    "brand_yellow": "#FC5A11",
+    "brand_red": "#FC5A11",
+    "bg_dark": "#000000"
   }
 }

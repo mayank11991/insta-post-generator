@@ -59,7 +59,8 @@ public class MainPageViewModel : INotifyPropertyChanged
                 Categories.Add(new CategorySelection
                 {
                     Name = kv.Key,
-                    DisplayName = $"{kv.Value.Emoji} {kv.Value.DisplayName}",
+                    DisplayName = kv.Value.DisplayName,
+                    Emoji = kv.Value.Emoji ?? "📌",
                     IsSelected = Categories.Count == 0
                 });
             }
@@ -746,6 +747,7 @@ public class CategorySelection : INotifyPropertyChanged
 
     public string Name { get; set; }
     public string DisplayName { get; set; }
+    public string Emoji { get; set; } = "📌";
 
     public bool IsSelected
     {
