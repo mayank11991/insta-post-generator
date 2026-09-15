@@ -66,28 +66,31 @@ public static class VideoDownloader
             Log($"Script: {scriptPath}");
 
             var intent = new Android.Content.Intent("com.termux.RUN_COMMAND");
-            intent.SetClassName("com.termux", "com.termux.app.RunCommandService");
+            intent.SetClassName("com.termux", "com.termux.app.TermuxActivity");
             intent.PutExtra("com.termux.RUN_COMMAND_PATH", "/data/data/com.termux/files/usr/bin/bash");
             intent.PutExtra("com.termux.RUN_COMMAND_ARGUMENTS", new[] { scriptPath });
             intent.PutExtra("com.termux.RUN_COMMAND_WORK_DIRECTORY", dir);
             intent.PutExtra("com.termux.RUN_COMMAND_BACKGROUND", true);
+            intent.AddFlags(Android.Content.ActivityFlags.NewTask);
 
             try
             {
-                Android.App.Application.Context.StartForegroundService(intent);
-                Log("ForegroundService started");
+                Android.App.Application.Context.StartActivity(intent);
+                Log("TermuxActivity started");
             }
             catch (Exception ex1)
             {
-                Log($"ForegroundService failed: {ex1.Message}");
+                Log($"TermuxActivity failed: {ex1.Message}");
                 try
                 {
-                    Android.App.Application.Context.StartService(intent);
-                    Log("StartService started");
+                    intent.SetClassName("com.termux", "com.termux.app.RunCommandService");
+                    intent.RemoveFlags(Android.Content.ActivityFlags.NewTask);
+                    Android.App.Application.Context.StartForegroundService(intent);
+                    Log("ForegroundService started (fallback)");
                 }
                 catch (Exception ex2)
                 {
-                    Log($"StartService failed: {ex2.Message}");
+                    Log($"All methods failed: {ex2.Message}");
                     return null;
                 }
             }
