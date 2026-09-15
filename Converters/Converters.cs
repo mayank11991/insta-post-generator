@@ -14,6 +14,10 @@ public class BoolToColorConverter : IValueConverter
         {
             "selected" => isSelected ? Color.FromArgb("#D1FF02") : Color.FromArgb("#2A2D35"),
             "border" => isSelected ? Color.FromArgb("#D1FF02") : Color.FromArgb("#444"),
+            "radio" => isSelected ? Color.FromArgb("#3A3A3A") : Color.FromArgb("#1A1A1A"),
+            "radio_border" => isSelected ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#333"),
+            "radio_inverse" => isSelected ? Color.FromArgb("#3A3A3A") : Color.FromArgb("#1A1A1A"),
+            "radio_inverse_border" => isSelected ? Color.FromArgb("#FFFFFF") : Color.FromArgb("#333"),
             _ => isSelected ? Colors.Green : Colors.Gray
         };
     }

@@ -48,8 +48,8 @@
                            TextColor="#FC5A11"
                            FontFamily="Bold" />
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected}"
-                               BorderColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
+                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=radio}"
+                               BorderColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=radio_border}"
                                CornerRadius="10"
                                Padding="14"
                                HasShadow="False"
@@ -62,7 +62,7 @@
                                 <Label Text="Posts" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="True">
-                                            <Setter Property="TextColor" Value="#BEFA05" />
+                                            <Setter Property="TextColor" Value="#FFFFFF" />
                                         </DataTrigger>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="False">
                                             <Setter Property="TextColor" Value="#888" />
@@ -71,8 +71,8 @@
                                 </Label>
                             </VerticalStackLayout>
                         </Frame>
-                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource InverseBoolConverter}, ConverterParameter=selected}"
-                               BorderColor="{Binding IsPostMode, Converter={StaticResource InverseBoolConverter}, ConverterParameter=border}"
+                        <Frame BackgroundColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=radio_inverse}"
+                               BorderColor="{Binding IsPostMode, Converter={StaticResource BoolToColorConverter}, ConverterParameter=radio_inverse_border}"
                                CornerRadius="10"
                                Padding="14"
                                HasShadow="False"
@@ -85,7 +85,7 @@
                                 <Label Text="Reels" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="False">
-                                            <Setter Property="TextColor" Value="#BEFA05" />
+                                            <Setter Property="TextColor" Value="#FFFFFF" />
                                         </DataTrigger>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsPostMode}" Value="True">
                                             <Setter Property="TextColor" Value="#888" />
@@ -113,44 +113,46 @@
                            FontSize="11"
                            TextColor="#666" />
 
-                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}" Spacing="6">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="vm:CategorySelection">
-                                <Frame
-                                    BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected}"
-                                    BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
-                                    CornerRadius="8"
-                                    Padding="10"
-                                    HasShadow="False">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleCategoryCommand}"
-                                            CommandParameter="{Binding .}" />
-                                    </Frame.GestureRecognizers>
-                                    <Grid ColumnDefinitions="32,*">
-                                        <Label Text="{Binding Emoji}"
-                                               FontSize="18"
-                                               VerticalOptions="Center"
-                                               HorizontalOptions="Center"
-                                               Grid.Column="0" />
-                                        <Label Text="{Binding DisplayName}"
-                                               FontSize="14"
-                                               VerticalOptions="Center"
-                                               Grid.Column="1">
-                                            <Label.Triggers>
-                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="TextColor" Value="Black" />
-                                                </DataTrigger>
-                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="False">
-                                                    <Setter Property="TextColor" Value="White" />
-                                                </DataTrigger>
-                                            </Label.Triggers>
-                                        </Label>
-                                    </Grid>
-                                </Frame>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
+                    <ScrollView HeightRequest="230">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Categories}" Spacing="6">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CategorySelection">
+                                    <Frame
+                                        BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected}"
+                                        BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
+                                        CornerRadius="8"
+                                        Padding="10"
+                                        HasShadow="False">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleCategoryCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+                                        <Grid ColumnDefinitions="32,*">
+                                            <Label Text="{Binding Emoji}"
+                                                   FontSize="18"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"
+                                                   Grid.Column="0" />
+                                            <Label Text="{Binding DisplayName}"
+                                                   FontSize="14"
+                                                   VerticalOptions="Center"
+                                                   Grid.Column="1">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="TextColor" Value="Black" />
+                                                    </DataTrigger>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="False">
+                                                        <Setter Property="TextColor" Value="White" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </ScrollView>
                 </VerticalStackLayout>
             </Frame>
 
@@ -203,7 +205,7 @@
             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Posts}" Spacing="12">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="vm:PostItemViewModel">
-                        <Frame BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=selected_bg}"
+                        <Frame BackgroundColor="#000000"
                                BorderColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter=border}"
                                CornerRadius="12"
                                Padding="14"
@@ -234,7 +236,7 @@
 
                                 <Label Text="{Binding CaptionPreview}"
                                        FontSize="12"
-                                       TextColor="#CCC"
+                                       TextColor="#FFFFFF"
                                        LineBreakMode="WordWrap"
                                        MaxLines="3" />
 
