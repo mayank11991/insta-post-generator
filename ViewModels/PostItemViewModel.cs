@@ -31,7 +31,28 @@ public class PostItemViewModel : INotifyPropertyChanged
     public string SeriesDisplay => $"Series: {Item.SeriesName}";
     public string CaptionPreview => Item.Caption;
     public string HashtagsDisplay => Item.Hashtags;
-    public string SourceDisplay => !string.IsNullOrEmpty(Item.SourceName) ? $"Source: {Item.SourceName}" : $"Source: {Item.SourceUrl}";
+    public string SourceDisplay
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(Item.SourceName))
+                return $"Source: {Item.SourceName}";
+            if (!string.IsNullOrEmpty(Item.SourceUrl))
+            {
+                // Extract clean name from URL
+                try
+                {
+                    var uri = new Uri(Item.SourceUrl);
+                    var host = uri.Host.Replace("www.", "").Replace("m.", "");
+                    var name = host.Split('.')[0];
+                    name = char.ToUpper(name[0]) + name[1..];
+                    return $"Source: {name}";
+                }
+                catch { }
+            }
+            return "";
+        }
+    }
 
     public bool IsSelected
     {
