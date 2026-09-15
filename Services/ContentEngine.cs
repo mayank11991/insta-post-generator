@@ -1372,8 +1372,8 @@ public static class ContentEngine
     // Series definitions
     private static readonly Dictionary<string, SeriesInfo> Series = new()
     {
-        ["bollywood_daily"] = new SeriesInfo { Name = "Bollywood Daily", BestFor = new[] { "bollywood" }, Description = "Daily Bollywood & Hindi entertainment roundup" },
-        ["bollywood_breaking"] = new SeriesInfo { Name = "Bollywood Breaking", BestFor = new[] { "bollywood" }, Description = "Breaking Bollywood news & updates" },
+        ["bollywood_daily"] = new SeriesInfo { Name = "Bollywood Daily", BestFor = new[] { "breaking_bollywood" }, Description = "Daily Bollywood & Hindi entertainment roundup" },
+        ["bollywood_breaking"] = new SeriesInfo { Name = "Bollywood Breaking", BestFor = new[] { "breaking_bollywood" }, Description = "Breaking Bollywood news & updates" },
         ["ai_daily"] = new SeriesInfo { Name = "AI Daily", BestFor = new[] { "ai_news" }, Description = "Latest AI & tech news" },
         ["ai_breaking"] = new SeriesInfo { Name = "AI Breaking", BestFor = new[] { "ai_news" }, Description = "Breaking AI developments" },
         ["politics_daily"] = new SeriesInfo { Name = "Politics Daily", BestFor = new[] { "india_politics" }, Description = "Daily Indian politics roundup" },
@@ -1383,10 +1383,10 @@ public static class ContentEngine
         ["reels_bollywood_teasers"] = new SeriesInfo { Name = "Bollywood Teasers", BestFor = new[] { "bollywood_teasers" }, Description = "Latest Bollywood teasers" },
         ["reels_bollywood_trailers"] = new SeriesInfo { Name = "Bollywood Trailers", BestFor = new[] { "bollywood_trailers" }, Description = "Latest Bollywood trailers" },
         ["reels_viral_trends"] = new SeriesInfo { Name = "Viral Trends", BestFor = new[] { "viral_trends" }, Description = "Trending viral clips" },
-        ["reels_paparazzi"] = new SeriesInfo { Name = "Viral Paparazzi", BestFor = new[] { "viral_paparazzi" }, Description = "Celebrity spotted moments" },
-        ["reels_politics"] = new SeriesInfo { Name = "Political Highlights", BestFor = new[] { "political_highlights" }, Description = "Political moments & clips" },
-        ["reels_ai"] = new SeriesInfo { Name = "AI Reels", BestFor = new[] { "ai_reels" }, Description = "Latest AI & tech clips" },
-        ["reels_webseries"] = new SeriesInfo { Name = "Web Series Reels", BestFor = new[] { "webseries_reels" }, Description = "Best web series moments" }
+        ["reels_paparazzi"] = new SeriesInfo { Name = "Viral Paparazzi", BestFor = new[] { "celebrity_viral" }, Description = "Celebrity spotted moments" },
+        ["reels_politics"] = new SeriesInfo { Name = "Political Highlights", BestFor = new[] { "political_breaking" }, Description = "Political moments & clips" },
+        ["reels_ai"] = new SeriesInfo { Name = "AI Reels", BestFor = new[] { "trending_india" }, Description = "Latest AI & tech clips" },
+        ["reels_webseries"] = new SeriesInfo { Name = "Web Series Reels", BestFor = new[] { "upcoming_movies" }, Description = "Best web series moments" }
     };
 
     // Celebrity names for entity extraction
@@ -1585,7 +1585,7 @@ public static class ContentEngine
         }
 
         if (!scores.Any() || scores.Values.Max() == 0)
-            return ("bollywood", 0.0);
+            return ("breaking_bollywood", 0.0);
 
         var best = scores.OrderByDescending(x => x.Value).First().Key;
         var total = scores.Values.Sum();
@@ -1595,7 +1595,7 @@ public static class ContentEngine
 
     public static int ScorePriority(Article article, string category)
     {
-        var catInfo = Categories.GetValueOrDefault(category, Categories["bollywood"]);
+        var catInfo = Categories.GetValueOrDefault(category, Categories["breaking_bollywood"]);
         var baseScore = catInfo.PriorityWeight;
 
         var title = (article.Title ?? "").ToLowerInvariant();
@@ -1648,7 +1648,7 @@ public static class ContentEngine
     {
         var title = (article.Title ?? "").Trim();
         var entities = ExtractEntities(title);
-        var templates = Categories.GetValueOrDefault(category, Categories["bollywood"]).HookTemplates;
+        var templates = Categories.GetValueOrDefault(category, Categories["breaking_bollywood"]).HookTemplates;
 
         var entity = entities.Primary;
         if (string.IsNullOrEmpty(entity) || entity.Length > 40)
@@ -1675,7 +1675,7 @@ public static class ContentEngine
 
     public static string GenerateCTA(string category, List<string> recentCTAs)
     {
-        var pool = Categories.GetValueOrDefault(category, Categories["bollywood"]).CTAs;
+        var pool = Categories.GetValueOrDefault(category, Categories["breaking_bollywood"]).CTAs;
         var available = pool.Where(c => !recentCTAs.Contains(c)).ToList();
         if (!available.Any())
             available = pool.ToList();
@@ -1772,7 +1772,7 @@ public static class ContentEngine
     {
         return category switch
         {
-            "bollywood" => (new[]
+            "breaking_bollywood" => (new[]
             {
                 "bollywood hungama", "koimoi", "pinkvilla", "bollywood shaadis",
                 "tellychakkar", "bollywood", "filmfare", "missmalini",
@@ -1850,7 +1850,7 @@ public static class ContentEngine
         var cta = GenerateCTA(category, mix.RecentCTAs);
         var series = SelectSeries(category, mix.RecentSeries);
         var seriesInfo = Series.GetValueOrDefault(series);
-        var catInfo = Categories.GetValueOrDefault(category, Categories["bollywood"]);
+        var catInfo = Categories.GetValueOrDefault(category, Categories["breaking_bollywood"]);
         var templateIds = catInfo.TemplateIds;
         var (passed, issues) = QualityCheck(article, category, hook);
 
@@ -1906,7 +1906,7 @@ public static class ContentEngine
         // Add category hashtag
         var categoryTag = category switch
         {
-            "bollywood" => "#Bollywood",
+                "breaking_bollywood" => "#Bollywood",
             "india_news" => "#IndiaNews",
             "india_politics" => "#IndianPolitics",
             _ => "#News"

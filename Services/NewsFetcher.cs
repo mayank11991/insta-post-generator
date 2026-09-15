@@ -437,7 +437,7 @@ public static class NewsFetcher
     // RSS Feed fetching
     private static readonly Dictionary<string, string[]> TopicToRssCategories = new()
     {
-        { "bollywood", new[] { "bollywood" } },
+        { "breaking_bollywood", new[] { "bollywood" } },
         { "india_news", new[] { "india_news" } },
         { "india_politics", new[] { "india_politics" } }
     };
