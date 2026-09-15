@@ -63,14 +63,18 @@ public static class VideoProcessor
         {
             var outputPath = Path.ChangeExtension(inputPath, "_reel.mp4");
 
-            // Convert to 9:16 aspect ratio, MP4 H.264, optimized for Instagram
+            // Blurred background + sharp foreground for 9:16 aspect ratio
+            var filter = "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5[bg];" +
+                         "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease[fg];" +
+                         "[bg][fg]overlay=(W-w)/2:(H-h)/2";
+
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "ffmpeg",
                     Arguments = $"-i \"{inputPath}\"" +
-                              $" -vf \"scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black\"" +
+                              $" -vf \"{filter}\"" +
                               $" -c:v libx264 -preset medium -crf 23" +
                               $" -c:a aac -b:a 128k" +
                               $" -movflags +faststart" +
