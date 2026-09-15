@@ -506,6 +506,12 @@ public static class NewsFetcher
                 var thumb = ExtractImageFromRss(item);
                 var isoDate = item.SelectSingleNode("pubDate")?.InnerText ?? item.SelectSingleNode("published")?.InnerText ?? "";
 
+                if (!string.IsNullOrEmpty(isoDate) && DateTime.TryParse(isoDate, out var pubDate))
+                {
+                    if ((DateTime.UtcNow - pubDate.ToUniversalTime()).TotalHours > 24)
+                        continue;
+                }
+
                 articles.Add(new Article
                 {
                     Title = title,
