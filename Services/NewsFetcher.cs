@@ -117,7 +117,7 @@ public static class NewsFetcher
                     Title = item["title"]?.ToString() ?? "",
                     Link = item["link"]?.ToString() ?? "",
                     Thumbnail = item["thumbnail"]?.ToString() ?? "",
-                    Source = new InstaPostGenerator.Models.SourceInfo { Name = item["source"]?.ToString() ?? "" },
+                    Source = new InstaPostGenerator.Models.SourceInfo { Name = ExtractSourceName(item["source"]) },
                     Summary = item["snippet"]?.ToString() ?? "",
                     IsoDate = item["date"]?.ToString() ?? "",
                     Category = ""
@@ -183,7 +183,7 @@ public static class NewsFetcher
                             continue;
 
                         seenImageUrls.Add(imageUrl);
-                        var source = item["source"]?.ToString() ?? "";
+                        var source = ExtractSourceName(item["source"]);
                         var title = item["title"]?.ToString() ?? celeb;
 
                         var article = new Article
@@ -571,6 +571,18 @@ public static class NewsFetcher
         nsmgr.AddNamespace("media", "http://search.yahoo.com/mrss/");
         nsmgr.AddNamespace("content", "http://purl.org/rss/1.0/modules/content/");
         return nsmgr;
+    }
+
+    private static string ExtractSourceName(object? source)
+    {
+        if (source == null) return "";
+        try
+        {
+            if (source is Newtonsoft.Json.Linq.JObject jObj && jObj.TryGetValue("name", out var name))
+                return name.ToString();
+            return source.ToString() ?? "";
+        }
+        catch { return ""; }
     }
 
     private static string CleanHtml(string html)
